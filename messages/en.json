@@ -96,12 +96,30 @@
       "title": "One number, whole team, zero lost chats.",
       "sub": "Every customer message lands in one inbox your whole team works from — assigned, answered and documented, on your official WhatsApp Business number.",
       "imageAlt": "The WeizChat inbox: a team conversation list and an open chat with the customer panel.",
-      "f1": { "title": "Assignments & statuses", "body": "Route each conversation to an owner, track new, open and resolved, and see at a glance who is on it." },
-      "f2": { "title": "Internal notes", "body": "Discuss a conversation privately, next to the conversation itself. Customers never see notes — the system enforces it." },
-      "f3": { "title": "Live for everyone", "body": "Two agents, one truth: updates appear for the whole team in real time, in two browsers or twenty." },
-      "f4": { "title": "The 24-hour window, visible", "body": "The inbox shows when the free-reply window closes and switches you to approved templates when it does." },
-      "f5": { "title": "Search & filters", "body": "Find any customer by name or number; filter the inbox by assignee or status." },
-      "f6": { "title": "Roles & permissions", "body": "Administrators and agents see and do exactly what their role allows — nothing more." }
+      "f1": {
+        "title": "Assignments & statuses",
+        "body": "Route each conversation to an owner, track new, open and resolved, and see at a glance who is on it."
+      },
+      "f2": {
+        "title": "Internal notes",
+        "body": "Discuss a conversation privately, next to the conversation itself. Customers never see notes — the system enforces it."
+      },
+      "f3": {
+        "title": "Live for everyone",
+        "body": "Two agents, one truth: updates appear for the whole team in real time, in two browsers or twenty."
+      },
+      "f4": {
+        "title": "The 24-hour window, visible",
+        "body": "The inbox shows when the free-reply window closes and switches you to approved templates when it does."
+      },
+      "f5": {
+        "title": "Search & filters",
+        "body": "Find any customer by name or number; filter the inbox by assignee or status."
+      },
+      "f6": {
+        "title": "Roles & permissions",
+        "body": "Administrators and agents see and do exactly what their role allows — nothing more."
+      }
     },
     "aiSalesAgent": {
       "metaTitle": "AI sales agent for WhatsApp",
@@ -110,12 +128,30 @@
       "title": "Answers like your best agent. Escalates like your most careful one.",
       "sub": "Weizic reads the customer's question, finds the exact product in your catalog, quotes the real price — and brings in a human the moment confidence drops or policy demands it.",
       "imageAlt": "The AI Sales Agent settings page: readiness score, quick-start business types and business details.",
-      "f1": { "title": "Real prices only", "body": "Prices and stock come from your product data. Weizic never invents a price — no confident match, no quote." },
-      "f2": { "title": "Product identification", "body": "A photo, a model name or a serial number is enough to start the search in your catalog." },
-      "f3": { "title": "Your rules, versioned", "body": "Behavior profile, rules and playbooks are written and approved by you. The AI never edits its own instructions." },
-      "f4": { "title": "You choose the autonomy", "body": "Fully autonomous, facts-only, or draft-only — where every reply waits for human approval." },
-      "f5": { "title": "Hard escalation triggers", "body": "Complaints, legal topics, payment issues and low confidence go straight to your team, with full context." },
-      "f6": { "title": "Every run audited", "body": "Every AI decision is recorded — what it saw, what it did, and why." },
+      "f1": {
+        "title": "Real prices only",
+        "body": "Prices and stock come from your product data. Weizic never invents a price — no confident match, no quote."
+      },
+      "f2": {
+        "title": "Product identification",
+        "body": "A photo, a model name or a serial number is enough to start the search in your catalog."
+      },
+      "f3": {
+        "title": "Your rules, versioned",
+        "body": "Behavior profile, rules and playbooks are written and approved by you. The AI never edits its own instructions."
+      },
+      "f4": {
+        "title": "You choose the autonomy",
+        "body": "Fully autonomous, facts-only, or draft-only — where every reply waits for human approval."
+      },
+      "f5": {
+        "title": "Hard escalation triggers",
+        "body": "Complaints, legal topics, payment issues and low confidence go straight to your team, with full context."
+      },
+      "f6": {
+        "title": "Every run audited",
+        "body": "Every AI decision is recorded — what it saw, what it did, and why."
+      },
       "honest": "A human can take over any conversation at any moment — and everything the AI sends passes the same checks as a human reply: messaging window, quota, permissions."
     },
     "chatbot": {
@@ -125,12 +161,30 @@
       "title": "Answer at 2am — without pretending to be a person.",
       "sub": "A first reply, a short menu and smart routing keep customers moving when the team is away — and hand over cleanly the moment an agent arrives.",
       "imageAlt": "The chatbot settings: greeting, menu options and hand-off to a human.",
-      "f1": { "title": "Instant first reply", "body": "Greet every new conversation with your message and a short menu of options." },
-      "f2": { "title": "Routing", "body": "Each menu choice can answer on its own, or hand the conversation to the right team." },
-      "f3": { "title": "Quiet when you type", "body": "The moment an agent replies in a conversation, the bot goes silent there — automatically." },
-      "f4": { "title": "Lifecycle automations", "body": "Rules that run once per conversation — welcomes, follow-ups, closing actions — with per-action failure reporting." },
-      "f5": { "title": "Works with Weizic", "body": "When the AI is on, it answers first; the menu bot backs it up for what's left." },
-      "f6": { "title": "One switch", "body": "An organization-wide switch stops every bot instantly. Control stays with you." },
+      "f1": {
+        "title": "Instant first reply",
+        "body": "Greet every new conversation with your message and a short menu of options."
+      },
+      "f2": {
+        "title": "Routing",
+        "body": "Each menu choice can answer on its own, or hand the conversation to the right team."
+      },
+      "f3": {
+        "title": "Quiet when you type",
+        "body": "The moment an agent replies in a conversation, the bot goes silent there — automatically."
+      },
+      "f4": {
+        "title": "Lifecycle automations",
+        "body": "Rules that run once per conversation — welcomes, follow-ups, closing actions — with per-action failure reporting."
+      },
+      "f5": {
+        "title": "Works with Weizic",
+        "body": "When the AI is on, it answers first; the menu bot backs it up for what's left."
+      },
+      "f6": {
+        "title": "One switch",
+        "body": "An organization-wide switch stops every bot instantly. Control stays with you."
+      },
       "honest": "Automations can do nothing a human agent couldn't do — same permissions, same message rules, same limits."
     },
     "crm": {
@@ -140,12 +194,30 @@
       "title": "The customer card that fills itself.",
       "sub": "Every first message creates a customer. Every conversation lands on their card. Nothing to install, nothing to sync.",
       "imageAlt": "The customers directory: names, masked numbers, labels and CSV import/export.",
-      "f1": { "title": "Auto-created customers", "body": "A new number writes in — a customer record exists. No manual entry." },
-      "f2": { "title": "Names from WhatsApp", "body": "The customer's WhatsApp profile name fills in automatically — and never overwrites a name you set yourself." },
-      "f3": { "title": "Custom fields", "body": "Define the fields your business needs and filter by them." },
-      "f4": { "title": "Tags & segments", "body": "Tag customers and build the audiences your campaigns will use." },
-      "f5": { "title": "Notes & ownership", "body": "Team notes and an assigned owner on every customer." },
-      "f6": { "title": "Import & export", "body": "Bring customers in by CSV and take them out the same way. Your data stays yours." }
+      "f1": {
+        "title": "Auto-created customers",
+        "body": "A new number writes in — a customer record exists. No manual entry."
+      },
+      "f2": {
+        "title": "Names from WhatsApp",
+        "body": "The customer's WhatsApp profile name fills in automatically — and never overwrites a name you set yourself."
+      },
+      "f3": {
+        "title": "Custom fields",
+        "body": "Define the fields your business needs and filter by them."
+      },
+      "f4": {
+        "title": "Tags & segments",
+        "body": "Tag customers and build the audiences your campaigns will use."
+      },
+      "f5": {
+        "title": "Notes & ownership",
+        "body": "Team notes and an assigned owner on every customer."
+      },
+      "f6": {
+        "title": "Import & export",
+        "body": "Bring customers in by CSV and take them out the same way. Your data stays yours."
+      }
     },
     "integrations": {
       "metaTitle": "Integrations",
@@ -154,11 +226,26 @@
       "title": "Built on the platform. Connected to your stack.",
       "sub": "WeizChat connects to the official WhatsApp Business Platform and to the systems your catalog lives in — labeled honestly: live today, or on the roadmap.",
       "imageAlt": "The WhatsApp connection page: a connected number and write-only credential fields.",
-      "f1": { "title": "WhatsApp Business Platform — live", "body": "The core connection: official Cloud API, embedded signup or manual credentials, write-only token storage." },
-      "f2": { "title": "Product catalog — live", "body": "A structured product editor inside WeizChat feeds Weizic real prices and stock." },
-      "f3": { "title": "AI by Anthropic — live", "body": "Weizic runs on Anthropic's Claude models, behind a permissioned, tenant-scoped tool gateway." },
-      "f4": { "title": "Google Sheets sync — coming soon", "body": "Keep your catalog in a spreadsheet and sync it into WeizChat. On the roadmap." },
-      "f5": { "title": "ERP & accounting — coming soon", "body": "Product-data and accounting connections are planned next — tell us which system you use." },
+      "f1": {
+        "title": "WhatsApp Business Platform — live",
+        "body": "The core connection: official Cloud API, embedded signup or manual credentials, write-only token storage."
+      },
+      "f2": {
+        "title": "Product catalog — live",
+        "body": "A structured product editor inside WeizChat feeds Weizic real prices and stock."
+      },
+      "f3": {
+        "title": "AI by Anthropic — live",
+        "body": "Weizic runs on Anthropic's Claude models, behind a permissioned, tenant-scoped tool gateway."
+      },
+      "f4": {
+        "title": "Google Sheets sync — coming soon",
+        "body": "Keep your catalog in a spreadsheet and sync it into WeizChat. On the roadmap."
+      },
+      "f5": {
+        "title": "ERP & accounting — coming soon",
+        "body": "Product-data and accounting connections are planned next — tell us which system you use."
+      },
       "honest": "If it isn't marked live, it doesn't exist yet. Roadmap is labeled roadmap."
     },
     "campaigns": {
@@ -167,10 +254,113 @@
       "kicker": "Campaigns",
       "title": "Broadcasts that respect the rules.",
       "sub": "Approved templates, opted-in audiences built from tags, resumable sending and honest delivery stats — opening to customers soon.",
-      "f1": { "title": "Approved templates only", "body": "Campaign messages are Meta-approved templates. The platform enforces it." },
-      "f2": { "title": "Opt-in audiences", "body": "Audiences are built only from customers who allow delivery — blocked customers are never included in the first place." },
-      "f3": { "title": "Honest measurement", "body": "Sent, delivered, read, replied — real numbers from real delivery statuses." },
-      "f4": { "title": "Quota-aware", "body": "Campaign quotas are enforced up front, and live customer replies are never blocked by a campaign." }
+      "f1": {
+        "title": "Approved templates only",
+        "body": "Campaign messages are Meta-approved templates. The platform enforces it."
+      },
+      "f2": {
+        "title": "Opt-in audiences",
+        "body": "Audiences are built only from customers who allow delivery — blocked customers are never included in the first place."
+      },
+      "f3": {
+        "title": "Honest measurement",
+        "body": "Sent, delivered, read, replied — real numbers from real delivery statuses."
+      },
+      "f4": {
+        "title": "Quota-aware",
+        "body": "Campaign quotas are enforced up front, and live customer replies are never blocked by a campaign."
+      }
+    }
+  },
+  "pricing": {
+    "metaTitle": "Pricing",
+    "metaDescription": "Simple plans for a shared WhatsApp inbox with an AI sales agent. Meta's conversation fees are charged separately by Meta.",
+    "title": "Pricing that says what it costs.",
+    "sub": "Every plan includes the whole product — the plan only sets how many campaign messages and AI replies you use each month.",
+    "mostPopular": "Most popular",
+    "perMonth": "month",
+    "tier": {
+      "free": {
+        "name": "Free",
+        "who": "For trying it out on a real number"
+      },
+      "pro": {
+        "name": "Pro",
+        "who": "For a team that answers all day"
+      },
+      "unlimited": {
+        "name": "Unlimited",
+        "who": "For high volume, without counting"
+      }
+    },
+    "campaignQuota": "Campaign messages / month",
+    "aiQuota": "AI replies / month",
+    "unmetered": "Unmetered",
+    "talkToUs": "Talk to us",
+    "metaNote": "On top of your subscription, Meta charges for conversations directly, at its own published rates. Those fees are billed by Meta, not by us, and we add nothing on top of them.",
+    "paymentsNote": "Online self-serve payment is not live yet, so we set accounts up personally — write to us and we will get you started, including the free plan.",
+    "includedTitle": "Every plan includes everything",
+    "includedBody": "We don't lock features behind tiers. The whole product is in every plan; the plan sets your monthly volume.",
+    "included": {
+      "inbox": "Shared team inbox",
+      "ai": "Weizic AI sales agent",
+      "chatbot": "Chatbot & automations",
+      "crm": "Customers & custom fields",
+      "templates": "Message templates",
+      "analytics": "Analytics",
+      "roles": "Roles, teams & permissions",
+      "locales": "Hebrew & English interface"
+    },
+    "faqTitle": "Pricing questions",
+    "faq": {
+      "whoCharges": {
+        "q": "What exactly does Meta charge for?",
+        "a": "Meta bills per 24-hour conversation, at rates that depend on the category and the country. Those rates are published by Meta and can change; we always point you to Meta's own pricing page rather than quoting numbers that may be out of date."
+      },
+      "overQuota": {
+        "q": "What happens if I pass my monthly quota?",
+        "a": "Campaign sending pauses for the rest of the month and admins are notified — and if the AI reaches its cap it stops answering while your team keeps working. Live replies from humans are never blocked by a quota."
+      },
+      "switch": {
+        "q": "Can I change plan later?",
+        "a": "Yes. Plans are monthly volumes, not contracts on features, so moving up or down takes effect for the following month."
+      },
+      "trial": {
+        "q": "How do I try it?",
+        "a": "Start on the free plan with your own WhatsApp Business Account. You will need a number you control and a Meta Business account — we walk you through the connection."
+      }
+    },
+    "ctaTrial": "Start free trial",
+    "ctaContact": "Ask a question"
+  },
+  "contact": {
+    "metaTitle": "Contact",
+    "metaDescription": "Talk to the WeizChat team about a demo, a trial or a question. Company details, phone and support email.",
+    "title": "Talk to us.",
+    "sub": "A demo, a question about connecting your number, or help choosing a plan — a person answers.",
+    "formTitle": "Send us a message",
+    "formSub": "Tell us a little about your business and what you want WhatsApp to do for it.",
+    "detailsTitle": "Company details",
+    "details": {
+      "legalName": "Legal name",
+      "companyId": "Company number",
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email"
+    },
+    "supportTitle": "Existing customer?",
+    "supportBody": "Write from the email address on your account and mention your organization name — it gets to the right place faster.",
+    "privacyTitle": "Privacy request?",
+    "privacyBody": "For access, correction or deletion of personal data, write to the same address and say so in the subject. See the data deletion page for the full process.",
+    "form": {
+      "name": "Your name",
+      "company": "Business name",
+      "phone": "Phone",
+      "message": "How can we help?",
+      "submit": "Open in email",
+      "note": "The button opens your email app with the message ready to send. This site has no form backend and stores nothing you type here.",
+      "emailSubject": "WeizChat — contact from the website",
+      "emailBody": "Name: {name}\nBusiness: {company}\nPhone: {phone}\n\n{message}"
     }
   },
   "legal": {
