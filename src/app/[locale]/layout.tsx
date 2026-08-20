@@ -11,6 +11,9 @@ import {
 } from 'next/font/google';
 import { directionFor, routing } from '../../i18n/routing';
 import { site } from '../../config/site';
+import { Nav } from '../../components/layout/nav';
+import { Footer } from '../../components/layout/footer';
+import { CookieConsent } from '../../components/layout/cookie-consent';
 import './../globals.css';
 
 /*
@@ -74,7 +77,12 @@ export default async function LocaleLayout({
         ) : null}
       </head>
       <body>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <Nav />
+          <div className="min-h-dvh">{children}</div>
+          <Footer />
+          <CookieConsent />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

@@ -4,5 +4,88 @@
     "body": "Direction, fonts and brand tokens load correctly from the first line — Hebrew first, English and Bengali alongside.",
     "proof": "Tokens: accent 6D4AFF · display Suez One · body Assistant",
     "cta": "On to the next step"
+  },
+  "nav": {
+    "primary": "Primary navigation",
+    "menu": "Menu",
+    "languageSwitcher": "Language",
+    "solutions": "Solutions",
+    "tools": "Tools",
+    "pricing": "Pricing",
+    "login": "Log in",
+    "startTrial": "Start free trial",
+    "comingSoon": "Coming soon",
+    "solution": {
+      "sharedInbox": "Shared team inbox",
+      "aiSalesAgent": "AI sales agent",
+      "chatbot": "Chatbot & automation",
+      "crm": "WhatsApp CRM",
+      "integrations": "Integrations",
+      "campaigns": "Campaigns"
+    },
+    "tool": {
+      "chatLink": "Chat link generator",
+      "qrCode": "QR code generator",
+      "chatWidget": "Chat widget generator",
+      "templateChecker": "Template checker",
+      "pricingCalculator": "Conversation pricing calculator"
+    },
+    "resource": {
+      "blog": "Blog",
+      "informationCenter": "Information center"
+    }
+  },
+  "footer": {
+    "tagline": "Every business WhatsApp conversation in one shared inbox — with AI that works for you.",
+    "companyId": "Company ID",
+    "solutionsTitle": "Solutions",
+    "toolsTitle": "Free tools",
+    "resourcesTitle": "Resources",
+    "legalTitle": "Legal",
+    "solution": {
+      "sharedInbox": "Shared team inbox",
+      "aiSalesAgent": "AI sales agent",
+      "chatbot": "Chatbot & automation",
+      "crm": "WhatsApp CRM",
+      "integrations": "Integrations",
+      "campaigns": "Campaigns"
+    },
+    "tool": {
+      "chatLink": "Chat link generator",
+      "qrCode": "QR code generator",
+      "chatWidget": "Chat widget generator",
+      "templateChecker": "Template checker",
+      "pricingCalculator": "Conversation pricing calculator"
+    },
+    "resource": {
+      "blog": "Blog",
+      "informationCenter": "Information center"
+    },
+    "legal": {
+      "privacy": "Privacy policy",
+      "terms": "Terms of service",
+      "dpa": "Data processing addendum (DPA)",
+      "dataDeletion": "Data deletion instructions",
+      "accessibility": "Accessibility statement",
+      "security": "Security"
+    },
+    "metaAttribution": "WhatsApp is a trademark of Meta Platforms, Inc. We are an independent software provider and are not affiliated with, endorsed by, or sponsored by Meta Platforms, Inc.",
+    "rights": "All rights reserved"
+  },
+  "trust": {
+    "label": "Product facts",
+    "cloudApi": "Built on the official WhatsApp Business Platform (Cloud API)",
+    "ownWaba": "You connect your own WhatsApp Business Account — it stays yours",
+    "trilingual": "Full support in Hebrew, English and Bengali",
+    "humanControl": "A human can take over any conversation, at any moment",
+    "techProvider": "Meta-approved Tech Provider",
+    "businessPartner": "Meta Business Partner"
+  },
+  "cookies": {
+    "label": "Cookie preferences",
+    "body": "This site uses essential cookies only. Optional analytics will run only if you allow them.",
+    "policyLink": "Read our privacy policy",
+    "accept": "Allow optional cookies",
+    "decline": "Essential only"
   }
 }

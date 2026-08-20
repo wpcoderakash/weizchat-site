@@ -4,5 +4,88 @@
     "body": "עברית היא שפת הבית של WeizChat — כיוון, גופנים וצבעי המותג נטענים נכון מהשורה הראשונה.",
     "proof": "טוקנים: accent 6D4AFF · תצוגה Suez One · גוף Assistant",
     "cta": "נמשיך לשלב הבא"
+  },
+  "nav": {
+    "primary": "ניווט ראשי",
+    "menu": "תפריט",
+    "languageSwitcher": "בחירת שפה",
+    "solutions": "פתרונות",
+    "tools": "כלים",
+    "pricing": "תמחור",
+    "login": "התחברות",
+    "startTrial": "התחלת ניסיון חינם",
+    "comingSoon": "בקרוב",
+    "solution": {
+      "sharedInbox": "תיבת צוות משותפת",
+      "aiSalesAgent": "סוכן מכירות AI",
+      "chatbot": "צ'אטבוט ואוטומציה",
+      "crm": "CRM לוואטסאפ",
+      "integrations": "אינטגרציות",
+      "campaigns": "קמפיינים"
+    },
+    "tool": {
+      "chatLink": "מחולל קישורי צ'אט",
+      "qrCode": "מחולל קוד QR",
+      "chatWidget": "מחולל וידג'ט צ'אט",
+      "templateChecker": "בודק תבניות הודעה",
+      "pricingCalculator": "מחשבון תמחור שיחות"
+    },
+    "resource": {
+      "blog": "בלוג",
+      "informationCenter": "מרכז מידע"
+    }
+  },
+  "footer": {
+    "tagline": "כל שיחות הוואטסאפ של העסק בתיבה משותפת אחת — עם AI שעובד בשבילכם.",
+    "companyId": "ח.פ",
+    "solutionsTitle": "פתרונות",
+    "toolsTitle": "כלים חינמיים",
+    "resourcesTitle": "משאבים",
+    "legalTitle": "משפטי",
+    "solution": {
+      "sharedInbox": "תיבת צוות משותפת",
+      "aiSalesAgent": "סוכן מכירות AI",
+      "chatbot": "צ'אטבוט ואוטומציה",
+      "crm": "CRM לוואטסאפ",
+      "integrations": "אינטגרציות",
+      "campaigns": "קמפיינים"
+    },
+    "tool": {
+      "chatLink": "מחולל קישורי צ'אט",
+      "qrCode": "מחולל קוד QR",
+      "chatWidget": "מחולל וידג'ט צ'אט",
+      "templateChecker": "בודק תבניות הודעה",
+      "pricingCalculator": "מחשבון תמחור שיחות"
+    },
+    "resource": {
+      "blog": "בלוג",
+      "informationCenter": "מרכז מידע"
+    },
+    "legal": {
+      "privacy": "מדיניות פרטיות",
+      "terms": "תנאי שימוש",
+      "dpa": "הסכם עיבוד נתונים (DPA)",
+      "dataDeletion": "הוראות מחיקת נתונים",
+      "accessibility": "הצהרת נגישות",
+      "security": "אבטחת מידע"
+    },
+    "metaAttribution": "‏WhatsApp הוא סימן מסחרי של ‏Meta Platforms, Inc.‎ אנחנו ספק תוכנה עצמאי, ואיננו קשורים ל־Meta Platforms, Inc.‎, איננו ממומנים על ידה ואיננו פועלים בחסותה.",
+    "rights": "כל הזכויות שמורות"
+  },
+  "trust": {
+    "label": "עובדות על המוצר",
+    "cloudApi": "בנוי על WhatsApp Business Platform‏ (Cloud API) הרשמי",
+    "ownWaba": "מתחברים עם חשבון ה־WhatsApp Business שלכם — והוא נשאר שלכם",
+    "trilingual": "תמיכה מלאה בעברית, אנגלית ובנגלית",
+    "humanControl": "נציג אנושי יכול להשתלט על כל שיחה, בכל רגע",
+    "techProvider": "ספק טכנולוגיה מאושר של Meta",
+    "businessPartner": "שותף עסקי של Meta"
+  },
+  "cookies": {
+    "label": "העדפות עוגיות",
+    "body": "האתר משתמש בעוגיות חיוניות בלבד. כלי מדידה אופציונליים יופעלו רק אם תאשרו אותם.",
+    "policyLink": "לקריאת מדיניות הפרטיות",
+    "accept": "לאשר עוגיות אופציונליות",
+    "decline": "חיוניות בלבד"
   }
 }
