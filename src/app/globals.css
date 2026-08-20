@@ -1,26 +1,112 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
+/*
+ * WeizChat design tokens — IDENTICAL to the product's palette (owner's
+ * rule: one brand, no color drift between weiz.chat and app.weiz.chat).
+ * Logical properties only (margin-inline-*, padding-inline-*, inset-inline-*):
+ * Hebrew is the primary locale and the layout must mirror by direction,
+ * never by hand-corrected left/right.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f9fafb;
+  --fg: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --accent: #6d4aff;
+  --accent-hover: #5936e4;
+  --accent-soft: #ece7ff;
+  --accent-fg: #ffffff;
+
+  --danger: #b91c1c;
+  --ok: #15803d;
+  --warn: #b45309;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 6%);
+
+  color-scheme: light dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: #0b1120;
+    --surface: #111827;
+    --surface-2: #0f172a;
+    --fg: #e5e7eb;
+    --muted: #94a3b8;
+    --border: #1f2937;
+    --border-strong: #334155;
+
+    --accent: #a78bfa;
+    --accent-hover: #c4b5fd;
+    --accent-soft: #312960;
+    --accent-fg: #17123a;
+
+    --danger: #fca5a5;
+    --ok: #86efac;
+    --warn: #fcd34d;
+
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Tailwind v4 theme mapping — utilities like bg-surface, text-accent. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-fg: var(--accent-fg);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+  --radius-card: var(--radius);
 }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), var(--font-body), ui-sans-serif, sans-serif;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

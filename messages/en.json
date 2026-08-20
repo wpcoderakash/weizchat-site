@@ -1,0 +1,8 @@
+{
+  "scaffold": {
+    "title": "The scaffold stands",
+    "body": "Direction, fonts and brand tokens load correctly from the first line — Hebrew first, English and Bengali alongside.",
+    "proof": "Tokens: accent 6D4AFF · display Suez One · body Assistant",
+    "cta": "On to the next step"
+  }
+}
