@@ -1,0 +1,52 @@
+# Security at WeizChat
+
+Security is designed into WeizChat's architecture, not added around it. This page
+describes, honestly and without marketing, the measures that protect your data. We do
+not currently claim third-party certifications; when we obtain one, it will be named
+here.
+
+## Tenant isolation
+
+Every business (tenant) is isolated at the **database layer** with enforced row-level
+security: every query runs inside a transaction bound to one organization, and the
+database itself refuses cross-tenant reads and writes — isolation does not depend on
+application code remembering to filter. Cross-tenant integrity is additionally enforced
+in the schema, and an automated cross-tenant test suite runs on every change.
+
+## Credentials and secrets
+
+WhatsApp access tokens and other credentials live in a **write-only vault**: they are
+envelope-encrypted with a key-management service, only the last four characters are ever
+shown, and there is no "reveal token" feature for anyone — including our own
+administrators. Recovery is rotation, not retrieval. Logs are redacted by an
+allowlist-based redactor, and automated checks scan responses and logs for secret-shaped
+values.
+
+## Separated administrative planes
+
+The platform's internal administration is a separate identity plane from customer
+organizations, with its own credentials, mandatory two-factor authentication, and a
+database role that customer-facing code cannot reach. No customer-facing role, however
+senior, has platform capabilities.
+
+## Application security
+
+- TLS everywhere; HSTS with a two-year lifetime; strict Content Security Policy.
+- Passwords hashed with scrypt; uniform sign-in failures that reveal nothing about
+  which part was wrong; rate limiting on authentication endpoints.
+- Webhooks are verified by HMAC signature on the raw payload before any parsing.
+- Idempotency keys on write APIs; audit records for sensitive actions.
+
+## The AI boundary
+
+The AI assistant has **no direct access** to the database, to WhatsApp, or to the open
+internet. Every capability it uses is a narrow, permission-checked, tenant-scoped tool,
+and every AI run is recorded in an audit trail. Customer text is treated as untrusted
+data, never as instructions.
+
+## Responsible disclosure
+
+If you believe you have found a vulnerability, email
+[office@weiz.co.il](mailto:office@weiz.co.il) with reproduction details. We will
+acknowledge within 3 business days, keep you informed, and will not pursue good-faith
+research conducted without harming other tenants' data.

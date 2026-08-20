@@ -75,6 +75,10 @@
     "techProvider": "Meta-approved Tech Provider",
     "businessPartner": "Meta Business Partner"
   },
+  "legal": {
+    "updated": "Last updated",
+    "lawyerNotice": "TODO: must be reviewed by a lawyer before launch — do not publish as-is. This text is a working draft prepared for review, not legal advice."
+  },
   "cookies": {
     "label": "Cookie preferences",
     "body": "This site uses essential cookies only. Optional analytics will run only if you allow them.",

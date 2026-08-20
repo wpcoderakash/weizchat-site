@@ -3,7 +3,8 @@ import createNextIntlPlugin from 'next-intl/plugin';
 import createMDX from '@next/mdx';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
-const withMDX = createMDX({});
+// Plugin named as a string so the options stay serializable under Turbopack.
+const withMDX = createMDX({ options: { remarkPlugins: ['remark-gfm'] } });
 
 const nextConfig: NextConfig = {
   pageExtensions: ['ts', 'tsx', 'md', 'mdx'],
