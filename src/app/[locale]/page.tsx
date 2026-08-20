@@ -1,31 +1,54 @@
-import { useTranslations } from 'next-intl';
-import { setRequestLocale } from 'next-intl/server';
-import { use } from 'react';
+import type { Metadata } from 'next';
+import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { TrustStrip } from '../../components/layout/trust-strip';
+import { Hero } from '../../components/sections/hero';
+import { Problem } from '../../components/sections/problem';
+import { Pillars } from '../../components/sections/pillars';
+import { AiDeepDive } from '../../components/sections/ai-deep-dive';
+import { OfficialPlatform } from '../../components/sections/official-platform';
+import { UseCases } from '../../components/sections/use-cases';
+import { SimpleCrm } from '../../components/sections/simple-crm';
+import { Testimonials } from '../../components/sections/testimonials';
+import { PricingPreview } from '../../components/sections/pricing-preview';
+import { Faq } from '../../components/sections/faq';
+import { FinalCta } from '../../components/sections/final-cta';
+import { alternatesFor, openGraphLocale } from '../../lib/seo';
 
-/**
- * Scaffold proof page (steps 2–3): shows the shared layout and the trust
- * strip in all three locales. Replaced by the real home page in step 4.
- */
-export default function Home({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = use(params);
+/** The home page, in the §5 order. Nav and Footer come from the layout. */
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'home.meta' });
+  return {
+    title: t('title'),
+    description: t('description'),
+    alternates: alternatesFor('/'),
+    openGraph: { title: t('title'), description: t('description'), ...openGraphLocale(locale) },
+  };
+}
+
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   setRequestLocale(locale);
-  const t = useTranslations('scaffold');
 
   return (
     <main>
+      <Hero />
       <TrustStrip />
-      <div className="mx-auto max-w-3xl px-6 py-20">
-        <h1 className="text-5xl">{t('title')}</h1>
-        <p className="mt-4 text-muted">{t('body')}</p>
-        <p className="mt-6 font-mono text-sm text-accent">{t('proof')}</p>
-        <button
-          type="button"
-          className="mt-8 rounded-full bg-accent px-6 py-2.5 font-semibold text-accent-fg hover:bg-accent-hover"
-        >
-          {t('cta')}
-        </button>
-      </div>
+      <Problem />
+      <Pillars />
+      <AiDeepDive />
+      <OfficialPlatform />
+      <UseCases />
+      <SimpleCrm />
+      <Testimonials />
+      <PricingPreview />
+      <Faq />
+      <FinalCta />
     </main>
   );
 }

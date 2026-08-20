@@ -5,10 +5,11 @@
  * agree in writing. No invented names, quotes, logos or ratings, ever.
  */
 export interface Testimonial {
+  id: string;
   quote: string;
-  name: string;
+  author: string;
   company: string;
-  locale: 'he' | 'en' | 'bn';
+  locale: 'he' | 'en';
   /** Written consent stored by us. Entries without it are filtered out. */
   consentOnFile: true;
 }

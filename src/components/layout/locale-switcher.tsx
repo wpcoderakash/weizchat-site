@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { routing } from '../../i18n/routing';
 import { Link, usePathname } from '../../i18n/navigation';
 
-const NATIVE_NAMES: Record<string, string> = { he: 'עברית', en: 'English', bn: 'বাংলা' };
+const NATIVE_NAMES: Record<string, string> = { he: 'עברית', en: 'English' };
 
 /**
  * Switches locale while staying on the same page. Native names on purpose:
