@@ -35,6 +35,12 @@ const PATHS = [
   '/tools/chat-widget-generator',
   '/tools/template-checker',
   '/tools/conversation-pricing-calculator',
+  '/blog',
+  '/information-center',
+  // One article from each collection — the rest are covered by the same code path.
+  '/information-center/what-is-the-whatsapp-business-platform',
+  '/information-center/conversation-pricing-explained',
+  '/blog/what-an-ai-agent-must-never-do',
 ];
 
 /** Deliberate, owner-supplied-later tokens. Anything else is a bug. */
@@ -65,6 +71,7 @@ const NAMESPACES = [
   'cookies',
   'home',
   'tools',
+  'articles',
 ];
 const RAW_KEY = new RegExp(`\\b(?:${NAMESPACES.join('|')})(?:\\.[a-zA-Z0-9_]+){1,4}\\b`, 'g');
 

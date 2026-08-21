@@ -564,6 +564,28 @@
       }
     }
   },
+  "articles": {
+    "common": {
+      "readingTime": "{minutes} min read",
+      "emptyTitle": "Nothing published here yet.",
+      "emptyBody": "We would rather show you an empty page than filler. Articles appear here as we write them.",
+      "ctaTitle": "See it working on your own number.",
+      "ctaTrial": "Start free trial",
+      "ctaDemo": "Book a demo"
+    },
+    "blog": {
+      "metaTitle": "Blog",
+      "metaDescription": "Practical writing about running business conversations on WhatsApp — from the team building WeizChat.",
+      "title": "Blog",
+      "sub": "What we have learned building a WhatsApp platform, written for the people who have to answer the messages."
+    },
+    "informationCenter": {
+      "metaTitle": "Information center",
+      "metaDescription": "Plain explanations of the WhatsApp Business Platform: templates, opt-in, pricing, and WABA vs the Business app.",
+      "title": "Information center",
+      "sub": "The WhatsApp Business Platform explained without jargon. Evergreen guides we keep current — Meta remains the source of truth for rates and policy."
+    }
+  },
   "legal": {
     "updated": "Last updated",
     "lawyerNotice": "TODO: must be reviewed by a lawyer before launch — do not publish as-is. This text is a working draft prepared for review, not legal advice."
