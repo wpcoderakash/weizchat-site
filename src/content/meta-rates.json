@@ -1,0 +1,21 @@
+{
+  "_comment": [
+    "Meta's per-message rate card. ONE file so rates can be updated without a code change.",
+    "It ships EMPTY on purpose: Meta publishes the numeric rates only inside downloadable",
+    "CSV/PDF rate cards, not as scrapeable text, so nothing here is guessed. Meta is the",
+    "source of truth — always.",
+    "",
+    "To fill it: open the pricing page below, download the rate card CSV for your WhatsApp",
+    "Business Account currency, and add entries to `countries` as:",
+    "  { \"code\": \"IL\", \"marketing\": 0.0000, \"utility\": 0.0000, \"authentication\": 0.0000 }",
+    "then set `ratesLastUpdated` to the date you copied them. The calculator shows that",
+    "date to visitors and falls back to asking them for their own rate when a country is",
+    "missing."
+  ],
+  "model": "per-message",
+  "modelEffectiveFrom": "2025-07-01",
+  "source": "https://developers.facebook.com/docs/whatsapp/pricing/",
+  "currency": "USD",
+  "ratesLastUpdated": null,
+  "countries": []
+}

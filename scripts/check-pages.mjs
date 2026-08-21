@@ -30,6 +30,11 @@ const PATHS = [
   '/accessibility',
   '/data-deletion',
   '/security',
+  '/tools/chat-link-generator',
+  '/tools/qr-code-generator',
+  '/tools/chat-widget-generator',
+  '/tools/template-checker',
+  '/tools/conversation-pricing-calculator',
 ];
 
 /** Deliberate, owner-supplied-later tokens. Anything else is a bug. */
@@ -59,6 +64,7 @@ const NAMESPACES = [
   'legal',
   'cookies',
   'home',
+  'tools',
 ];
 const RAW_KEY = new RegExp(`\\b(?:${NAMESPACES.join('|')})(?:\\.[a-zA-Z0-9_]+){1,4}\\b`, 'g');
 

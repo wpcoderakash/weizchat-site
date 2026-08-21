@@ -363,6 +363,207 @@
       "emailBody": "Name: {name}\nBusiness: {company}\nPhone: {phone}\n\n{message}"
     }
   },
+  "tools": {
+    "common": {
+      "kicker": "Free tool",
+      "copy": "Copy",
+      "copied": "Copied",
+      "copyFailed": "Copy failed — select and copy manually",
+      "privacy": "This tool runs entirely in your browser. Nothing you type is sent to us or stored anywhere — this site has no form backend at all.",
+      "closerTitle": "Want the number answered as fast as it is scanned?",
+      "closerSub": "WeizChat gives your team one shared inbox and an AI agent on the same number.",
+      "ctaTrial": "Start free trial",
+      "ctaDemo": "Book a demo",
+      "phoneError": {
+        "empty": "Enter a phone number.",
+        "leading-zero": "Drop the leading zero and use the country code — for example 972 instead of 0.",
+        "too-short": "That looks too short for an international number.",
+        "too-long": "That is longer than the 15 digits an international number allows."
+      }
+    },
+    "chatLink": {
+      "metaTitle": "WhatsApp chat link generator (wa.me)",
+      "metaDescription": "Create a free wa.me click-to-chat link with a prefilled message. Runs in your browser, nothing stored.",
+      "title": "WhatsApp link generator",
+      "sub": "Turn your number into a link that opens a chat with your message already typed. Put it in a bio, an email signature, or an ad.",
+      "phoneLabel": "WhatsApp number",
+      "phoneHint": "International format, digits only, no plus and no leading zero. Example: 972501234567",
+      "messageLabel": "Prefilled message (optional)",
+      "messageHint": "What the customer's chat box will already say when it opens.",
+      "resultTitle": "Your link",
+      "test": "Test it",
+      "empty": "Enter a number and your link appears here.",
+      "howTitle": "How to use it",
+      "how": {
+        "s1": "Type your WhatsApp number in international format, without a plus sign or a leading zero.",
+        "s2": "Optionally write the message you want the customer's chat to open with.",
+        "s3": "Copy the link into your Instagram bio, email signature, website button or ad."
+      }
+    },
+    "qrCode": {
+      "metaTitle": "WhatsApp QR code generator",
+      "metaDescription": "Generate a free WhatsApp QR code that opens a chat with a prefilled message. Made in your browser, downloadable as PNG.",
+      "title": "WhatsApp QR code generator",
+      "sub": "A QR that opens a WhatsApp chat with you — for a shop window, a receipt, a business card or a delivery box.",
+      "phoneLabel": "WhatsApp number",
+      "phoneHint": "International format, digits only. Example: 972501234567",
+      "messageLabel": "Prefilled message (optional)",
+      "resultTitle": "Your QR code",
+      "qrAlt": "QR code that opens a WhatsApp chat with the number you entered",
+      "linkLabel": "The link inside the QR code",
+      "download": "Download PNG",
+      "empty": "Enter a number and the QR code appears here.",
+      "howTitle": "How to use it",
+      "how": {
+        "s1": "Enter your number and, if you like, the message the chat should open with.",
+        "s2": "Download the PNG — it is generated on your device, at a size that prints cleanly.",
+        "s3": "Print it or place it wherever customers can reach it, and test the scan once before you print a hundred."
+      }
+    },
+    "chatWidget": {
+      "metaTitle": "WhatsApp chat widget generator (free HTML)",
+      "metaDescription": "Generate a floating WhatsApp button for your website. Plain HTML, no dependencies, no tracking.",
+      "title": "WhatsApp chat widget generator",
+      "sub": "A floating WhatsApp button for your site. One snippet of plain HTML — no script to load, no tracker, no account needed.",
+      "phoneLabel": "WhatsApp number",
+      "phoneHint": "International format, digits only. Example: 972501234567",
+      "labelLabel": "Button text",
+      "defaultLabel": "Chat with us",
+      "messageLabel": "Prefilled message (optional)",
+      "sideLabel": "Position",
+      "sideRight": "Bottom right",
+      "sideLeft": "Bottom left",
+      "colorLabel": "Button colour",
+      "resultTitle": "Your snippet",
+      "resultHint": "Paste this just before the closing </body> tag of your site.",
+      "previewTitle": "Preview",
+      "empty": "Enter a number and the snippet appears here.",
+      "howTitle": "How to use it",
+      "how": {
+        "s1": "Set your number, the button text and where the button should sit.",
+        "s2": "Copy the snippet and paste it before the closing body tag on every page you want it on.",
+        "s3": "It is ordinary HTML — it loads nothing from us and sends us no data about your visitors."
+      }
+    },
+    "templateChecker": {
+      "metaTitle": "WhatsApp message template checker",
+      "metaDescription": "Check a WhatsApp template name and variables against the rules Meta documents publicly — and see exactly what was not checked.",
+      "title": "Message template checker",
+      "sub": "Catch the structural mistakes that get templates rejected before you submit — and see plainly which rules this tool does not verify.",
+      "nameLabel": "Template name",
+      "nameHint": "Meta documents: lowercase letters, numbers and underscores, up to 512 characters.",
+      "bodyLabel": "Body text",
+      "bodyHint": "Paste the body including its variables, for example {{1}} or {{first_name}}.",
+      "bodyPlaceholder": "Hi {{1}}, your order {{2}} is on its way.",
+      "resultTitle": "What we checked",
+      "allPass": "No problems found in the rules this tool checks.",
+      "someFail": "{count} problem(s) found.",
+      "empty": "Enter a template name or body to run the checks.",
+      "checks": {
+        "nameEmpty": {
+          "label": "Template name present",
+          "ok": "A name is set.",
+          "fail": "A template needs a name."
+        },
+        "nameChars": {
+          "label": "Name uses allowed characters",
+          "ok": "Only lowercase letters, numbers and underscores.",
+          "fail": "Meta allows only lowercase letters, numbers and underscores in a template name."
+        },
+        "nameLength": {
+          "label": "Name within 512 characters",
+          "ok": "Within the documented limit.",
+          "fail": "Longer than the documented 512-character limit"
+        },
+        "mixedFormats": {
+          "label": "One variable format",
+          "ok": "The body uses a single placeholder format.",
+          "fail": "The body mixes numbered {{1}} and named {{example}} placeholders. Meta expects one format."
+        },
+        "sequential": {
+          "label": "Numbered variables run 1, 2, 3…",
+          "ok": "Numbering is sequential and in order.",
+          "fail": "Numbered placeholders must appear in order starting at 1, with no gaps. Found"
+        },
+        "namedChars": {
+          "label": "Named variables use allowed characters",
+          "ok": "Lowercase letters and underscores only.",
+          "fail": "Named parameters must be lowercase letters and underscores. Problem with"
+        },
+        "namedUnique": {
+          "label": "Named variables are unique",
+          "ok": "Each named parameter appears once.",
+          "fail": "Named parameters must be unique. Repeated"
+        }
+      },
+      "notCheckedTitle": "What this tool does NOT check",
+      "notCheckedIntro": "We only implement rules Meta states publicly. These are real requirements we cannot verify here, so we say so instead of guessing:",
+      "notChecked": {
+        "lengths": "Character limits for header, body, footer and button text — Meta does not state them on the page we cite.",
+        "buttons": "How many buttons a template may have, and which combinations are allowed.",
+        "category": "Whether your text matches the category (marketing / utility / authentication) you submit it under.",
+        "policy": "Whether the content complies with the WhatsApp Business Messaging Policy — the most common reason for rejection.",
+        "variableEdges": "Whether a variable may open or close the body, or sit next to another variable.",
+        "media": "Media header requirements — format, size and the sample file you must upload."
+      },
+      "source": "The rules we check come from Meta's Message Templates documentation",
+      "howTitle": "How to use it",
+      "how": {
+        "s1": "Paste your template name and body exactly as you plan to submit them.",
+        "s2": "Fix anything flagged, then read the \"not checked\" list — those rules still apply to you.",
+        "s3": "Submit in WhatsApp Manager, or let WeizChat submit it for you and report Meta's answer verbatim."
+      }
+    },
+    "pricingCalculator": {
+      "metaTitle": "WhatsApp conversation pricing calculator",
+      "metaDescription": "Estimate your monthly WhatsApp Business Platform cost under Meta's per-message pricing. Meta is the source of truth for rates.",
+      "title": "WhatsApp pricing calculator",
+      "sub": "Estimate what Meta will charge you in a month. Since 1 July 2025 WhatsApp bills per delivered template message, not per conversation.",
+      "countryLabel": "Country",
+      "noTable": "We do not republish Meta's rates here, because Meta publishes them in downloadable rate cards that change over time. Enter the rate for your country from your own rate card and this tool does the arithmetic.",
+      "rateCardLink": "Open Meta's official pricing page",
+      "volumeLabel": "Messages per month",
+      "rateLabel": "Rate per message ({currency})",
+      "category": {
+        "marketing": {
+          "name": "Marketing templates",
+          "when": "Always charged when delivered."
+        },
+        "utility": {
+          "name": "Utility templates",
+          "when": "Charged when delivered outside an open customer service window."
+        },
+        "authentication": {
+          "name": "Authentication templates",
+          "when": "Charged when delivered outside an open customer service window."
+        },
+        "service": {
+          "name": "Service messages",
+          "when": "Free — your replies inside an open 24-hour customer service window cost nothing."
+        }
+      },
+      "resultTitle": "Estimated monthly cost",
+      "thCategory": "Category",
+      "thVolume": "Messages",
+      "thCost": "Cost",
+      "total": "Total",
+      "needRate": "rate needed",
+      "incomplete": "enter the missing rates",
+      "empty": "Enter your monthly volumes to see an estimate.",
+      "estimateNote": "An estimate only. Your real invoice depends on the recipient's country, your volume tier, and any free-entry-point conversations.",
+      "disclaimerTitle": "Where these numbers come from",
+      "disclaimer": "Rates are set and published by Meta, and Meta is the source of truth. We do not add any fee of our own to the amounts Meta charges you.",
+      "modelLine": "Pricing model: per delivered message, in effect since {date}.",
+      "ratesUpdated": "Rate table last updated: {date}.",
+      "ratesNotLoaded": "Rate table: not loaded — enter the rate from your own Meta rate card above.",
+      "howTitle": "How to use it",
+      "how": {
+        "s1": "Open your Meta rate card and find the per-message rate for the country you message most.",
+        "s2": "Enter that rate and how many template messages you expect to send each month, by category.",
+        "s3": "Remember replies inside the 24-hour service window are free — good conversation habits lower the bill."
+      }
+    }
+  },
   "legal": {
     "updated": "Last updated",
     "lawyerNotice": "TODO: must be reviewed by a lawyer before launch — do not publish as-is. This text is a working draft prepared for review, not legal advice."
