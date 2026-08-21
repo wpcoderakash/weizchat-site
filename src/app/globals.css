@@ -12,18 +12,23 @@
   --surface: #ffffff;
   --surface-2: #f9fafb;
   --fg: #0f172a;
-  --muted: #64748b;
+  /* Darkened from #64748b: that failed WCAG AA on --bg (4.43 vs 4.5). */
+  --muted: #5c6878;
   --border: #e2e8f0;
   --border-strong: #cbd5e1;
 
   --accent: #6d4aff;
   --accent-hover: #5936e4;
-  --accent-soft: #ece7ff;
+  /* Lightened from #ece7ff so accent-coloured TEXT on this tint clears AA
+     (4.28 -> 4.6). The brand accent itself is deliberately unchanged. */
+  --accent-soft: #f3f0ff;
   --accent-fg: #ffffff;
 
   --danger: #b91c1c;
   --ok: #15803d;
-  --warn: #b45309;
+  /* Darkened from #b45309: the legal notice renders this on a warn/10
+     tint, where the lighter amber measured 4.11 against a 4.5 threshold. */
+  --warn: #8a3f07;
 
   --radius: 12px;
   --radius-sm: 8px;

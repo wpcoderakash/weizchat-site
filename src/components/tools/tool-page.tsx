@@ -93,7 +93,7 @@ export function makeToolPage(slug: ToolSlug) {
           <div className="flex flex-wrap items-center justify-between gap-4 rounded-card bg-accent px-8 py-8 text-accent-fg">
             <div>
               <p className="text-xl font-semibold">{tc('closerTitle')}</p>
-              <p className="mt-1 opacity-90">{tc('closerSub')}</p>
+              <p className="mt-1">{tc('closerSub')}</p>
             </div>
             <div className="flex flex-wrap gap-3">
               <a
