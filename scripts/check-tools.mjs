@@ -10,7 +10,9 @@ import { createRequire } from 'node:module';
 const require = createRequire('/Users/akashbiswas/Desktop/whatsapp sass Project/package.json');
 const { chromium } = require('@playwright/test');
 
-const B = 'http://localhost:4100/en/tools';
+/** Override with BASE when the built server is on another port. */
+const BASE = process.env.BASE ?? 'http://localhost:4100';
+const B = `${BASE}/en/tools`;
 const browser = await chromium.launch();
 const ctx = await browser.newContext({ permissions: ['clipboard-read', 'clipboard-write'] });
 const page = await ctx.newPage();

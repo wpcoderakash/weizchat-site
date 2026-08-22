@@ -1,33 +1,32 @@
-import { useTranslations } from 'next-intl';
+import type { CmsSection } from '../../cms/schema';
 
-const QUESTIONS = ['waba', 'charges', 'keepNumber', 'data', 'aiSafety'] as const;
+type Faq = Extract<CmsSection, { id: 'faq' }>;
 
 /**
- * §5.12 — FAQ with FAQPage JSON-LD. The four Meta-relevant questions are
- * mandated by the brief; the fifth answers the objection we hear most.
+ * §5.12 — FAQ with FAQPage JSON-LD. The structured data is generated from
+ * the same array the page renders, so an editor adding a question adds it
+ * to both and the two can never disagree.
  */
-export function Faq() {
-  const t = useTranslations('home.faq');
-
+export function Faq({ data }: { data: Faq }) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: QUESTIONS.map((key) => ({
+    mainEntity: data.items.map((item) => ({
       '@type': 'Question',
-      name: t(`${key}.q`),
-      acceptedAnswer: { '@type': 'Answer', text: t(`${key}.a`) },
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
     })),
   };
 
   return (
     <section className="border-y border-border bg-surface">
       <div className="mx-auto max-w-3xl px-6 py-16 lg:py-20">
-        <h2 className="text-3xl sm:text-4xl">{t('title')}</h2>
+        <h2 className="text-3xl sm:text-4xl">{data.title}</h2>
         <dl className="mt-10 divide-y divide-border">
-          {QUESTIONS.map((key) => (
-            <div key={key} className="py-5">
-              <dt className="text-lg font-semibold">{t(`${key}.q`)}</dt>
-              <dd className="mt-2 text-muted">{t(`${key}.a`)}</dd>
+          {data.items.map((item) => (
+            <div key={item.id} className="py-5">
+              <dt className="text-lg font-semibold">{item.q}</dt>
+              <dd className="mt-2 text-muted">{item.a}</dd>
             </div>
           ))}
         </dl>

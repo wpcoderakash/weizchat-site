@@ -9,6 +9,9 @@
 import { createRequire } from 'node:module';
 const require = createRequire('/Users/akashbiswas/Desktop/whatsapp sass Project/package.json');
 const { chromium } = require('@playwright/test');
+
+/** Override with BASE when the built server is on another port. */
+const BASE = process.env.BASE ?? 'http://localhost:4100';
 const b = await chromium.launch();
 let fails = 0;
 const check = (n, c, e = '') => { console.log(`${c ? 'PASS' : 'FAIL'}  ${n}${e ? ' — ' + e : ''}`); if (!c) fails++; };
@@ -21,7 +24,7 @@ for (const [path, expect, label] of [
   ['/en/blog', 2, 'en blog lists 2'],
 ]) {
   const ctx = await b.newContext(); const p = await ctx.newPage();
-  await p.goto(`http://localhost:4100${path}`, { waitUntil: 'domcontentloaded' });
+  await p.goto(`${BASE}${path}`, { waitUntil: 'domcontentloaded' });
   const n = await p.locator('main li').count();
   check(label, n === expect, `${n}`);
   await ctx.close();
@@ -29,7 +32,7 @@ for (const [path, expect, label] of [
 
 // an article renders: h1, date, reading time, JSON-LD, markdown table
 const ctx = await b.newContext(); const p = await ctx.newPage();
-await p.goto('http://localhost:4100/en/information-center/template-message-rules', { waitUntil: 'domcontentloaded' });
+await p.goto(`${BASE}/en/information-center/template-message-rules`, { waitUntil: 'domcontentloaded' });
 check('article h1', (await p.locator('main h1').innerText()).includes('template messages'));
 check('article has reading time', /min read/.test(await p.locator('main').textContent()));
 const ld = JSON.parse(await p.locator('script[type="application/ld+json"]').first().textContent());
@@ -43,14 +46,14 @@ await ctx.close();
 
 // Hebrew article is RTL and in Hebrew
 const c2 = await b.newContext(); const p2 = await c2.newPage();
-await p2.goto('http://localhost:4100/information-center/opt-in-requirements', { waitUntil: 'domcontentloaded' });
+await p2.goto(`${BASE}/information-center/opt-in-requirements`, { waitUntil: 'domcontentloaded' });
 check('he article dir=rtl', (await p2.locator('html').getAttribute('dir')) === 'rtl');
 check('he article is Hebrew', /הסכמה/.test(await p2.locator('main h1').innerText()));
 await c2.close();
 
 // unknown slug must 404, not render blank
 const c3 = await b.newContext(); const p3 = await c3.newPage();
-const r = await p3.goto('http://localhost:4100/en/blog/does-not-exist', { waitUntil: 'domcontentloaded' });
+const r = await p3.goto(`${BASE}/en/blog/does-not-exist`, { waitUntil: 'domcontentloaded' });
 check('unknown slug 404s', r.status() === 404, String(r.status()));
 await c3.close();
 

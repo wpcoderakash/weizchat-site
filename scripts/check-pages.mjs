@@ -63,13 +63,11 @@ const ALLOWED_PLACEHOLDERS = new Set([
 const NAMESPACES = [
   'nav',
   'footer',
-  'trust',
   'solutions',
   'pricing',
   'contact',
   'legal',
   'cookies',
-  'home',
   'tools',
   'articles',
 ];

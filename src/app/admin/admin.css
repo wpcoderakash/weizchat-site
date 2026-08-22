@@ -1,0 +1,318 @@
+/*
+ * The CMS admin's own styling.
+ *
+ * Deliberately separate from the public site's Tailwind theme: this is a
+ * tool, not a page. It is dense, always light, always LTR — an editor
+ * managing Hebrew content still wants the chrome to sit still — and it
+ * borrows only the brand accent so it feels like the same product.
+ */
+.cms {
+  --cms-bg: #f6f7f9;
+  --cms-surface: #ffffff;
+  --cms-sunken: #f1f0f6;
+  --cms-fg: #14121f;
+  --cms-muted: #5c6878;
+  --cms-line: #e2e0ea;
+  --cms-accent: #5936e4;
+  --cms-ok: #1b6e3c;
+  --cms-danger: #9c1f3d;
+
+  direction: ltr;
+  min-height: 100dvh;
+  background: var(--cms-bg);
+  color: var(--cms-fg);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+}
+
+.cms * {
+  box-sizing: border-box;
+}
+
+.cms-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.85rem 1.25rem;
+  background: var(--cms-surface);
+  border-bottom: 1px solid var(--cms-line);
+}
+
+.cms-bar h1 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.cms-spacer {
+  margin-inline-start: auto;
+}
+
+.cms-wrap {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cms-card {
+  background: var(--cms-surface);
+  border: 1px solid var(--cms-line);
+  border-radius: 10px;
+}
+
+.cms-sec-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 0.9rem;
+}
+
+.cms-sec-head button.cms-title {
+  flex: 1;
+  text-align: start;
+  background: none;
+  border: none;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  color: inherit;
+}
+
+.cms-sec-id {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  color: var(--cms-muted);
+  background: var(--cms-sunken);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+.cms-body {
+  border-top: 1px solid var(--cms-line);
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.cms-field label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--cms-muted);
+  margin-bottom: 0.25rem;
+}
+
+.cms-field input[type='text'],
+.cms-field input[type='password'],
+.cms-field textarea,
+.cms-field select {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--cms-line);
+  border-radius: 7px;
+  font: inherit;
+  background: var(--cms-surface);
+  color: var(--cms-fg);
+}
+
+.cms-field textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.cms-field input:focus-visible,
+.cms-field textarea:focus-visible,
+.cms-field select:focus-visible {
+  outline: 2px solid var(--cms-accent);
+  outline-offset: 1px;
+  border-color: var(--cms-accent);
+}
+
+.cms-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+}
+
+.cms-item {
+  border: 1px solid var(--cms-line);
+  border-radius: 8px;
+  padding: 0.7rem;
+  background: var(--cms-sunken);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.cms-item-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.cms-item-bar .cms-sec-id {
+  margin-inline-end: auto;
+}
+
+.cms-btn {
+  border: 1px solid var(--cms-line);
+  background: var(--cms-surface);
+  color: var(--cms-fg);
+  border-radius: 7px;
+  padding: 0.4rem 0.7rem;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.cms-btn:hover:not(:disabled) {
+  border-color: var(--cms-accent);
+  color: var(--cms-accent);
+}
+
+.cms-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.cms-btn-primary {
+  background: var(--cms-accent);
+  border-color: var(--cms-accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.cms-btn-primary:hover:not(:disabled) {
+  color: #fff;
+  filter: brightness(1.08);
+}
+
+.cms-btn-danger {
+  color: var(--cms-danger);
+}
+
+.cms-btn-icon {
+  padding: 0.25rem 0.45rem;
+  line-height: 1;
+}
+
+.cms-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--cms-muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.cms-note {
+  font-size: 0.8rem;
+  color: var(--cms-muted);
+  margin: 0;
+}
+
+.cms-status {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.cms-status-ok {
+  color: var(--cms-ok);
+}
+
+.cms-status-err {
+  color: var(--cms-danger);
+}
+
+.cms-hidden-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--cms-danger);
+  background: #fbe9ee;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+.cms-login {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: 1.5rem;
+}
+
+.cms-login form {
+  width: min(22rem, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.cms-media {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  gap: 0.6rem;
+  max-height: 18rem;
+  overflow-y: auto;
+  padding: 0.4rem;
+  border: 1px solid var(--cms-line);
+  border-radius: 8px;
+  background: var(--cms-sunken);
+}
+
+.cms-media button {
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background: var(--cms-surface);
+  padding: 0.25rem;
+  cursor: pointer;
+}
+
+.cms-media button[aria-pressed='true'] {
+  border-color: var(--cms-accent);
+}
+
+.cms-media img {
+  width: 100%;
+  height: 4.5rem;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+.cms-media span {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--cms-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 0.2rem;
+}
+
+/* Preview: the public page inside the admin's chrome. */
+.cms-preview-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 0.5rem 1rem;
+  background: var(--cms-accent);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.cms-preview-frame {
+  background: var(--bg, #f6f7f9);
+  color: var(--fg, #0f172a);
+}

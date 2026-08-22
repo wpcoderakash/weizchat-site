@@ -1,22 +1,35 @@
-import { useLocale, useTranslations } from 'next-intl';
-import { Link } from '../../i18n/navigation';
+import { useLocale } from 'next-intl';
+import type { CmsSection } from '../../cms/schema';
 import { pricingTiers } from '../../content/pricing';
+import { CmsCta } from './cms-link';
+
+type Pricing = Extract<CmsSection, { id: 'pricing' }>;
 
 /**
- * §5.11 — pricing preview. Tier names and quotas come from the same source
- * as /pricing (content/pricing.ts + the `pricing` namespace), so the two
- * pages cannot drift. Prices are SECTION-10 placeholders; the
- * Meta-charges-separately note is mandatory and real.
+ * §5.11 — pricing preview.
+ *
+ * The tier names and quotas stay in content/pricing.ts on purpose: they
+ * mirror the product's code-owned plan matrix, and letting an editor type
+ * a different quota here is how a marketing page starts lying about the
+ * product. Only the wrapper copy is CMS-managed.
  */
-export function PricingPreview() {
-  const t = useTranslations('home.pricing');
-  const tp = useTranslations('pricing');
+export function PricingPreview({
+  data,
+  tierNames,
+  unmetered,
+  quotaLabels,
+}: {
+  data: Pricing;
+  tierNames: Record<string, string>;
+  unmetered: string;
+  quotaLabels: { campaigns: string; ai: string };
+}) {
   const locale = useLocale();
   const nf = new Intl.NumberFormat(locale === 'he' ? 'he-IL' : 'en-US');
 
   return (
     <section className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
-      <h2 className="text-3xl sm:text-4xl">{t('title')}</h2>
+      <h2 className="text-3xl sm:text-4xl">{data.title}</h2>
       <div className="mt-10 grid gap-6 md:grid-cols-3">
         {pricingTiers.map((tier) => (
           <div
@@ -25,33 +38,28 @@ export function PricingPreview() {
               tier.featured ? 'border-accent shadow-md' : 'border-border'
             }`}
           >
-            <h3 className="font-semibold">{tp(`tier.${tier.key}.name`)}</h3>
+            <h3 className="font-semibold">{tierNames[tier.key]}</h3>
             <p className="mt-3 font-mono text-3xl font-semibold">
               {tier.monthlyPrice}
-              <span className="text-sm font-normal text-muted"> / {t('perMonth')}</span>
+              <span className="text-sm font-normal text-muted"> / {data.perMonth}</span>
             </p>
             <p className="mt-3 text-sm text-muted">
               {tier.campaignMessagesPerMonth === null
-                ? tp('unmetered')
+                ? unmetered
                 : nf.format(tier.campaignMessagesPerMonth)}{' '}
-              · {tp('campaignQuota')}
+              · {quotaLabels.campaigns}
             </p>
             <p className="mt-1 text-sm text-muted">
-              {tier.aiRepliesPerMonth === null
-                ? tp('unmetered')
-                : nf.format(tier.aiRepliesPerMonth)}{' '}
-              · {tp('aiQuota')}
+              {tier.aiRepliesPerMonth === null ? unmetered : nf.format(tier.aiRepliesPerMonth)} ·{' '}
+              {quotaLabels.ai}
             </p>
           </div>
         ))}
       </div>
-      <p className="mt-6 max-w-2xl text-sm text-muted">{t('metaNote')}</p>
-      <Link
-        href="/pricing"
-        className="mt-4 inline-block font-semibold text-accent hover:text-accent-hover"
-      >
-        {t('cta')}
-      </Link>
+      <p className="mt-6 max-w-2xl text-sm text-muted">{data.metaNote}</p>
+      <div className="mt-4">
+        <CmsCta link={data.cta} className="inline-block font-semibold text-accent hover:text-accent-hover" />
+      </div>
     </section>
   );
 }
