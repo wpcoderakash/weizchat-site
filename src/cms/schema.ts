@@ -217,7 +217,10 @@ export const seoSchema = z.object({
   ogDescription: z.string().optional(),
   ogImage: imageSchema.optional(),
   canonical: z.string().optional(),
+  /** Keeps a page out of search indexes without unpublishing it. */
+  noindex: z.boolean().optional(),
 });
+export type CmsSeo = z.infer<typeof seoSchema>;
 
 export const landingPageSchema = z.object({
   slug: z.literal('home'),

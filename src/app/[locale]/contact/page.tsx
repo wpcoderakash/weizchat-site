@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
 import { site } from '../../../config/site';
+import { getGlobal, getPageDoc } from '../../../cms/load';
+import type { ContactDoc } from '../../../cms/site-schema';
 import { ContactForm } from '../../../components/contact/contact-form';
-import { alternatesFor, openGraphLocale } from '../../../lib/seo';
+import { metaFromSeo } from '../../../lib/seo';
 
 /**
  * /contact (brief §0.5.1): the legal identity block Meta's reviewers look
@@ -16,54 +18,45 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'contact' });
-  return {
-    title: t('metaTitle'),
-    description: t('metaDescription'),
-    alternates: alternatesFor('/contact'),
-    openGraph: {
-      title: t('metaTitle'),
-      description: t('metaDescription'),
-      ...openGraphLocale(locale),
-    },
-  };
+  const doc = await getPageDoc<ContactDoc>('contact', locale);
+  return metaFromSeo(doc.seo, '/contact', locale);
 }
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations({ locale, namespace: 'contact' });
+  const [doc, g] = await Promise.all([getPageDoc<ContactDoc>('contact', locale), getGlobal(locale)]);
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: site.legal.companyName,
-    legalName: site.legal.companyName,
+    name: g.site.legalName,
+    legalName: g.site.legalName,
     url: site.url,
-    email: site.supportEmail,
-    telephone: site.legal.phone,
-    address: { '@type': 'PostalAddress', streetAddress: site.legal.address },
-    identifier: site.legal.companyId,
+    email: g.site.supportEmail,
+    telephone: g.site.phone,
+    address: { '@type': 'PostalAddress', streetAddress: g.site.address },
+    identifier: g.site.companyId,
   };
 
   const rows: [string, React.ReactNode][] = [
-    [t('details.legalName'), site.legal.companyName],
-    [t('details.companyId'), site.legal.companyId],
-    [t('details.address'), site.legal.address],
+    [doc.details.legalName, g.site.legalName],
+    [doc.details.companyId, g.site.companyId],
+    [doc.details.address, g.site.address],
     [
-      t('details.phone'),
+      doc.details.phone,
       <span key="phone" dir="ltr">
-        {site.legal.phone}
+        {g.site.phone}
       </span>,
     ],
     [
-      t('details.email'),
+      doc.details.email,
       <a
         key="email"
-        href={`mailto:${site.supportEmail}`}
+        href={`mailto:${g.site.supportEmail}`}
         className="text-accent hover:text-accent-hover"
       >
-        {site.supportEmail}
+        {g.site.supportEmail}
       </a>,
     ],
   ];
@@ -72,22 +65,22 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
     <main>
       <section className="border-b border-border bg-surface">
         <div className="mx-auto max-w-6xl px-6 py-14 lg:py-16">
-          <h1 className="text-4xl sm:text-5xl">{t('title')}</h1>
-          <p className="mt-5 max-w-2xl text-lg text-muted">{t('sub')}</p>
+          <h1 className="text-4xl sm:text-5xl">{doc.title}</h1>
+          <p className="mt-5 max-w-2xl text-lg text-muted">{doc.sub}</p>
         </div>
       </section>
 
       <section className="mx-auto grid max-w-6xl gap-10 px-6 py-14 lg:grid-cols-[1.15fr_1fr]">
         <div>
-          <h2 className="text-2xl">{t('formTitle')}</h2>
-          <p className="mt-2 text-muted">{t('formSub')}</p>
+          <h2 className="text-2xl">{doc.formTitle}</h2>
+          <p className="mt-2 text-muted">{doc.formSub}</p>
           <div className="mt-6">
-            <ContactForm />
+            <ContactForm email={g.site.supportEmail} strings={doc.form} />
           </div>
         </div>
 
         <div>
-          <h2 className="text-2xl">{t('detailsTitle')}</h2>
+          <h2 className="text-2xl">{doc.detailsTitle}</h2>
           <dl className="mt-6 divide-y divide-border rounded-card border border-border bg-surface">
             {rows.map(([label, value], i) => (
               <div key={i} className="flex flex-wrap items-baseline gap-x-4 gap-y-1 px-5 py-4">
@@ -97,12 +90,12 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             ))}
           </dl>
           <div className="mt-6 rounded-card border border-border bg-surface p-5">
-            <h3 className="font-semibold">{t('supportTitle')}</h3>
-            <p className="mt-2 text-sm text-muted">{t('supportBody')}</p>
+            <h3 className="font-semibold">{doc.supportTitle}</h3>
+            <p className="mt-2 text-sm text-muted">{doc.supportBody}</p>
           </div>
           <div className="mt-4 rounded-card border border-border bg-surface p-5">
-            <h3 className="font-semibold">{t('privacyTitle')}</h3>
-            <p className="mt-2 text-sm text-muted">{t('privacyBody')}</p>
+            <h3 className="font-semibold">{doc.privacyTitle}</h3>
+            <p className="mt-2 text-sm text-muted">{doc.privacyBody}</p>
           </div>
         </div>
       </section>

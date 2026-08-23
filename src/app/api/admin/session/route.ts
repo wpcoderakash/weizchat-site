@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { CMS_COOKIE, adminConfigured, checkCredentials, sessionCookie } from '../../../../cms/auth';
+import { CMS_COOKIE, adminConfigured, checkCredentials, sessionCookieFor } from '../../../../cms/auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -16,10 +16,11 @@ export async function POST(req: Request): Promise<NextResponse> {
   // One shape for every failure: a wrong username and a wrong password
   // must not be distinguishable, or the form tells an attacker which
   // usernames are real.
-  if (!body.success || !checkCredentials(body.data.username, body.data.password)) {
+  const user = body.success ? checkCredentials(body.data.username, body.data.password) : null;
+  if (!user) {
     return NextResponse.json({ error: 'invalid' }, { status: 401 });
   }
-  const { name, value } = sessionCookie();
+  const { name, value } = sessionCookieFor(user);
   const res = NextResponse.json({ ok: true });
   res.cookies.set(name, value, {
     httpOnly: true,

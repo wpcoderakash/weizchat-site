@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { NextResponse } from 'next/server';
-import { isSignedIn } from '../../../../cms/auth';
+import { hasRole, isSignedIn } from '../../../../cms/auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -19,7 +19,13 @@ export const dynamic = 'force-dynamic';
  *    number rather than the client-supplied MIME or the extension;
  *  - a generated filename, so a caller cannot choose a path.
  */
-const MEDIA_DIR = path.join(process.cwd(), 'public', 'media');
+/*
+ * Uploads live in content-store/media, NOT public/: `next start` snapshots
+ * the public directory at build time, so a file uploaded at runtime would
+ * 404 in production — which is exactly what happened when the automated
+ * check first ran. /media/<name> is served by a route handler instead.
+ */
+const MEDIA_DIR = path.join(process.cwd(), 'content-store', 'media');
 const MAX_BYTES = 8 * 1024 * 1024;
 
 /** Magic numbers, so a .png that is really something else is refused. */
@@ -78,4 +84,20 @@ export async function POST(req: Request): Promise<NextResponse> {
   const name = `${randomUUID()}.${match.ext}`;
   fs.writeFileSync(path.join(MEDIA_DIR, name), bytes);
   return NextResponse.json({ file: { src: `/media/${name}`, name, bytes: bytes.length } }, { status: 201 });
+}
+
+export async function DELETE(req: Request): Promise<NextResponse> {
+  if (!(await hasRole('editor'))) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  const url = new URL(req.url);
+  const name = url.searchParams.get('name') ?? '';
+  // Uploads only, addressed by bare filename: the shipped product
+  // screenshots under /product are content the repo owns, and a path with
+  // separators in it is someone probing.
+  if (!/^[a-z0-9-]+\.(png|jpe?g|gif|webp)$/i.test(name)) {
+    return NextResponse.json({ error: 'invalid_name' }, { status: 400 });
+  }
+  const file = path.join(MEDIA_DIR, name);
+  if (!fs.existsSync(file)) return NextResponse.json({ error: 'not_found' }, { status: 404 });
+  fs.unlinkSync(file);
+  return NextResponse.json({ ok: true });
 }

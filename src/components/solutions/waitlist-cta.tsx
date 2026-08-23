@@ -1,26 +1,34 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { site } from '../../config/site';
+
+export interface WaitlistStrings {
+  title: string;
+  body: string;
+  cta: string;
+  note: string;
+  subject: string;
+  emailLabel: string;
+  /** Template with an {email} placeholder. */
+  emailBody: string;
+}
 
 /**
- * The campaigns waitlist (brief §4). The marketing site has no backend, so
- * the honest mechanism is a prefilled email — the button says so. No data
- * is stored here.
+ * The campaigns waitlist (brief §4). The marketing site has no form
+ * backend, so the honest mechanism is a prefilled email — and the note
+ * under the button says exactly that. Nothing typed here is stored.
  */
-export function WaitlistCta() {
-  const t = useTranslations('solutions.common');
-  const [email, setEmail] = useState('');
+export function WaitlistCta({ email, strings: s }: { email: string; strings: WaitlistStrings }) {
+  const [value, setValue] = useState('');
 
-  const href = `mailto:${site.supportEmail}?subject=${encodeURIComponent(
-    t('waitlistSubject'),
-  )}&body=${encodeURIComponent(t('waitlistEmailBody', { email: email || '—' }))}`;
+  const href = `mailto:${email}?subject=${encodeURIComponent(s.subject)}&body=${encodeURIComponent(
+    s.emailBody.replace('{email}', value || '—'),
+  )}`;
 
   return (
     <div className="rounded-card border border-border bg-surface p-6">
-      <h2 className="text-xl font-semibold">{t('waitlistTitle')}</h2>
-      <p className="mt-2 text-muted">{t('waitlistBody')}</p>
+      <h2 className="text-xl font-semibold">{s.title}</h2>
+      <p className="mt-2 text-muted">{s.body}</p>
       <form
         className="mt-4 flex flex-wrap items-center gap-3"
         onSubmit={(event) => {
@@ -29,25 +37,25 @@ export function WaitlistCta() {
         }}
       >
         <label className="sr-only" htmlFor="waitlist-email">
-          {t('waitlistEmailLabel')}
+          {s.emailLabel}
         </label>
         <input
           id="waitlist-email"
           type="email"
           required
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          placeholder={t('waitlistEmailLabel')}
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          placeholder={s.emailLabel}
           className="w-full max-w-xs rounded-full border border-border-strong bg-bg px-4 py-2.5 focus:border-accent"
         />
         <button
           type="submit"
           className="rounded-full bg-accent px-5 py-2.5 font-semibold text-accent-fg hover:bg-accent-hover"
         >
-          {t('waitlistCta')}
+          {s.cta}
         </button>
       </form>
-      <p className="mt-3 text-sm text-muted">{t('waitlistNote')}</p>
+      <p className="mt-3 text-sm text-muted">{s.note}</p>
     </div>
   );
 }

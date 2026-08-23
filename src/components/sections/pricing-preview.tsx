@@ -39,7 +39,7 @@ export function PricingPreview({
             }`}
           >
             <h3 className="font-semibold">{tierNames[tier.key]}</h3>
-            <p className="mt-3 font-mono text-3xl font-semibold">
+            <p className="mt-3 break-all font-mono text-3xl font-semibold">
               {tier.monthlyPrice}
               <span className="text-sm font-normal text-muted"> / {data.perMonth}</span>
             </p>

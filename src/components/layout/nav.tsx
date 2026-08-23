@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '../../i18n/navigation';
-import { site } from '../../config/site';
+import type { GlobalDoc } from '../../cms/site-schema';
 import { resourceRoutes, solutionRoutes, toolRoutes } from '../../config/routes';
 import { WeizMark } from '../weiz-mark';
 import { LocaleSwitcher } from './locale-switcher';
@@ -31,7 +31,7 @@ function Chevron({ open }: { open: boolean }) {
   );
 }
 
-export function Nav() {
+export function Nav({ g }: { g: GlobalDoc }) {
   const t = useTranslations('nav');
   const pathname = usePathname();
   const [openMenu, setOpenMenu] = useState<MenuId>(null);
@@ -65,11 +65,15 @@ export function Nav() {
     };
   }, []);
 
+  const solutionLabel = (key: string) => g.solutionLabels[key as keyof typeof g.solutionLabels];
+  const toolLabel = (key: string) => g.toolLabels[key as keyof typeof g.toolLabels];
+  const resourceLabel = (key: string) => g.resourceLabels[key as keyof typeof g.resourceLabels];
+
   const dropdown = (
     id: Exclude<MenuId, null>,
     label: string,
     items: readonly { href: string; key: string; comingSoon?: boolean }[],
-    labelNs: string,
+    labelOf: (key: string) => string,
   ) => (
     <div className="relative">
       <button
@@ -94,10 +98,10 @@ export function Nav() {
               href={item.href}
               className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-fg hover:bg-accent-soft/60"
             >
-              {t(`${labelNs}.${item.key}`)}
+              {labelOf(item.key)}
               {'comingSoon' in item && item.comingSoon ? (
                 <span className="rounded-full bg-accent-soft px-2 py-0.5 text-xs font-semibold text-accent">
-                  {t('comingSoon')}
+                  {g.nav.comingSoon}
                 </span>
               ) : null}
             </Link>
@@ -115,43 +119,43 @@ export function Nav() {
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-2 px-6">
         <Link href="/" className="flex items-center gap-2.5 font-semibold text-fg">
           <WeizMark size={26} />
-          <span className="text-lg">{site.name}</span>
+          <span className="text-lg">WeizChat</span>
         </Link>
 
         {/* Desktop */}
         <nav aria-label={t('primary')} className="ms-6 hidden items-center gap-1 lg:flex">
-          {dropdown('solutions', t('solutions'), solutionRoutes, 'solution')}
-          {dropdown('tools', t('tools'), toolRoutes, 'tool')}
+          {dropdown('solutions', g.nav.solutions, solutionRoutes, solutionLabel)}
+          {dropdown('tools', g.nav.tools, toolRoutes, toolLabel)}
           {resourceRoutes.map((r) => (
             <Link
               key={r.href}
               href={r.href}
               className="rounded-full px-3 py-1.5 text-sm font-medium text-fg hover:bg-accent-soft/60"
             >
-              {t(`resource.${r.key}`)}
+              {resourceLabel(r.key)}
             </Link>
           ))}
           <Link
             href="/pricing"
             className="rounded-full px-3 py-1.5 text-sm font-medium text-fg hover:bg-accent-soft/60"
           >
-            {t('pricing')}
+            {g.nav.pricing}
           </Link>
         </nav>
 
         <div className="ms-auto hidden items-center gap-3 lg:flex">
           <LocaleSwitcher />
           <a
-            href={`${site.appUrl}/login`}
+            href={`${g.site.appUrl}/login`}
             className="rounded-full border border-border-strong px-4 py-1.5 text-sm font-semibold text-fg hover:border-accent hover:text-accent"
           >
-            {t('login')}
+            {g.nav.login}
           </a>
           <a
-            href={`${site.appUrl}/login`}
+            href={`${g.site.appUrl}/login`}
             className="rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-accent-fg hover:bg-accent-hover"
           >
-            {t('startTrial')}
+            {g.nav.startTrial}
           </a>
         </div>
 
@@ -180,48 +184,48 @@ export function Nav() {
           className="border-t border-border bg-surface px-6 py-4 lg:hidden"
         >
           <p className="pb-1 text-xs font-semibold uppercase tracking-wide text-muted">
-            {t('solutions')}
+            {g.nav.solutions}
           </p>
           {solutionRoutes.map((r) => (
             <Link key={r.href} href={r.href} className="flex items-center gap-2 py-1.5 text-fg">
-              {t(`solution.${r.key}`)}
+              {solutionLabel(r.key)}
               {'comingSoon' in r && r.comingSoon ? (
                 <span className="rounded-full bg-accent-soft px-2 py-0.5 text-xs font-semibold text-accent">
-                  {t('comingSoon')}
+                  {g.nav.comingSoon}
                 </span>
               ) : null}
             </Link>
           ))}
           <p className="pb-1 pt-3 text-xs font-semibold uppercase tracking-wide text-muted">
-            {t('tools')}
+            {g.nav.tools}
           </p>
           {toolRoutes.map((r) => (
             <Link key={r.href} href={r.href} className="block py-1.5 text-fg">
-              {t(`tool.${r.key}`)}
+              {toolLabel(r.key)}
             </Link>
           ))}
           <div className="flex flex-col gap-2 pt-3">
             {resourceRoutes.map((r) => (
               <Link key={r.href} href={r.href} className="text-fg">
-                {t(`resource.${r.key}`)}
+                {resourceLabel(r.key)}
               </Link>
             ))}
             <Link href="/pricing" className="text-fg">
-              {t('pricing')}
+              {g.nav.pricing}
             </Link>
           </div>
           <div className="flex items-center gap-3 pt-4">
             <a
-              href={`${site.appUrl}/login`}
+              href={`${g.site.appUrl}/login`}
               className="rounded-full border border-border-strong px-4 py-1.5 text-sm font-semibold"
             >
-              {t('login')}
+              {g.nav.login}
             </a>
             <a
-              href={`${site.appUrl}/login`}
+              href={`${g.site.appUrl}/login`}
               className="rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-accent-fg"
             >
-              {t('startTrial')}
+              {g.nav.startTrial}
             </a>
           </div>
           <div className="pt-4">

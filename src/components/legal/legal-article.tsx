@@ -1,15 +1,20 @@
-import type { ComponentType } from 'react';
 import type { Metadata } from 'next';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import remarkGfm from 'remark-gfm';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { alternatesFor, openGraphLocale } from '../../lib/seo';
+import { getPageDoc } from '../../cms/load';
+import type { LegalDoc } from '../../cms/site-schema';
+import { metaFromSeo } from '../../lib/seo';
 
 /**
- * Legal pages (brief §0.5): permanent paths, per-locale MDX content a
- * lawyer can edit directly, and — until that review happens — a visible
- * notice on every page. Removing the notice is a one-line change made
- * only after counsel signs off.
+ * Legal pages (brief §0.5): permanent paths, and a body that is one
+ * markdown document a lawyer edits whole — now through the CMS, with the
+ * shipped MDX files as the built-in fallback.
+ *
+ * The lawyer-review notice stays in CODE, not in the document: it must be
+ * impossible to delete from the editor until counsel actually signs off,
+ * at which point removing it is a deliberate one-line change here.
  */
-
 export type LegalSlug =
   | 'privacy-policy'
   | 'terms'
@@ -18,58 +23,27 @@ export type LegalSlug =
   | 'data-deletion'
   | 'security';
 
-/** Explicit module map — no bundler path magic, every file accounted for. */
-const CONTENT: Record<LegalSlug, Record<string, () => Promise<{ default: ComponentType }>>> = {
-  'privacy-policy': {
-    he: () => import('../../content/legal/privacy-policy.he.mdx'),
-    en: () => import('../../content/legal/privacy-policy.en.mdx'),
-  },
-  terms: {
-    he: () => import('../../content/legal/terms.he.mdx'),
-    en: () => import('../../content/legal/terms.en.mdx'),
-  },
-  dpa: {
-    he: () => import('../../content/legal/dpa.he.mdx'),
-    en: () => import('../../content/legal/dpa.en.mdx'),
-  },
-  accessibility: {
-    he: () => import('../../content/legal/accessibility.he.mdx'),
-    en: () => import('../../content/legal/accessibility.en.mdx'),
-  },
-  'data-deletion': {
-    he: () => import('../../content/legal/data-deletion.he.mdx'),
-    en: () => import('../../content/legal/data-deletion.en.mdx'),
-  },
-  security: {
-    he: () => import('../../content/legal/security.he.mdx'),
-    en: () => import('../../content/legal/security.en.mdx'),
-  },
-};
-
-/** The draft date of the current text, shown as "last updated". */
+/** The draft date of the current built-in text, shown as "last updated". */
 const UPDATED = '2026-08-20';
 
-export function makeLegalPage(slug: LegalSlug, titleKey: string) {
+export function makeLegalPage(slug: LegalSlug, _titleKey: string) {
+  void _titleKey;
+
   async function generateMetadata({
     params,
   }: {
     params: Promise<{ locale: string }>;
   }): Promise<Metadata> {
     const { locale } = await params;
-    const t = await getTranslations({ locale, namespace: 'footer.legal' });
-    return {
-      title: t(titleKey),
-      alternates: alternatesFor(`/${slug}`),
-      openGraph: { title: t(titleKey), ...openGraphLocale(locale) },
-    };
+    const doc = await getPageDoc<LegalDoc>(slug, locale);
+    return metaFromSeo(doc.seo, `/${slug}`, locale);
   }
 
   async function Page({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     setRequestLocale(locale);
+    const doc = await getPageDoc<LegalDoc>(slug, locale);
     const t = await getTranslations({ locale, namespace: 'legal' });
-    const load = CONTENT[slug][locale] ?? CONTENT[slug]['he'];
-    const { default: Content } = await load();
 
     return (
       <main className="mx-auto max-w-3xl px-6 py-14">
@@ -81,7 +55,10 @@ export function makeLegalPage(slug: LegalSlug, titleKey: string) {
           {t('lawyerNotice')}
         </div>
         <article className="legal-prose">
-          <Content />
+          <MDXRemote
+            source={doc.body}
+            options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+          />
         </article>
         <p className="mt-10 border-t border-border pt-4 text-sm text-muted">
           {t('updated')}: {UPDATED}

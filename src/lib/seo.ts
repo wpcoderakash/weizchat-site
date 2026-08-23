@@ -31,3 +31,24 @@ export function openGraphLocale(locale: string) {
       .map(([, value]) => value),
   };
 }
+
+import type { CmsSeo } from '../cms/schema';
+
+/** Metadata from a document's SEO block — one implementation for every page. */
+export function metaFromSeo(seo: CmsSeo, path: string, locale: string): Metadata {
+  return {
+    title: seo.title,
+    description: seo.description,
+    alternates: {
+      ...alternatesFor(path),
+      ...(seo.canonical ? { canonical: seo.canonical } : {}),
+    },
+    openGraph: {
+      title: seo.ogTitle ?? seo.title,
+      description: seo.ogDescription ?? seo.description,
+      ...(seo.ogImage ? { images: [{ url: seo.ogImage.src, alt: seo.ogImage.alt }] } : {}),
+      ...openGraphLocale(locale),
+    },
+    ...(seo.noindex ? { robots: { index: false, follow: false } } : {}),
+  };
+}

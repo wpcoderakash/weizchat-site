@@ -36,7 +36,7 @@ export function makeArticleIndex(collection: Collection, nsKey: string) {
     setRequestLocale(locale);
     const t = await getTranslations({ locale, namespace: ns });
     const tc = await getTranslations({ locale, namespace: 'articles.common' });
-    const articles = listArticles(collection, locale);
+    const articles = await listArticles(collection, locale);
     const df = new Intl.DateTimeFormat(locale === 'he' ? 'he-IL' : 'en-GB', {
       day: 'numeric',
       month: 'long',

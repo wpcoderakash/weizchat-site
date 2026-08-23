@@ -43,9 +43,6 @@ next-env.d.ts
 # Local CMS admin password
 .env.local
 
-# CMS uploads
-public/media/*
-!public/media/.gitkeep
 
 # CMS content store
 content-store/

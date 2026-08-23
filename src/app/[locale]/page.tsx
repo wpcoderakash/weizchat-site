@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
-import { getLandingPage } from '../../cms/store';
+import { getPageDoc } from '../../cms/load';
 import type { CmsSection, LandingPage } from '../../cms/schema';
 import { Hero } from '../../components/sections/hero';
 import { TrustStrip } from '../../components/sections/trust-strip';
@@ -14,7 +14,7 @@ import { Testimonials } from '../../components/sections/testimonials';
 import { PricingPreview } from '../../components/sections/pricing-preview';
 import { Faq } from '../../components/sections/faq';
 import { FinalCta } from '../../components/sections/final-cta';
-import { alternatesFor, openGraphLocale } from '../../lib/seo';
+import { metaFromSeo } from '../../lib/seo';
 
 /**
  * The home page (ADR-0032).
@@ -31,21 +31,8 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const { seo } = getLandingPage(locale);
-  return {
-    title: seo.title,
-    description: seo.description,
-    alternates: {
-      ...alternatesFor('/'),
-      ...(seo.canonical ? { canonical: seo.canonical } : {}),
-    },
-    openGraph: {
-      title: seo.ogTitle ?? seo.title,
-      description: seo.ogDescription ?? seo.description,
-      ...(seo.ogImage ? { images: [{ url: seo.ogImage.src, alt: seo.ogImage.alt }] } : {}),
-      ...openGraphLocale(locale),
-    },
-  };
+  const { seo } = await getPageDoc<LandingPage>('home', locale);
+  return metaFromSeo(seo, '/', locale);
 }
 
 /** Renders whichever section this is. Unknown ids are skipped, not crashed on. */
@@ -99,7 +86,7 @@ export async function LandingSections({ page, locale }: { page: LandingPage; loc
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const page = getLandingPage(locale);
+  const page = await getPageDoc<LandingPage>('home', locale);
 
   return (
     <main>

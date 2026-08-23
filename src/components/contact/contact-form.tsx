@@ -1,8 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { site } from '../../config/site';
+
+export interface ContactFormStrings {
+  name: string;
+  company: string;
+  phone: string;
+  message: string;
+  submit: string;
+  note: string;
+  emailSubject: string;
+  /** Template with {name} {company} {phone} {message} placeholders. */
+  emailBody: string;
+}
 
 /**
  * The contact form. This site has no backend, so the form composes a
@@ -10,8 +20,7 @@ import { site } from '../../config/site';
  * button says exactly that. A form that silently discarded submissions
  * would be the worst kind of fake functionality.
  */
-export function ContactForm() {
-  const t = useTranslations('contact.form');
+export function ContactForm({ email, strings: t }: { email: string; strings: ContactFormStrings }) {
   const [name, setName] = useState('');
   const [company, setCompany] = useState('');
   const [phone, setPhone] = useState('');
@@ -19,15 +28,12 @@ export function ContactForm() {
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
-    const body = t('emailBody', {
-      name: name || '—',
-      company: company || '—',
-      phone: phone || '—',
-      message: message || '—',
-    });
-    window.location.href = `mailto:${site.supportEmail}?subject=${encodeURIComponent(
-      t('emailSubject'),
-    )}&body=${encodeURIComponent(body)}`;
+    const body = t.emailBody
+      .replace('{name}', name || '—')
+      .replace('{company}', company || '—')
+      .replace('{phone}', phone || '—')
+      .replace('{message}', message || '—');
+    window.location.href = `mailto:${email}?subject=${encodeURIComponent(t.emailSubject)}&body=${encodeURIComponent(body)}`;
   }
 
   const field =
@@ -38,7 +44,7 @@ export function ContactForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="c-name" className="text-sm font-medium">
-            {t('name')}
+            {t.name}
           </label>
           <input
             id="c-name"
@@ -50,7 +56,7 @@ export function ContactForm() {
         </div>
         <div>
           <label htmlFor="c-company" className="text-sm font-medium">
-            {t('company')}
+            {t.company}
           </label>
           <input
             id="c-company"
@@ -61,7 +67,7 @@ export function ContactForm() {
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="c-phone" className="text-sm font-medium">
-            {t('phone')}
+            {t.phone}
           </label>
           <input
             id="c-phone"
@@ -75,7 +81,7 @@ export function ContactForm() {
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="c-message" className="text-sm font-medium">
-            {t('message')}
+            {t.message}
           </label>
           <textarea
             id="c-message"
@@ -91,9 +97,9 @@ export function ContactForm() {
         type="submit"
         className="mt-5 rounded-full bg-accent px-6 py-2.5 font-semibold text-accent-fg hover:bg-accent-hover"
       >
-        {t('submit')}
+        {t.submit}
       </button>
-      <p className="mt-3 text-sm text-muted">{t('note')}</p>
+      <p className="mt-3 text-sm text-muted">{t.note}</p>
     </form>
   );
 }

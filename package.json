@@ -10,8 +10,9 @@
     "check:pages": "node scripts/check-pages.mjs",
     "check:tools": "node scripts/check-tools.mjs",
     "check:articles": "node scripts/check-articles.mjs",
-    "check:all": "node scripts/check-pages.mjs && node scripts/check-tools.mjs && node scripts/check-articles.mjs && node scripts/check-a11y.mjs",
-    "check:a11y": "node scripts/check-a11y.mjs"
+    "check:all": "node scripts/check-pages.mjs && node scripts/check-tools.mjs && node scripts/check-articles.mjs && node scripts/check-a11y.mjs && node scripts/check-cms.mjs",
+    "check:a11y": "node scripts/check-a11y.mjs",
+    "check:cms": "node scripts/check-cms.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

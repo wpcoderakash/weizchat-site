@@ -5,6 +5,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { Assistant, IBM_Plex_Mono, Suez_One } from 'next/font/google';
 import { directionFor, routing } from '../../i18n/routing';
 import { site } from '../../config/site';
+import { getGlobal } from '../../cms/load';
 import { Nav } from '../../components/layout/nav';
 import { Footer } from '../../components/layout/footer';
 import { CookieConsent } from '../../components/layout/cookie-consent';
@@ -41,6 +42,7 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
+  const g = await getGlobal(locale);
 
   const fontVars = `${suez.variable} ${assistant.variable} ${plexMono.variable}`;
   const fontStyle = {
@@ -58,9 +60,9 @@ export default async function LocaleLayout({
       </head>
       <body>
         <NextIntlClientProvider>
-          <Nav />
+          <Nav g={g} />
           <div className="min-h-dvh">{children}</div>
-          <Footer />
+          <Footer g={g} />
           <CookieConsent />
         </NextIntlClientProvider>
       </body>

@@ -316,3 +316,96 @@
   background: var(--bg, #f6f7f9);
   color: var(--fg, #0f172a);
 }
+
+.cms-badge-live,
+.cms-badge-draft {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.cms-badge-live {
+  background: #e6f2ea;
+  color: var(--cms-ok);
+}
+
+.cms-badge-draft {
+  background: var(--cms-sunken);
+  color: var(--cms-muted);
+  border: 1px solid var(--cms-line);
+}
+
+.cms-markdown {
+  width: 100%;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  padding: 0.7rem;
+  border: 1px solid var(--cms-line);
+  border-radius: 7px;
+  background: var(--cms-surface);
+  color: var(--cms-fg);
+  resize: vertical;
+  direction: ltr;
+}
+
+.cms-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--cms-surface);
+  font-size: 0.9rem;
+}
+
+.cms-table th,
+.cms-table td {
+  text-align: start;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--cms-line);
+}
+
+.cms-table thead th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cms-muted);
+  background: var(--cms-sunken);
+}
+
+.cms-table a {
+  color: var(--cms-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.cms-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.75rem;
+}
+
+.cms-tiles a {
+  display: block;
+  background: var(--cms-surface);
+  border: 1px solid var(--cms-line);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cms-tiles a:hover {
+  border-color: var(--cms-accent);
+}
+
+.cms-tiles h2 {
+  margin: 0 0 0.3rem;
+  font-size: 0.95rem;
+}
+
+.cms-tiles p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--cms-muted);
+}

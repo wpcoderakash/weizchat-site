@@ -26,7 +26,7 @@ export function makeArticlePage(collection: Collection, nsKey: string) {
     params: Promise<{ locale: string; slug: string }>;
   }): Promise<Metadata> {
     const { locale, slug } = await params;
-    const article = getArticle(collection, slug, locale);
+    const article = await getArticle(collection, slug, locale);
     if (!article) return {};
     return {
       title: article.title,
@@ -49,7 +49,7 @@ export function makeArticlePage(collection: Collection, nsKey: string) {
   }) {
     const { locale, slug } = await params;
     setRequestLocale(locale);
-    const article = getArticle(collection, slug, locale);
+    const article = await getArticle(collection, slug, locale);
     if (!article) notFound();
 
     const t = await getTranslations({ locale, namespace: 'articles.common' });

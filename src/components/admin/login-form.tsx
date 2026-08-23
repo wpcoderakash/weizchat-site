@@ -29,7 +29,7 @@ export function LoginForm() {
     // server-rendered from the store, and a soft navigation would keep
     // the previous locale's document in memory.
     // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-    window.location.href = '/admin/landing/en';
+    window.location.href = '/admin';
   }
 
   return (
