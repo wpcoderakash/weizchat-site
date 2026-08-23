@@ -89,7 +89,8 @@ let failures = 0;
 
 for (const locale of ['he', 'en']) {
   for (const path of PATHS) {
-    const url = `${BASE}${locale === 'he' ? '' : '/en'}${path}`;
+    // English is unprefixed; Hebrew sits under /heb.
+    const url = `${BASE}${locale === 'he' ? '/heb' : ''}${path}`;
     const ctx = await browser.newContext();
     const page = await ctx.newPage();
     const problems = [];

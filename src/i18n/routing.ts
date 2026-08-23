@@ -1,15 +1,23 @@
 import { defineRouting } from 'next-intl/routing';
 
 /**
- * Hebrew is the primary market and the default locale (brief §3): it lives
- * at the bare path (`/`), while `/en` carries a prefix. hreflang alternates
- * are emitted per page from this single source of truth.
- * (Bengali was in the original brief; the owner dropped it — he/en only.)
+ * URL shape (owner's decision, 2026-08-23): English is the default and
+ * lives at the bare path (`/`); Hebrew sits under `/heb`.
+ *
+ * The locale CODE stays `he` — it is what `lang` and `hreflang` must carry
+ * to be valid — while the URL SEGMENT is `heb`. next-intl's `prefixes` map
+ * is exactly that distinction, so nothing downstream has to know about it.
+ *
+ * (The brief originally made Hebrew the unprefixed default, and Bengali was
+ * dropped earlier; both were owner decisions.)
  */
 export const routing = defineRouting({
   locales: ['he', 'en'],
-  defaultLocale: 'he',
-  localePrefix: 'as-needed',
+  defaultLocale: 'en',
+  localePrefix: {
+    mode: 'as-needed',
+    prefixes: { he: '/heb' },
+  },
 });
 
 export type Locale = (typeof routing.locales)[number];

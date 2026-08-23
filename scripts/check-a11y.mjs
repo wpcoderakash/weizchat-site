@@ -38,7 +38,8 @@ let total = 0;
 for (const scheme of ['light', 'dark']) {
 for (const locale of ['he', 'en']) {
   for (const path of PATHS) {
-    const url = `${BASE}${locale === 'he' ? '' : '/en'}${path}`;
+    // English is unprefixed; Hebrew sits under /heb.
+    const url = `${BASE}${locale === 'he' ? '/heb' : ''}${path}`;
     const ctx = await browser.newContext({ colorScheme: scheme });
     const page = await ctx.newPage();
     await page.goto(url, { waitUntil: 'domcontentloaded' });

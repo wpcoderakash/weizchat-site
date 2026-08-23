@@ -12,7 +12,7 @@ const { chromium } = require('@playwright/test');
 
 /** Override with BASE when the built server is on another port. */
 const BASE = process.env.BASE ?? 'http://localhost:4100';
-const B = `${BASE}/en/tools`;
+const B = `${BASE}/tools`;
 const browser = await chromium.launch();
 const ctx = await browser.newContext({ permissions: ['clipboard-read', 'clipboard-write'] });
 const page = await ctx.newPage();

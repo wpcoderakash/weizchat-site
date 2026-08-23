@@ -6,8 +6,8 @@ Meta Business Verification + Tech Provider review — the compliance rules in
 the build brief's SECTION 0 override everything else.
 
 - Next.js App Router + TypeScript strict, Tailwind v4 token layer
-- next-intl: `he` (default, RTL) · `en`, routes `/[locale]/...` (Bengali
-  was in the original brief; the owner dropped it)
+- next-intl: `en` (default, unprefixed at `/`) · `he` (RTL, under `/heb`).
+  The locale code stays `he`; `heb` is only the URL segment.
 - Brand tokens are IDENTICAL to the product's palette (accent #6D4AFF)
 - `src/config/site.ts` — site truth incl. `metaPartnerStatus: 'none'`
   (no Meta badge may render until flipped after approval)
@@ -16,7 +16,7 @@ the build brief's SECTION 0 override everything else.
 ## Run
 
     pnpm install
-    pnpm dev        # http://localhost:3000  (he at /, en at /en)
+    pnpm dev        # http://localhost:3000  (en at /, he at /heb)
 
 ## Outstanding placeholders (must be replaced before launch)
 

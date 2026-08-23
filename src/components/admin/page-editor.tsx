@@ -21,9 +21,10 @@ const SECTION_NAMES: Record<CmsSection['id'], string> = {
   finalCta: 'Final call to action',
 };
 
+/** `path` is where the public page lives — English is unprefixed. */
 const LOCALES = [
-  { code: 'en', label: 'English', path: '/en' },
-  { code: 'he', label: 'Hebrew', path: '/' },
+  { code: 'en', label: 'English', path: '/' },
+  { code: 'he', label: 'Hebrew', path: '/heb' },
 ] as const;
 
 /**
