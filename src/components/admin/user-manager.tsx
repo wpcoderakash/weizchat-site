@@ -57,9 +57,6 @@ export function UserManager({ me }: { me: string }) {
   return (
     <>
       <div className="cms-bar">
-        <a className="cms-btn" href="/admin">
-          ←
-        </a>
         <h1>Users</h1>
         <div className="cms-spacer" />
         {note ? (

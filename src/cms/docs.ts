@@ -28,6 +28,9 @@ export interface Envelope<T> {
   draft: T;
   published: T | null;
   updatedAt: string;
+  /** Who last touched it, and what they did — the activity feed's truth. */
+  updatedBy?: string;
+  lastAction?: 'saved' | 'published' | 'unpublished';
 }
 
 const STORE_DIR = path.join(process.cwd(), 'content-store');
@@ -51,6 +54,8 @@ export function readEnvelope<T>(
       draft?: unknown;
       published?: unknown;
       updatedAt?: unknown;
+      updatedBy?: unknown;
+      lastAction?: unknown;
     };
     const draft = schema.safeParse(raw.draft);
     if (!draft.success) {
@@ -63,7 +68,13 @@ export function readEnvelope<T>(
       if (parsed.success) published = parsed.data;
       else console.error(`[cms] ${file} published failed validation — treating as unpublished`);
     }
-    return { draft: draft.data, published, updatedAt: String(raw.updatedAt ?? '') };
+    return {
+      draft: draft.data,
+      published,
+      updatedAt: String(raw.updatedAt ?? ''),
+      updatedBy: typeof raw.updatedBy === 'string' ? raw.updatedBy : undefined,
+      lastAction: raw.lastAction as Envelope<T>['lastAction'],
+    };
   } catch (error) {
     console.error(`[cms] ${file} unreadable — using built-in`, error);
     return null;
@@ -130,6 +141,7 @@ export function saveDraft<T>(
   slug: string,
   locale: string,
   data: unknown,
+  by?: string,
 ): T {
   const parsed = schema.parse(data);
   const existing = readEnvelope(schema, kind, slug, locale);
@@ -137,6 +149,8 @@ export function saveDraft<T>(
     draft: parsed,
     published: existing?.published ?? null,
     updatedAt: new Date().toISOString(),
+    updatedBy: by,
+    lastAction: 'saved',
   });
   return parsed;
 }
@@ -147,10 +161,17 @@ export function publishDoc<T>(
   kind: DocKind,
   slug: string,
   locale: string,
+  by?: string,
 ): T | null {
   const env = readEnvelope(schema, kind, slug, locale);
   if (!env) return null;
-  write(kind, slug, locale, { ...env, published: env.draft, updatedAt: new Date().toISOString() });
+  write(kind, slug, locale, {
+    ...env,
+    published: env.draft,
+    updatedAt: new Date().toISOString(),
+    updatedBy: by,
+    lastAction: 'published',
+  });
   return env.draft;
 }
 
@@ -160,10 +181,17 @@ export function unpublishDoc<T>(
   kind: DocKind,
   slug: string,
   locale: string,
+  by?: string,
 ): boolean {
   const env = readEnvelope(schema, kind, slug, locale);
   if (!env) return false;
-  write(kind, slug, locale, { ...env, published: null, updatedAt: new Date().toISOString() });
+  write(kind, slug, locale, {
+    ...env,
+    published: null,
+    updatedAt: new Date().toISOString(),
+    updatedBy: by,
+    lastAction: 'unpublished',
+  });
   return true;
 }
 
@@ -184,4 +212,49 @@ export function listStored(kind: DocKind): { slug: string; locale: string }[] {
     .map((f) => /^(.+)\.([a-z]{2})\.json$/.exec(f))
     .filter((m): m is RegExpExecArray => m !== null)
     .map((m) => ({ slug: m[1]!, locale: m[2]! }));
+}
+
+export interface ActivityRow {
+  kind: DocKind;
+  slug: string;
+  locale: string;
+  updatedAt: string;
+  updatedBy: string | null;
+  action: 'saved' | 'published' | 'unpublished';
+  isPublished: boolean;
+}
+
+/**
+ * The activity feed, read straight from the envelopes on disk. It shows
+ * only what genuinely happened — no synthetic history, and documents
+ * never touched simply are not in it.
+ */
+export function recentActivity(limit = 10): ActivityRow[] {
+  const rows: ActivityRow[] = [];
+  for (const kind of ['page', 'global', 'post'] as const) {
+    for (const { slug, locale } of listStored(kind)) {
+      const dir = path.join(STORE_DIR, kind, `${slug}.${locale}.json`);
+      try {
+        const raw = JSON.parse(fs.readFileSync(dir, 'utf8')) as {
+          updatedAt?: string;
+          updatedBy?: string;
+          lastAction?: ActivityRow['action'];
+          published?: unknown;
+        };
+        if (!raw.updatedAt) continue;
+        rows.push({
+          kind,
+          slug,
+          locale,
+          updatedAt: raw.updatedAt,
+          updatedBy: raw.updatedBy ?? null,
+          action: raw.lastAction ?? 'saved',
+          isPublished: raw.published !== null && raw.published !== undefined,
+        });
+      } catch {
+        // An unreadable file is reported by the loaders; the feed skips it.
+      }
+    }
+  }
+  return rows.sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1)).slice(0, limit);
 }

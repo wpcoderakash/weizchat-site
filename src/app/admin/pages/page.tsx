@@ -29,9 +29,6 @@ export default async function PagesList() {
   return (
     <>
       <div className="cms-bar">
-        <a className="cms-btn" href="/admin">
-          ←
-        </a>
         <h1>Pages</h1>
         <div className="cms-spacer" />
         <p className="cms-note">“Built-in” means the page shows the content the site shipped with.</p>

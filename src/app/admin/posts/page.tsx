@@ -12,9 +12,6 @@ export default async function PostsList() {
   return (
     <>
       <div className="cms-bar">
-        <a className="cms-btn" href="/admin">
-          ←
-        </a>
         <h1>Posts</h1>
         <div className="cms-spacer" />
         <a className="cms-btn cms-btn-primary" href="/admin/posts/new">

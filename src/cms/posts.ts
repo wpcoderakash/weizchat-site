@@ -135,10 +135,12 @@ export const postsAdmin = {
     const env = readEnvelope(postDocSchema, 'post', stored, locale);
     return env?.draft ?? env?.published ?? mdxPostDefault(collection, slug, locale);
   },
-  save: (c: Collection, s: string, l: string, data: unknown) =>
-    saveDraft(postDocSchema, 'post', storageSlug(c, s), l, data),
-  publish: (c: Collection, s: string, l: string) => publishDoc(postDocSchema, 'post', storageSlug(c, s), l),
-  unpublish: (c: Collection, s: string, l: string) => unpublishDoc(postDocSchema, 'post', storageSlug(c, s), l),
+  save: (c: Collection, s: string, l: string, data: unknown, by?: string) =>
+    saveDraft(postDocSchema, 'post', storageSlug(c, s), l, data, by),
+  publish: (c: Collection, s: string, l: string, by?: string) =>
+    publishDoc(postDocSchema, 'post', storageSlug(c, s), l, by),
+  unpublish: (c: Collection, s: string, l: string, by?: string) =>
+    unpublishDoc(postDocSchema, 'post', storageSlug(c, s), l, by),
   reset: (c: Collection, s: string, l: string) => resetDoc('post', storageSlug(c, s), l),
   status: (c: Collection, s: string, l: string) => docStatus(postDocSchema, 'post', storageSlug(c, s), l),
 };

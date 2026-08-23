@@ -1,7 +1,7 @@
 import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { hasRole } from '../../../../cms/auth';
+import { currentUser, hasRole } from '../../../../cms/auth';
 import { postDocSchema } from '../../../../cms/site-schema';
 import { adminListPosts, postsAdmin, type Collection } from '../../../../cms/posts';
 
@@ -70,7 +70,7 @@ export async function PUT(req: Request): Promise<NextResponse> {
     );
   }
   const { collection, slug, locale } = body.data.key;
-  postsAdmin.save(collection, slug, locale, body.data.doc);
+  postsAdmin.save(collection, slug, locale, body.data.doc, (await currentUser())?.username);
   return NextResponse.json({ status: postsAdmin.status(collection, slug, locale) });
 }
 
@@ -81,12 +81,13 @@ export async function POST(req: Request): Promise<NextResponse> {
   const body = actionSchema.safeParse(await req.json().catch(() => null));
   if (!body.success) return NextResponse.json({ error: 'invalid' }, { status: 400 });
   const { collection, slug, locale } = body.data.key;
+  const user = await currentUser();
   if (body.data.action === 'publish') {
-    if (postsAdmin.publish(collection, slug, locale) === null) {
+    if (postsAdmin.publish(collection, slug, locale, user?.username) === null) {
       return NextResponse.json({ error: 'nothing_to_publish' }, { status: 409 });
     }
   } else {
-    postsAdmin.unpublish(collection, slug, locale);
+    postsAdmin.unpublish(collection, slug, locale, user?.username);
   }
   refresh(collection, slug, locale);
   return NextResponse.json({ status: postsAdmin.status(collection, slug, locale) });

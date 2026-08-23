@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import { Assistant, IBM_Plex_Mono } from 'next/font/google';
 import '../globals.css';
 import './admin.css';
+import pkg from '../../../package.json';
+import { currentUser } from '../../cms/auth';
+import { AdminSide } from '../../components/admin/admin-side';
 
 /**
  * The admin's ROOT layout.
@@ -25,7 +28,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  // Signed in → the full shell (sidebar + topbar). Signed out (the login
+  // page, or an unconfigured install) → just the frame, no chrome to leak.
+  const user = await currentUser();
   return (
     <html
       lang="en"
@@ -45,7 +51,30 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           the chrome to sit still. The preview sets its own direction on the
           rendered page inside.
         */}
-        <div className="cms">{children}</div>
+        <div className="cms">
+          {user ? (
+            <>
+              <AdminSide role={user.role} version={pkg.version} />
+              <div className="cms-main">
+                <div className="cms-top">
+                  <span className="crumb">
+                    Weiz Admin / <strong>Content Manager</strong>
+                  </span>
+                  <div className="cms-spacer" />
+                  <a className="cms-btn" href="/api/admin/preview/stop?redirect=/admin">
+                    Exit preview
+                  </a>
+                  <span className="cms-chip">
+                    {user.username} · {user.role.replace('_', ' ')}
+                  </span>
+                </div>
+                {children}
+              </div>
+            </>
+          ) : (
+            children
+          )}
+        </div>
       </body>
     </html>
   );

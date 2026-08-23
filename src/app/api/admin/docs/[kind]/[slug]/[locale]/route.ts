@@ -1,7 +1,7 @@
 import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { hasRole, type Role } from '../../../../../../../cms/auth';
+import { currentUser, hasRole, type Role } from '../../../../../../../cms/auth';
 import {
   docStatus,
   draftDoc,
@@ -98,7 +98,8 @@ export async function PUT(req: Request, { params }: Params): Promise<NextRespons
       { status: 400 },
     );
   }
-  saveDraft(target.schema, kind as 'page', slug, locale, parsed.data);
+  const user = await currentUser();
+  saveDraft(target.schema, kind as 'page', slug, locale, parsed.data, user?.username);
   return NextResponse.json({
     doc: parsed.data,
     status: docStatus(target.schema, kind as 'page', slug, locale),
@@ -117,11 +118,12 @@ export async function POST(req: Request, { params }: Params): Promise<NextRespon
   const body = actionSchema.safeParse(await req.json().catch(() => null));
   if (!body.success) return NextResponse.json({ error: 'invalid' }, { status: 400 });
 
+  const user = await currentUser();
   if (body.data.action === 'publish') {
-    const published = publishDoc(target.schema, kind as 'page', slug, locale);
+    const published = publishDoc(target.schema, kind as 'page', slug, locale, user?.username);
     if (published === null) return NextResponse.json({ error: 'nothing_to_publish' }, { status: 409 });
   } else {
-    unpublishDoc(target.schema, kind as 'page', slug, locale);
+    unpublishDoc(target.schema, kind as 'page', slug, locale, user?.username);
   }
   // Revalidate AFTER the write, so "published" in the response means the
   // public page is actually being rebuilt with the new content.

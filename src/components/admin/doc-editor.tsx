@@ -56,6 +56,7 @@ export function DocEditor({
   }, [dirty]);
 
   const api = `/api/admin/docs/${apiKind}/${slug}/${locale}`;
+  const backHref = apiKind === 'page' ? '/admin/pages' : '/admin';
 
   function edit(next: unknown) {
     setDoc(next);
@@ -138,11 +139,21 @@ export function DocEditor({
   return (
     <>
       <div className="cms-bar">
-        <a className="cms-btn" href="/admin">
+        <a className="cms-btn" href={backHref} aria-label="Back">
           ←
         </a>
         <h1>{title}</h1>
-        <span className="cms-sec-id">{locale.toUpperCase()}</span>
+        <span className="cms-lang" role="group" aria-label="Locale">
+          {(['en', 'he'] as const).map((l) => (
+            <a
+              key={l}
+              href={apiKind === 'page' ? `/admin/pages/${slug}/${l}` : `/admin/global/${l}`}
+              aria-current={l === locale ? 'page' : undefined}
+            >
+              {l === 'en' ? 'English' : 'עברית'}
+            </a>
+          ))}
+        </span>
         <span className={status.isPublished ? 'cms-badge-live' : 'cms-badge-draft'}>
           {status.isPublished ? (status.dirty || dirty ? 'Live · draft edited' : 'Live') : 'Not published'}
         </span>

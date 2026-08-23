@@ -82,9 +82,6 @@ export function MediaLibrary() {
   return (
     <>
       <div className="cms-bar">
-        <a className="cms-btn" href="/admin">
-          ←
-        </a>
         <h1>Media</h1>
         <div className="cms-field" style={{ minWidth: '14rem' }}>
           <input

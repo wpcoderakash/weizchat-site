@@ -19,6 +19,7 @@
 
   direction: ltr;
   min-height: 100dvh;
+  display: flex;
   background: var(--cms-bg);
   color: var(--cms-fg);
   font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
@@ -31,7 +32,7 @@
 
 .cms-bar {
   position: sticky;
-  top: 0;
+  top: 3.05rem;
   z-index: 20;
   display: flex;
   align-items: center;
@@ -244,6 +245,7 @@
 }
 
 .cms-login {
+  width: 100%;
   display: grid;
   place-items: center;
   min-height: 100dvh;
@@ -408,4 +410,286 @@
   margin: 0;
   font-size: 0.8rem;
   color: var(--cms-muted);
+}
+
+/* ── Admin shell: sidebar + topbar (layout only — palette unchanged) ─────── */
+.cms-side {
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  height: 100dvh;
+  width: 15.5rem;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  background: var(--cms-surface);
+  border-inline-end: 1px solid var(--cms-line);
+  padding: 1rem 0.7rem;
+  overflow-y: auto;
+}
+
+.cms-side-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.2rem 0.55rem 1rem;
+  color: var(--cms-fg);
+  text-decoration: none;
+}
+
+.cms-side-brand .logo {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 9px;
+  background: var(--cms-accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.cms-side-brand strong {
+  display: block;
+  font-size: 1.05rem;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.cms-side-brand .sub {
+  display: block;
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cms-muted);
+}
+
+.cms-side nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.cms-side-label {
+  padding: 0.75rem 0.6rem 0.3rem;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cms-muted);
+}
+
+.cms-side-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 8px;
+  color: var(--cms-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 550;
+}
+
+.cms-side-link svg {
+  flex: none;
+}
+
+.cms-side-link:hover {
+  color: var(--cms-fg);
+  background: var(--cms-sunken);
+}
+
+.cms-side-link[aria-current='page'] {
+  color: #fff;
+  background: var(--cms-accent);
+}
+
+.cms-side-bottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--cms-line);
+}
+
+.cms-side-version {
+  padding: 0.6rem 0.6rem 0.1rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.68rem;
+  color: var(--cms-muted);
+}
+
+.cms-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cms-top {
+  position: sticky;
+  top: 0;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.65rem 1.25rem;
+  background: var(--cms-surface);
+  border-bottom: 1px solid var(--cms-line);
+  font-size: 0.88rem;
+  min-height: 3.05rem;
+}
+
+.cms-top .crumb {
+  color: var(--cms-muted);
+}
+
+.cms-top .crumb strong {
+  color: var(--cms-fg);
+}
+
+.cms-chip {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.74rem;
+  background: var(--cms-sunken);
+  border: 1px solid var(--cms-line);
+  border-radius: 999px;
+  padding: 0.28rem 0.7rem;
+  color: var(--cms-muted);
+  white-space: nowrap;
+}
+
+/* ── Dashboard: welcome, stat cards, activity feed ───────────────────────── */
+.cms-welcome h1 {
+  margin: 0.4rem 0 0.15rem;
+  font-size: 1.45rem;
+}
+
+.cms-welcome p {
+  margin: 0;
+  color: var(--cms-muted);
+  font-size: 0.9rem;
+}
+
+.cms-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+  gap: 0.75rem;
+}
+
+.cms-stat {
+  background: var(--cms-surface);
+  border: 1px solid var(--cms-line);
+  border-radius: 10px;
+  padding: 0.95rem 1.1rem;
+}
+
+.cms-stat .k {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--cms-muted);
+}
+
+.cms-stat .k svg {
+  color: var(--cms-accent);
+  flex: none;
+}
+
+.cms-stat .n {
+  margin-top: 0.5rem;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.cms-h2 {
+  margin: 0.6rem 0 0;
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.cms-activity {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cms-activity li {
+  display: flex;
+  gap: 0.9rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--cms-line);
+  font-size: 0.88rem;
+}
+
+.cms-activity li:last-child {
+  border-bottom: none;
+}
+
+.cms-activity .who {
+  color: var(--cms-accent);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.78rem;
+}
+
+.cms-activity time {
+  margin-inline-start: auto;
+  color: var(--cms-muted);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.cms-empty {
+  padding: 1rem;
+  color: var(--cms-muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 52rem) {
+  .cms-side {
+    display: none;
+  }
+
+  .cms-bar {
+    top: 0;
+  }
+}
+
+.cms-activity a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cms-activity a:hover {
+  color: var(--cms-accent);
+}
+
+/* The editor's locale toggle — the reference dashboard's עברית/English. */
+.cms-lang {
+  display: inline-flex;
+  border: 1px solid var(--cms-line);
+  border-radius: 999px;
+  overflow: hidden;
+  font-size: 0.78rem;
+}
+
+.cms-lang a {
+  padding: 0.22rem 0.7rem;
+  color: var(--cms-muted);
+  text-decoration: none;
+}
+
+.cms-lang a[aria-current='page'] {
+  background: var(--cms-accent);
+  color: #fff;
+  font-weight: 600;
 }
