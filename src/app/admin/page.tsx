@@ -11,9 +11,9 @@ export default async function AdminIndex() {
         <div className="cms-card" style={{ padding: '1.25rem', maxWidth: '30rem' }}>
           <h1 style={{ marginTop: 0, fontSize: '1.1rem' }}>The CMS is not configured</h1>
           <p className="cms-note">
-            Set <code>CMS_ADMIN_PASSWORD</code> (at least 8 characters) in the environment and
-            restart. Until then the admin refuses to run — an editor with no password is worse
-            than no editor.
+            Set <code>CMS_ADMIN_USERNAME</code> and <code>CMS_ADMIN_PASSWORD</code> (at least 8
+            characters) in the environment and restart. Until then the admin refuses to run — an
+            editor with no credentials is worse than no editor.
           </p>
         </div>
       </div>
