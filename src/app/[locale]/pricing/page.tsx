@@ -52,7 +52,7 @@ export default async function PricingPage({
             <div
               key={tier.id}
               className={`flex flex-col rounded-card border bg-surface p-6 ${
-                tier.featured ? 'border-accent shadow-md' : 'border-border'
+                tier.featured ? 'border-accent shadow-lg ring-1 ring-accent/25' : 'border-border'
               }`}
             >
               {tier.featured ? (
@@ -62,9 +62,11 @@ export default async function PricingPage({
               ) : null}
               <h2 className="text-xl font-semibold">{t(`tier.${tier.key}.name`)}</h2>
               <p className="mt-1 text-sm text-muted">{t(`tier.${tier.key}.who`)}</p>
-              <p className="mt-4 break-all font-mono text-3xl font-semibold">
-                {tier.monthlyPrice}
-                <span className="text-sm font-normal text-muted"> / {doc.perMonth}</span>
+              <p className="mt-4 flex items-baseline gap-1.5">
+                <span className="text-4xl font-bold tracking-tight tabular-nums">
+                  {doc.prices[tier.id]}
+                </span>
+                <span className="text-sm text-muted">/ {doc.perMonth}</span>
               </p>
               <dl className="mt-5 flex-1 space-y-3 border-t border-border pt-5 text-sm">
                 <div>

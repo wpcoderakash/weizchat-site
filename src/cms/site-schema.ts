@@ -44,6 +44,12 @@ export const pricingDocSchema = z.object({
   seo: seoSchema,
   title: z.string().min(1),
   sub: z.string().min(1),
+  /** ADR-0032 addendum: amounts are owner-editable; names and quotas stay code-owned. */
+  prices: z.object({
+    free: z.string().min(1),
+    pro: z.string().min(1),
+    unlimited: z.string().min(1),
+  }),
   mostPopular: z.string().min(1),
   perMonth: z.string().min(1),
   campaignQuota: z.string().min(1),

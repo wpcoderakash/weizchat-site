@@ -275,15 +275,18 @@
     "tier": {
       "free": {
         "name": "Free",
-        "who": "For trying it out on a real number"
+        "who": "For trying it out on a real number",
+        "price": "₪0"
       },
       "pro": {
         "name": "Pro",
-        "who": "For a team that answers all day"
+        "who": "For a team that answers all day",
+        "price": "₪299"
       },
       "unlimited": {
         "name": "Unlimited",
-        "who": "For high volume, without counting"
+        "who": "For high volume, without counting",
+        "price": "₪799"
       }
     },
     "campaignQuota": "Campaign messages / month",

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { getPageDoc } from '../../cms/load';
+import type { PricingDoc } from '../../cms/site-schema';
 import type { CmsSection, LandingPage } from '../../cms/schema';
 import { Hero } from '../../components/sections/hero';
 import { TrustStrip } from '../../components/sections/trust-strip';
@@ -38,7 +39,13 @@ export async function generateMetadata({
 /** Renders whichever section this is. Unknown ids are skipped, not crashed on. */
 function renderSection(
   section: CmsSection,
-  extras: { tierNames: Record<string, string>; unmetered: string; quotaLabels: { campaigns: string; ai: string } },
+  extras: {
+    tierNames: Record<string, string>;
+    unmetered: string;
+    quotaLabels: { campaigns: string; ai: string };
+    prices: PricingDoc['prices'];
+    mostPopular: string;
+  },
 ) {
   if (!section.visible) return null;
   switch (section.id) {
@@ -75,10 +82,15 @@ export async function LandingSections({ page, locale }: { page: LandingPage; loc
   // Plan names and quota labels stay in the product's own vocabulary, not
   // the CMS: they mirror the code-owned plan matrix.
   const tp = await getTranslations({ locale, namespace: 'pricing' });
+  // Amounts and the badge come from the pricing DOCUMENT, so the landing
+  // preview always agrees with /pricing (ADR-0032 addendum).
+  const pricingDoc = await getPageDoc<PricingDoc>('pricing', locale);
   const extras = {
     tierNames: { free: tp('tier.free.name'), pro: tp('tier.pro.name'), unlimited: tp('tier.unlimited.name') },
     unmetered: tp('unmetered'),
     quotaLabels: { campaigns: tp('campaignQuota'), ai: tp('aiQuota') },
+    prices: pricingDoc.prices,
+    mostPopular: pricingDoc.mostPopular,
   };
   return <>{page.sections.map((section) => renderSection(section, extras))}</>;
 }

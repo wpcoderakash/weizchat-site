@@ -1,5 +1,6 @@
 import { useLocale } from 'next-intl';
 import type { CmsSection } from '../../cms/schema';
+import type { PricingDoc } from '../../cms/site-schema';
 import { pricingTiers } from '../../content/pricing';
 import { CmsCta } from './cms-link';
 
@@ -18,11 +19,15 @@ export function PricingPreview({
   tierNames,
   unmetered,
   quotaLabels,
+  prices,
+  mostPopular,
 }: {
   data: Pricing;
   tierNames: Record<string, string>;
   unmetered: string;
   quotaLabels: { campaigns: string; ai: string };
+  prices: PricingDoc['prices'];
+  mostPopular: string;
 }) {
   const locale = useLocale();
   const nf = new Intl.NumberFormat(locale === 'he' ? 'he-IL' : 'en-US');
@@ -34,14 +39,19 @@ export function PricingPreview({
         {pricingTiers.map((tier) => (
           <div
             key={tier.id}
-            className={`rounded-card border bg-surface p-6 ${
-              tier.featured ? 'border-accent shadow-md' : 'border-border'
+            className={`relative rounded-card border bg-surface p-6 ${
+              tier.featured ? 'border-accent shadow-lg ring-1 ring-accent/25' : 'border-border'
             }`}
           >
+            {tier.featured ? (
+              <span className="absolute -top-3 start-6 rounded-full bg-accent px-3 py-0.5 text-xs font-semibold text-accent-fg">
+                {mostPopular}
+              </span>
+            ) : null}
             <h3 className="font-semibold">{tierNames[tier.key]}</h3>
-            <p className="mt-3 break-all font-mono text-3xl font-semibold">
-              {tier.monthlyPrice}
-              <span className="text-sm font-normal text-muted"> / {data.perMonth}</span>
+            <p className="mt-3 flex items-baseline gap-1.5">
+              <span className="text-4xl font-bold tracking-tight tabular-nums">{prices[tier.id]}</span>
+              <span className="text-sm text-muted">/ {data.perMonth}</span>
             </p>
             <p className="mt-3 text-sm text-muted">
               {tier.campaignMessagesPerMonth === null

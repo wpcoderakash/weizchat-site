@@ -6,14 +6,14 @@
  * product can never disagree: Free 1,000 / Pro 10,000 / Unlimited unmetered
  * campaign messages, and 500 / 5,000 / unmetered AI replies per month.
  *
- * The PRICES are a SECTION-10 item the owner must supply — they render as
- * literal `__TIER_*_PRICE__` placeholders until then. Never invent one.
+ * The PRICES are not here: they are CMS content on the pricing document
+ * (ADR-0032 addendum), edited on the Pricing page in the admin. Every
+ * surface that shows an amount reads that one document.
  */
 export interface PricingTier {
   id: 'free' | 'pro' | 'unlimited';
   /** messages key under `pricing.tier.` */
   key: string;
-  monthlyPrice: string;
   /** null = unmetered, mirrors PLANS[].campaignMessagesPerMonth */
   campaignMessagesPerMonth: number | null;
   /** null = unmetered, mirrors PLANS[].aiRunsPerMonth */
@@ -25,23 +25,20 @@ export const pricingTiers: readonly PricingTier[] = [
   {
     id: 'free',
     key: 'free',
-    monthlyPrice: '__TIER_FREE_PRICE__',
-    campaignMessagesPerMonth: 1000,
+      campaignMessagesPerMonth: 1000,
     aiRepliesPerMonth: 500,
   },
   {
     id: 'pro',
     key: 'pro',
-    monthlyPrice: '__TIER_PRO_PRICE__',
-    campaignMessagesPerMonth: 10_000,
+      campaignMessagesPerMonth: 10_000,
     aiRepliesPerMonth: 5000,
     featured: true,
   },
   {
     id: 'unlimited',
     key: 'unlimited',
-    monthlyPrice: '__TIER_UNLIMITED_PRICE__',
-    campaignMessagesPerMonth: null,
+      campaignMessagesPerMonth: null,
     aiRepliesPerMonth: null,
   },
 ];

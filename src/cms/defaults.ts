@@ -109,6 +109,11 @@ export function pricingDefault(locale: string): PricingDoc {
     seo: { title: t(locale, `${ns}.metaTitle`), description: t(locale, `${ns}.metaDescription`) },
     title: t(locale, `${ns}.title`),
     sub: t(locale, `${ns}.sub`),
+    prices: {
+      free: t(locale, `${ns}.tier.free.price`),
+      pro: t(locale, `${ns}.tier.pro.price`),
+      unlimited: t(locale, `${ns}.tier.unlimited.price`),
+    },
     mostPopular: t(locale, `${ns}.mostPopular`),
     perMonth: t(locale, `${ns}.perMonth`),
     campaignQuota: t(locale, `${ns}.campaignQuota`),
