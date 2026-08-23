@@ -75,7 +75,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           <h2 className="text-2xl">{doc.formTitle}</h2>
           <p className="mt-2 text-muted">{doc.formSub}</p>
           <div className="mt-6">
-            <ContactForm email={g.site.supportEmail} strings={doc.form} />
+            <ContactForm email={g.site.supportEmail} locale={locale} strings={doc.form} />
           </div>
         </div>
 

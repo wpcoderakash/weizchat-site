@@ -3,6 +3,7 @@ import path from 'node:path';
 import { redirect } from 'next/navigation';
 import { adminConfigured, currentUser, listUsers } from '../../cms/auth';
 import { recentActivity, type ActivityRow } from '../../cms/docs';
+import { countNewLeads } from '../../cms/leads';
 import { adminListPosts } from '../../cms/posts';
 import { PAGES, pageBySlug } from '../../cms/registry';
 
@@ -62,6 +63,7 @@ const statIcon = {
   pages: 'M7 3h8l4 4v14H7zM15 3v4h4',
   posts: 'M5 4h14v16H5zM9 8h6M9 12h6M9 16h4',
   media: 'M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4',
+  leads: 'M4 4h16v12H4zM4 13h5l1.5 3h3L15 13h5M8 8h8',
   users: 'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.7-5 6-5s6 2 6 5M16 4.5a3.5 3.5 0 0 1 0 6.6M17 15.2c2.4.5 4 2.1 4 4.8',
 };
 
@@ -128,6 +130,7 @@ export default async function AdminHome() {
           <Stat k="Pages" n={PAGES.length} icon="pages" />
           <Stat k="Posts" n={posts.length} icon="posts" />
           <Stat k="Media files" n={mediaCount()} icon="media" />
+          <Stat k="New leads" n={countNewLeads()} icon="leads" />
           {isSuper ? <Stat k="Users" n={listUsers().length} icon="users" /> : null}
         </div>
 

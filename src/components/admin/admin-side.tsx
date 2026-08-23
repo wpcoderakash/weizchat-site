@@ -34,6 +34,7 @@ const ICONS = {
   media: 'M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4M9 9h.01',
   global: 'M3 5h18v4H3zM3 15h18v4H3zM7 7h.01M7 17h.01',
   users: 'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.7-5 6-5s6 2 6 5M16 4.5a3.5 3.5 0 0 1 0 6.6M17 15.2c2.4.5 4 2.1 4 4.8',
+  leads: 'M4 4h16v12H4zM4 13h5l1.5 3h3L15 13h5M8 8h8',
   site: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.4 3.8 5.6 3.8 9S14.5 18.6 12 21c-2.5-2.4-3.8-5.6-3.8-9S9.5 5.4 12 3z',
   out: 'M14 4h-8v16h8M10 12h11M18 8.5 21.5 12 18 15.5',
 };
@@ -58,6 +59,7 @@ export function AdminSide({ role, version }: { role: Role; version: string }) {
         { href: '/admin/posts', label: 'All Posts', icon: 'posts' },
         { href: '/admin/posts/new', label: 'Add New', icon: 'add' },
         { href: '/admin/media', label: 'Media Library', icon: 'media' },
+        { href: '/admin/leads', label: 'Form Leads', icon: 'leads' },
       ],
     },
   ];

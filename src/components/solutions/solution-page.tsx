@@ -96,12 +96,15 @@ export function makeSolutionPage(slug: string) {
         <section className="mx-auto max-w-6xl px-6 pb-16">
           {doc.comingSoon ? (
             <WaitlistCta
+              locale={locale}
               email={g.site.supportEmail}
               strings={{
                 title: g.shared.waitlistTitle,
                 body: g.shared.waitlistBody,
                 cta: g.shared.waitlistCta,
                 note: g.shared.waitlistNote,
+                success: g.shared.waitlistSuccess,
+                error: g.shared.waitlistError,
                 subject: g.shared.waitlistSubject,
                 emailLabel: g.shared.waitlistEmailLabel,
                 emailBody: g.shared.waitlistEmailBody,

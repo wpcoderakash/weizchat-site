@@ -211,6 +211,72 @@ check('suspended editor cannot sign in', (await signIn({ username: 'writer@test.
   check('shipped screenshots refuse deletion', shipped.status === 404 || shipped.status === 400, String(shipped.status));
 }
 
+// ── form leads: intake, honeypot, rate limit, inbox lifecycle ──────────────
+{
+  // Every run poses as a fresh forwarded IP, so repeated runs never fill
+  // the real client's rate window.
+  const runIp = `198.51.100.${Date.now() % 250}`;
+  const post = (body, headers = {}) =>
+    fetch(`${B}/api/leads`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-forwarded-for': runIp, ...headers },
+      body: JSON.stringify(body),
+    });
+
+  const anon = await fetch(`${B}/api/admin/leads`);
+  check('lead inbox requires auth', anon.status === 401, String(anon.status));
+
+  const bad = await post({ source: 'contact', locale: 'en' });
+  check('contact lead without name/message rejected', bad.status === 400, String(bad.status));
+
+  const ok = await post({
+    source: 'contact',
+    locale: 'en',
+    name: 'Check Lead',
+    company: 'Check Co',
+    phone: '+972500000000',
+    message: 'A real lead from the automated check.',
+  });
+  check('contact lead accepted', ok.status === 201, String(ok.status));
+
+  const wl = await post({ source: 'waitlist', locale: 'he', email: 'check@example.com' });
+  check('waitlist lead accepted', wl.status === 201, String(wl.status));
+
+  const honey = await post({
+    source: 'contact', locale: 'en', name: 'Bot', message: 'spam', website: 'http://spam',
+  });
+  check('honeypot gets the same 201', honey.status === 201, String(honey.status));
+
+  const list = await (await api(admin, '/api/admin/leads')).json();
+  const mine = list.leads.filter((l) => l.name === 'Check Lead' || l.email === 'check@example.com');
+  check('both real leads listed in the inbox', mine.length === 2, String(mine.length));
+  check('honeypot submission was NOT stored', !list.leads.some((l) => l.name === 'Bot'));
+
+  const lead = mine.find((l) => l.name === 'Check Lead');
+  const flip = await api(admin, '/api/admin/leads', {
+    method: 'PATCH', body: JSON.stringify({ id: lead.id, status: 'handled' }),
+  });
+  const after = await (await api(admin, '/api/admin/leads')).json();
+  check('lead marked handled', flip.ok && after.leads.find((l) => l.id === lead.id)?.status === 'handled');
+
+  // The rate limit, exercised on a spoofed forwarded IP so repeat runs of
+  // this suite never trip it for the real client.
+  const spoof = { 'x-forwarded-for': '203.0.113.99' };
+  let last = 0;
+  for (let i = 0; i < 11; i++) {
+    last = (await post({ source: 'waitlist', locale: 'en', email: `rl${i}@example.com`, website: 'x' }, spoof)).status;
+  }
+  check('rate limit answers 429 after the window fills', last === 429, String(last));
+
+  // cleanup: leads are personal data — the check deletes what it created.
+  const final = await (await api(admin, '/api/admin/leads')).json();
+  for (const l of final.leads.filter((x) => x.name === 'Check Lead' || x.email === 'check@example.com')) {
+    await api(admin, '/api/admin/leads', { method: 'DELETE', body: JSON.stringify({ id: l.id }) });
+  }
+  const empty = await (await api(admin, '/api/admin/leads')).json();
+  check('lead delete works', !empty.leads.some((x) => x.name === 'Check Lead' || x.email === 'check@example.com'));
+}
+
 // cleanup: remove the test user
 await api(admin, '/api/admin/users', { method: 'DELETE', body: JSON.stringify({ username: 'writer@test.local' }) });
 

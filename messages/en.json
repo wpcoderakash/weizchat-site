@@ -74,11 +74,13 @@
       "closerTitle": "See it on your own number.",
       "waitlistTitle": "Join the campaigns waitlist",
       "waitlistBody": "Leave your email and we'll write to you when campaigns open up.",
-      "waitlistCta": "Join via email",
-      "waitlistNote": "The button opens your email app — this site stores nothing.",
+      "waitlistCta": "Join the waitlist",
+      "waitlistNote": "Joining stores your email with us so we can let you know when this launches — nothing more.",
       "waitlistSubject": "Campaigns waitlist",
       "waitlistEmailLabel": "Your email",
-      "waitlistEmailBody": "Please add me to the campaigns waitlist. My email: {email}"
+      "waitlistEmailBody": "Please add me to the campaigns waitlist. My email: {email}",
+      "waitlistSuccess": "You're on the list — we'll email you when this launches.",
+      "waitlistError": "That didn't go through. Please try again, or email us directly:"
     },
     "sharedInbox": {
       "metaTitle": "Shared WhatsApp team inbox",
@@ -348,10 +350,12 @@
       "company": "Business name",
       "phone": "Phone",
       "message": "How can we help?",
-      "submit": "Open in email",
-      "note": "The button opens your email app with the message ready to send. This site has no form backend and stores nothing you type here.",
+      "submit": "Send message",
+      "note": "Submitting stores your message with us so we can get back to you. You can also write to us directly by email.",
       "emailSubject": "WeizChat — contact from the website",
-      "emailBody": "Name: {name}\nBusiness: {company}\nPhone: {phone}\n\n{message}"
+      "emailBody": "Name: {name}\nBusiness: {company}\nPhone: {phone}\n\n{message}",
+      "success": "Thanks — your message is in. We usually reply within one business day.",
+      "error": "Something went wrong and the message was not sent. Please try again, or email us directly:"
     }
   },
   "tools": {

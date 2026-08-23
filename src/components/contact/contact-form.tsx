@@ -9,35 +9,67 @@ export interface ContactFormStrings {
   message: string;
   submit: string;
   note: string;
+  success: string;
+  error: string;
   emailSubject: string;
   /** Template with {name} {company} {phone} {message} placeholders. */
   emailBody: string;
 }
 
 /**
- * The contact form. This site has no backend, so the form composes a
- * message and opens the visitor's email client — and the note under the
- * button says exactly that. A form that silently discarded submissions
- * would be the worst kind of fake functionality.
+ * The contact form — a real one: it POSTs to /api/leads and the message
+ * lands in the admin's Form Leads inbox. The note under the button says
+ * the message is stored, because it is. If the request fails, the honest
+ * fallback is the old prefilled mailto link.
  */
-export function ContactForm({ email, strings: t }: { email: string; strings: ContactFormStrings }) {
+export function ContactForm({
+  email,
+  locale,
+  strings: t,
+}: {
+  email: string;
+  locale: string;
+  strings: ContactFormStrings;
+}) {
   const [name, setName] = useState('');
   const [company, setCompany] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [website, setWebsite] = useState('');
+  const [state, setState] = useState<'idle' | 'busy' | 'sent' | 'failed'>('idle');
 
-  function submit(event: React.FormEvent) {
+  async function submit(event: React.FormEvent) {
     event.preventDefault();
-    const body = t.emailBody
-      .replace('{name}', name || '—')
-      .replace('{company}', company || '—')
-      .replace('{phone}', phone || '—')
-      .replace('{message}', message || '—');
-    window.location.href = `mailto:${email}?subject=${encodeURIComponent(t.emailSubject)}&body=${encodeURIComponent(body)}`;
+    setState('busy');
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ source: 'contact', locale, name, company, phone, message, website }),
+      });
+      setState(res.ok ? 'sent' : 'failed');
+    } catch {
+      setState('failed');
+    }
   }
+
+  const mailtoBody = t.emailBody
+    .replace('{name}', name || '—')
+    .replace('{company}', company || '—')
+    .replace('{phone}', phone || '—')
+    .replace('{message}', message || '—');
+  const mailto = `mailto:${email}?subject=${encodeURIComponent(t.emailSubject)}&body=${encodeURIComponent(mailtoBody)}`;
 
   const field =
     'mt-1 w-full rounded-xl border border-border-strong bg-bg px-4 py-2.5 focus:border-accent';
+
+  if (state === 'sent') {
+    return (
+      <div role="status" className="rounded-card border border-border bg-surface p-6">
+        <p className="font-semibold">{t.success}</p>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={submit} className="rounded-card border border-border bg-surface p-6">
@@ -93,13 +125,34 @@ export function ContactForm({ email, strings: t }: { email: string; strings: Con
           />
         </div>
       </div>
+      {/* The honeypot: humans never see it, bots fill it, the API drops it. */}
+      <div className="hidden" aria-hidden>
+        <label htmlFor="c-website">Website</label>
+        <input
+          id="c-website"
+          tabIndex={-1}
+          autoComplete="off"
+          value={website}
+          onChange={(e) => setWebsite(e.target.value)}
+        />
+      </div>
       <button
         type="submit"
-        className="mt-5 rounded-full bg-accent px-6 py-2.5 font-semibold text-accent-fg hover:bg-accent-hover"
+        disabled={state === 'busy'}
+        className="mt-5 rounded-full bg-accent px-6 py-2.5 font-semibold text-accent-fg hover:bg-accent-hover disabled:opacity-60"
       >
         {t.submit}
       </button>
-      <p className="mt-3 text-sm text-muted">{t.note}</p>
+      {state === 'failed' ? (
+        <p role="alert" className="mt-3 text-sm font-medium text-warn">
+          {t.error}{' '}
+          <a href={mailto} className="underline">
+            {email}
+          </a>
+        </p>
+      ) : (
+        <p className="mt-3 text-sm text-muted">{t.note}</p>
+      )}
     </form>
   );
 }
