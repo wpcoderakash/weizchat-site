@@ -52,7 +52,7 @@ export function LeadInbox() {
         <h1>Form Leads</h1>
         {note ? <span className="cms-status cms-status-err">{note}</span> : null}
       </div>
-      <div className="cms-wrap" style={{ maxWidth: '72rem' }}>
+      <div className="cms-wrap">
         <p className="cms-note">
           Everything the contact form and the waitlists captured. Leads are personal data —
           delete a row once it is dealt with, or when the person asks.

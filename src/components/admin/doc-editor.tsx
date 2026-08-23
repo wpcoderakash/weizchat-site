@@ -193,7 +193,7 @@ export function DocEditor({
         </button>
       </div>
 
-      <div className="cms-wrap">
+      <div className="cms-wrap cms-wrap-narrow">
         {seo ? (
           <div className="cms-card">
             <div className="cms-sec-head">

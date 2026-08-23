@@ -54,12 +54,18 @@
 }
 
 .cms-wrap {
-  max-width: 60rem;
+  width: 100%;
+  max-width: 82rem;
   margin: 0 auto;
-  padding: 1.25rem 1.25rem 5rem;
+  padding: 1.25rem 1.5rem 5rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+/* Editors keep a readable measure — full-bleed inputs are unpleasant. */
+.cms-wrap-narrow {
+  max-width: 62rem;
 }
 
 .cms-card {
@@ -261,8 +267,8 @@
 
 .cms-media {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
-  gap: 0.6rem;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 0.75rem;
   max-height: 18rem;
   overflow-y: auto;
   padding: 0.4rem;
@@ -285,7 +291,7 @@
 
 .cms-media img {
   width: 100%;
-  height: 4.5rem;
+  height: 9rem;
   object-fit: cover;
   border-radius: 4px;
   display: block;

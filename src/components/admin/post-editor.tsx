@@ -189,7 +189,7 @@ export function PostEditor({
         </button>
       </div>
 
-      <div className="cms-wrap">
+      <div className="cms-wrap cms-wrap-narrow">
         <div className="cms-card">
           <div className="cms-sec-head">
             <span style={{ fontWeight: 600 }}>Post</span>
