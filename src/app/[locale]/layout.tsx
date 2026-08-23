@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
-import { Assistant, IBM_Plex_Mono, Suez_One } from 'next/font/google';
+import { IBM_Plex_Mono, Rubik } from 'next/font/google';
 import { directionFor, routing } from '../../i18n/routing';
 import { site } from '../../config/site';
 import { getGlobal } from '../../cms/load';
@@ -12,11 +12,10 @@ import { CookieConsent } from '../../components/layout/cookie-consent';
 import './../globals.css';
 
 /*
- * Typography (design plan): Hebrew-first. Suez One is the display voice —
- * a Hebrew slab that makes `he` the flagship, not the translation.
+ * Typography: Rubik for everything (owner's choice, 2026-08) — one face,
+ * full Hebrew support, weight carries the heading hierarchy.
  */
-const suez = Suez_One({ weight: '400', subsets: ['hebrew', 'latin'], variable: '--f-suez' });
-const assistant = Assistant({ subsets: ['hebrew', 'latin'], variable: '--f-assistant' });
+const rubik = Rubik({ subsets: ['hebrew', 'latin'], variable: '--f-rubik' });
 const plexMono = IBM_Plex_Mono({
   weight: ['400', '600'],
   subsets: ['latin'],
@@ -44,10 +43,10 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const g = await getGlobal(locale);
 
-  const fontVars = `${suez.variable} ${assistant.variable} ${plexMono.variable}`;
+  const fontVars = `${rubik.variable} ${plexMono.variable}`;
   const fontStyle = {
-    '--font-display': 'var(--f-suez)',
-    '--font-body': 'var(--f-assistant)',
+    '--font-display': 'var(--f-rubik)',
+    '--font-body': 'var(--f-rubik)',
     '--font-mono': 'var(--f-mono)',
   } as React.CSSProperties;
 

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Assistant, IBM_Plex_Mono } from 'next/font/google';
+import { IBM_Plex_Mono, Rubik } from 'next/font/google';
 import '../globals.css';
 import './admin.css';
 import pkg from '../../../package.json';
@@ -19,7 +19,7 @@ import { AdminSide } from '../../components/admin/admin-side';
  * tokens and utilities the preview would show unstyled markup and lie
  * about what publishing produces.
  */
-const assistant = Assistant({ subsets: ['hebrew', 'latin'], variable: '--f-assistant' });
+const rubik = Rubik({ subsets: ['hebrew', 'latin'], variable: '--f-rubik' });
 const plexMono = IBM_Plex_Mono({ weight: ['400', '600'], subsets: ['latin'], variable: '--f-mono' });
 
 export const metadata: Metadata = {
@@ -36,11 +36,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <html
       lang="en"
       dir="ltr"
-      className={`${assistant.variable} ${plexMono.variable}`}
+      className={`${rubik.variable} ${plexMono.variable}`}
       style={
         {
-          '--font-body': 'var(--f-assistant)',
-          '--font-display': 'var(--f-assistant)',
+          '--font-body': 'var(--f-rubik)',
+          '--font-display': 'var(--f-rubik)',
           '--font-mono': 'var(--f-mono)',
         } as React.CSSProperties
       }
