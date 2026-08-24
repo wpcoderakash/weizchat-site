@@ -35,6 +35,7 @@ const ICONS = {
   global: 'M3 5h18v4H3zM3 15h18v4H3zM7 7h.01M7 17h.01',
   users: 'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.7-5 6-5s6 2 6 5M16 4.5a3.5 3.5 0 0 1 0 6.6M17 15.2c2.4.5 4 2.1 4 4.8',
   leads: 'M4 4h16v12H4zM4 13h5l1.5 3h3L15 13h5M8 8h8',
+  maintenance: 'M14.7 6.3a4 4 0 0 1-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2-2 2.5-2.5z',
   site: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.4 3.8 5.6 3.8 9S14.5 18.6 12 21c-2.5-2.4-3.8-5.6-3.8-9S9.5 5.4 12 3z',
   out: 'M14 4h-8v16h8M10 12h11M18 8.5 21.5 12 18 15.5',
   profile: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21c0-3.6 3.6-6 8-6s8 2.4 8 6',
@@ -67,7 +68,10 @@ export function AdminSide({ role, version }: { role: Role; version: string }) {
   if (isAdmin) {
     groups.push({
       label: 'Site',
-      items: [{ href: '/admin/global/en', label: 'Header & Footer', icon: 'global' }],
+      items: [
+        { href: '/admin/global/en', label: 'Header & Footer', icon: 'global' },
+        { href: '/admin/maintenance', label: 'Maintenance', icon: 'maintenance' },
+      ],
     });
   }
   if (role === 'super_admin') {

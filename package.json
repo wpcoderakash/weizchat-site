@@ -10,14 +10,15 @@
     "check:pages": "node scripts/check-pages.mjs",
     "check:tools": "node scripts/check-tools.mjs",
     "check:articles": "node scripts/check-articles.mjs",
-    "check:all": "node --no-warnings=MODULE_TYPELESS_PACKAGE_JSON scripts/check-markdown-roundtrip.mjs && node scripts/check-pages.mjs && node scripts/check-tools.mjs && node scripts/check-articles.mjs && node scripts/check-a11y.mjs && node scripts/check-cms.mjs && node scripts/check-admin.mjs",
+    "check:all": "node --no-warnings=MODULE_TYPELESS_PACKAGE_JSON scripts/check-markdown-roundtrip.mjs && node scripts/check-pages.mjs && node scripts/check-tools.mjs && node scripts/check-articles.mjs && node scripts/check-a11y.mjs && node scripts/check-cms.mjs && node scripts/check-admin.mjs && node scripts/check-maintenance.mjs",
     "check:a11y": "node scripts/check-a11y.mjs",
     "check:cms": "node scripts/check-cms.mjs",
     "check:admin": "node scripts/check-admin.mjs",
     "check:markdown": "node --no-warnings=MODULE_TYPELESS_PACKAGE_JSON scripts/check-markdown-roundtrip.mjs",
     "preflight": "node scripts/preflight.mjs",
     "release": "./scripts/build-release.sh",
-    "deploy": "./scripts/deploy.sh"
+    "deploy": "./scripts/deploy.sh",
+    "check:maintenance": "node scripts/check-maintenance.mjs"
   },
   "dependencies": {
     "@tiptap/core": "^3.30.3",

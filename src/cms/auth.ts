@@ -126,11 +126,18 @@ export function sessionCookieFor(user: CmsUser): { name: string; value: string }
 }
 
 /** The signed-in user, or null. Suspension takes effect on the next request. */
-export async function currentUser(): Promise<CmsUser | null> {
-  if (!adminConfigured()) return null;
-  const jar = await cookies();
-  const raw = jar.get(COOKIE)?.value;
-  if (!raw) return null;
+/** The cookie's name, for callers that read it from a raw request. */
+export const SESSION_COOKIE = COOKIE;
+
+/**
+ * Verify a session cookie value without `next/headers`.
+ *
+ * Middleware has no access to that API, and the maintenance gate needs the
+ * same answer the pages get — one implementation, so a signed-in editor is
+ * recognised identically in both places.
+ */
+export function userFromCookieValue(raw: string | undefined): CmsUser | null {
+  if (!adminConfigured() || !raw) return null;
   const sep = raw.lastIndexOf(':');
   if (sep <= 0) return null;
   const username = raw.slice(0, sep);
@@ -148,6 +155,11 @@ export async function currentUser(): Promise<CmsUser | null> {
     return { username: boot.username, role: 'super_admin', status: 'active' };
   }
   return readUsers().find((u) => u.username.toLowerCase() === username.toLowerCase()) ?? null;
+}
+
+export async function currentUser(): Promise<CmsUser | null> {
+  const jar = await cookies();
+  return userFromCookieValue(jar.get(COOKIE)?.value);
 }
 
 export async function isSignedIn(): Promise<boolean> {
