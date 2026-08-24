@@ -15,7 +15,7 @@ forwards `www.weiz.chat` to the Node process on `127.0.0.1:3000`.
 | | Why |
 |---|---|
 | The CloudPanel site is of type **Node.js** (or a reverse-proxy vhost) | A PHP or Static site serves files from disk and will never reach the app |
-| **Node 20+** installed on the server | The release runs on it; nothing else is needed — no pnpm, no build tools |
+| **Node 20+** installed on the server | v22.23.2, installed per-user via **nvm** — deploy scripts source `~/.nvm/nvm.sh` because a non-interactive ssh never reads `.bashrc` |
 | **PM2** installed (`npm i -g pm2`) | Keeps the site up and restarts it on reboot |
 | An **SSH key** added to the site user | `scripts/deploy.sh` uses your key; it never handles a password |
 | DNS for `weiz.chat` and `www.weiz.chat` pointing at the server | Otherwise Let's Encrypt cannot issue a certificate |
@@ -66,7 +66,10 @@ refuses a deploy that still carries the development password.
 
 **2 — Point CloudPanel at the app**
 
-In CloudPanel, the site must be a **Node.js** site with **App Port `3000`**.
+In CloudPanel, the site is a **Node.js** site and its vhost proxies to
+**port 3002** on this host (3000 and 3001 are taken by other applications).
+That port is what `ecosystem.config.cjs` sets; if the vhost is ever changed,
+change it there too.
 CloudPanel then writes the Nginx reverse proxy for you. Nothing needs to be
 placed in the site's document root — the proxy bypasses it.
 

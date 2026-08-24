@@ -23,7 +23,13 @@ module.exports = {
       max_memory_restart: '512M',
       env: {
         NODE_ENV: 'production',
-        PORT: 3000,
+        /*
+         * 3002, not 3000: this is the port CloudPanel's nginx vhost for
+         * www.weiz.chat actually proxies to — established by binding each
+         * candidate port and asking the public URL which one answered. Ports
+         * 3000 and 3001 are occupied by other applications on this host.
+         */
+        PORT: 3002,
         /*
          * 0.0.0.0, deliberately, and NOT 127.0.0.1.
          *
