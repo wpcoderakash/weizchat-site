@@ -70,7 +70,8 @@ REMOTE_RELEASE="${DEPLOY_PATH}/releases/${STAMP}"
 $SSH "$TARGET" "mkdir -p '${REMOTE_RELEASE}'"
 
 echo "==> Uploading"
-rsync -az --delete --info=progress2 -e "$SSH" "$ROOT/release/" "${TARGET}:${REMOTE_RELEASE}/"
+# No --info=progress2: macOS ships rsync 2.6.9, which does not have it.
+rsync -az --delete -e "$SSH" "$ROOT/release/" "${TARGET}:${REMOTE_RELEASE}/"
 
 echo "==> Preflight on the server"
 # shellcheck disable=SC2029

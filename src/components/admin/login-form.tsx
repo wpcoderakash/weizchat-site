@@ -8,6 +8,7 @@ export function LoginForm() {
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [reveal, setReveal] = useState(false);
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -16,7 +17,11 @@ export function LoginForm() {
     const res = await fetch('/api/admin/session', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ username, password }),
+      // Trimmed: an admin password is copied and pasted, and a stray space
+      // carried along by the clipboard is indistinguishable from a wrong
+      // password once it reaches the server. Surrounding whitespace is never
+      // part of what someone meant to type.
+      body: JSON.stringify({ username: username.trim(), password: password.trim() }),
     });
     setBusy(false);
     if (!res.ok) {
@@ -51,21 +56,36 @@ export function LoginForm() {
         </div>
         <div className="cms-field">
           <label htmlFor="cms-password">Password</label>
-          <input
-            id="cms-password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="cms-password-row">
+            <input
+              id="cms-password"
+              type={reveal ? 'text' : 'password'}
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            {/* Sign-in is where a mistyped character is invisible and the
+                only feedback is a flat refusal. Letting someone look is
+                worth more than hiding it from a shoulder they chose. */}
+            <button
+              type="button"
+              className="cms-btn cms-btn-icon"
+              onClick={() => setReveal((r) => !r)}
+              aria-pressed={reveal}
+              aria-label={reveal ? 'Hide password' : 'Show password'}
+              title={reveal ? 'Hide password' : 'Show password'}
+            >
+              {reveal ? 'Hide' : 'Show'}
+            </button>
+          </div>
         </div>
         {error ? (
           <p className="cms-status cms-status-err" role="alert">
             {error}
           </p>
         ) : null}
-        <button type="submit" className="cms-btn cms-btn-primary" disabled={busy || !username || !password}>
+        <button type="submit" className="cms-btn cms-btn-primary" disabled={busy || !username.trim() || !password.trim()}>
           {busy ? 'Checking…' : 'Sign in'}
         </button>
       </form>

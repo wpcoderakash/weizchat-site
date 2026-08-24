@@ -921,3 +921,19 @@
 .cms-rich-surface th {
   position: relative;
 }
+
+/* Sign-in: the password field and its reveal button share a row. */
+.cms-password-row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: stretch;
+}
+
+.cms-password-row input {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.cms-password-row .cms-btn {
+  flex: none;
+}
