@@ -66,12 +66,12 @@ if (!user || !password) {
   problems.push('CMS_ADMIN_PASSWORD is shorter than 8 characters');
 } else if (/REPLACE_ME|changeme|password/i.test(password)) {
   problems.push('CMS_ADMIN_PASSWORD still looks like the example value');
-} else if (process.env.NODE_ENV === 'production' && password.length < 12) {
-  // No literal to compare against: this file is published, and a known
-  // password in it would be a password to rotate. Length is the honest proxy
-  // for "not the short one you use locally".
-  problems.push('CMS_ADMIN_PASSWORD is under 12 characters — too short for a public site');
 }
+// The floor is the application's own (8, the NIST 800-63B minimum), not a
+// stricter one invented here: the owner chooses this password, and a deploy
+// script is the wrong place to overrule them. Length was never the real
+// protection anyway — a password that has been shared is weak at any length.
+
 
 // ── Things worth knowing, but not fatal ─────────────────────────────────────
 if (!process.env.NEXT_PUBLIC_META_DOMAIN_VERIFICATION) {

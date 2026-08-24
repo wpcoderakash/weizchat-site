@@ -13,8 +13,12 @@ module.exports = {
   apps: [
     {
       name: 'weizchat-site',
-      cwd: '/home/weiz-chat/htdocs/www.weiz.chat/current',
-      script: 'server.js',
+      // A wrapper that sources the environment itself — see run-site.sh.
+      // PM2's env_file is silently ignored here, and a reload without it
+      // leaves the admin unable to authenticate anyone.
+      cwd: '/home/weiz-chat',
+      script: '/home/weiz-chat/htdocs/www.weiz.chat/current/scripts/run-site.sh',
+      interpreter: 'bash',
       // One instance: the CMS store is a directory of files with
       // last-writer-wins semantics (ADR-0032). Clustering would need shared
       // storage or a database first.
@@ -52,7 +56,6 @@ module.exports = {
       },
       // CMS_ADMIN_USERNAME / CMS_ADMIN_PASSWORD / NEXT_PUBLIC_META_DOMAIN_VERIFICATION
       // come from here — see DEPLOY.md.
-      env_file: '/home/weiz-chat/weizchat.env',
       out_file: '/home/weiz-chat/logs/weizchat-site.out.log',
       error_file: '/home/weiz-chat/logs/weizchat-site.err.log',
       time: true,
