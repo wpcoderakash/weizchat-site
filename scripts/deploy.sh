@@ -36,6 +36,29 @@ fi
 
 echo "==> Deploying to ${TARGET}:${DEPLOY_PATH}"
 
+# First-time setup, made idempotent so every deploy can assert it rather than
+# depending on someone having read the runbook. Creating directories is safe;
+# creating the secrets file is not, so that one is reported, never invented.
+echo "==> Checking the server"
+$SSH "$TARGET" bash -s <<'REMOTE'
+set -euo pipefail
+mkdir -p ~/weizchat-data/content-store ~/logs ~/htdocs/www.weiz.chat/releases
+missing=0
+command -v node >/dev/null || { echo "MISSING  node is not installed (need 20+)"; missing=1; }
+command -v pm2  >/dev/null || { echo "MISSING  pm2 is not installed (npm i -g pm2)"; missing=1; }
+if [ ! -f ~/weizchat.env ]; then
+  echo "MISSING  ~/weizchat.env — create it from .env.production.example, then: chmod 600 ~/weizchat.env"
+  missing=1
+fi
+if [ "$missing" -ne 0 ]; then
+  echo "Server is not ready; nothing was changed."
+  exit 1
+fi
+node_major="$(node -p 'process.versions.node.split(".")[0]')"
+[ "$node_major" -ge 20 ] || { echo "MISSING  node ${node_major} is too old (need 20+)"; exit 1; }
+echo "ready: node $(node -v), pm2 $(pm2 -v 2>/dev/null | tail -1)"
+REMOTE
+
 # A dated release beside the live one, so a bad deploy is a symlink away from
 # being undone rather than a rebuild away.
 STAMP="$(date -u +%Y%m%d-%H%M%S)"
