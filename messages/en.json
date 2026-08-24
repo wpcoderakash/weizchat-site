@@ -28,8 +28,7 @@
       "blog": "Blog",
       "informationCenter": "Information center"
     },
-    "themeToDark": "Switch to dark theme",
-    "themeToLight": "Switch to light theme"
+    "themeSwitch": "Dark theme"
   },
   "footer": {
     "tagline": "Every business WhatsApp conversation in one shared inbox — with AI that works for you.",
