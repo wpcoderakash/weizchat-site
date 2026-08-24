@@ -15,7 +15,9 @@
   --cms-line: #e2e0ea;
   --cms-accent: #5936e4;
   --cms-ok: #1b6e3c;
+  --cms-ok-soft: #e6f2ea;
   --cms-danger: #9c1f3d;
+  --cms-danger-soft: #fbe9ee;
 
   direction: ltr;
   min-height: 100dvh;
@@ -245,7 +247,7 @@
   font-size: 0.72rem;
   font-weight: 600;
   color: var(--cms-danger);
-  background: #fbe9ee;
+  background: var(--cms-danger-soft);
   padding: 0.1rem 0.4rem;
   border-radius: 4px;
 }
@@ -335,7 +337,7 @@
 }
 
 .cms-badge-live {
-  background: #e6f2ea;
+  background: var(--cms-ok-soft);
   color: var(--cms-ok);
 }
 
@@ -698,4 +700,35 @@
   background: var(--cms-accent);
   color: #fff;
   font-weight: 600;
+}
+
+/* ── Dark theme — the same chrome, night palette. The light set above stays
+   the default; this applies only when the toggle stored 'dark' (or the OS
+   asks for it and nothing was stored), via <html data-theme>. ─────────── */
+:root[data-theme='dark'] .cms {
+  --cms-bg: #0e0c14;
+  --cms-surface: #16131f;
+  --cms-sunken: #1d1929;
+  --cms-fg: #ece9f4;
+  --cms-muted: #a19bb3;
+  --cms-line: #2a2438;
+  --cms-accent: #a78bfa;
+  --cms-ok: #6ee7a0;
+  --cms-ok-soft: #0f2a1c;
+  --cms-danger: #f98da0;
+  --cms-danger-soft: #3b1420;
+
+  color-scheme: dark;
+}
+
+:root[data-theme='dark'] .cms-side-link[aria-current='page'],
+:root[data-theme='dark'] .cms-btn-primary,
+:root[data-theme='dark'] .cms-lang a[aria-current='page'],
+:root[data-theme='dark'] .cms-side-brand .logo,
+:root[data-theme='dark'] .cms-preview-bar {
+  color: #17123a;
+}
+
+:root[data-theme='dark'] .cms-top {
+  background: var(--cms-surface);
 }

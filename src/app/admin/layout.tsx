@@ -5,6 +5,7 @@ import './admin.css';
 import pkg from '../../../package.json';
 import { currentUser } from '../../cms/auth';
 import { AdminSide } from '../../components/admin/admin-side';
+import { ThemeToggle } from '../../components/layout/theme-toggle';
 
 /**
  * The admin's ROOT layout.
@@ -28,6 +29,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+// Before first paint: a stored theme choice wins, else the OS setting. The
+// key is shared with the public site — one origin, one preference.
+const THEME_BOOT = `(function(){try{var s=localStorage.getItem('theme');var t=s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t;}catch(e){}})();`;
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   // Signed in → the full shell (sidebar + topbar). Signed out (the login
   // page, or an unconfigured install) → just the frame, no chrome to leak.
@@ -36,6 +41,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <html
       lang="en"
       dir="ltr"
+      suppressHydrationWarning
       className={`${rubik.variable} ${plexMono.variable}`}
       style={
         {
@@ -46,6 +52,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       }
     >
       <body>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         {/*
           The tool is always LTR even while editing Hebrew: an editor wants
           the chrome to sit still. The preview sets its own direction on the
@@ -64,6 +71,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                   <a className="cms-btn" href="/api/admin/preview/stop?redirect=/admin">
                     Exit preview
                   </a>
+                  <ThemeToggle label="Dark theme" />
                   <span className="cms-chip">
                     {user.username} · {user.role.replace('_', ' ')}
                   </span>

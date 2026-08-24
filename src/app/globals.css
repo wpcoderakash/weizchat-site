@@ -245,7 +245,11 @@ h3 {
     border-color 0.2s ease;
 }
 
-.theme-toggle[aria-checked='true'] {
+/* Visual state follows <html data-theme>, which the boot script sets before
+   first paint — so the switch is right immediately, before React hydrates
+   and sets aria-checked. Both selectors are kept so a click is instant. */
+.theme-toggle[aria-checked='true'],
+:root[data-theme='dark'] .theme-toggle {
   --toggle-bg: var(--accent);
   --toggle-line: var(--accent);
 }
@@ -282,9 +286,20 @@ button.theme-toggle:hover:not(:disabled) {
   inset-inline-end: 0.45rem;
 }
 
-.theme-toggle[aria-checked='true'] .track-icon {
+.theme-toggle[aria-checked='true'] .track-icon,
+:root[data-theme='dark'] .theme-toggle .track-icon {
   color: var(--accent-fg);
   opacity: 0.8;
+}
+
+/* The knob carries both icons; CSS picks the one for the current theme. */
+.theme-toggle .knob-moon,
+:root[data-theme='dark'] .theme-toggle .knob-sun {
+  display: none;
+}
+
+:root[data-theme='dark'] .theme-toggle .knob-moon {
+  display: block;
 }
 
 .theme-toggle .knob {
@@ -302,7 +317,8 @@ button.theme-toggle:hover:not(:disabled) {
   transition: inset-inline-start 0.2s ease;
 }
 
-.theme-toggle[aria-checked='true'] .knob {
+.theme-toggle[aria-checked='true'] .knob,
+:root[data-theme='dark'] .theme-toggle .knob {
   inset-inline-start: calc(100% - 1.375rem - 0.125rem);
 }
 
