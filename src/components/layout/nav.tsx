@@ -7,6 +7,7 @@ import type { GlobalDoc } from '../../cms/site-schema';
 import { resourceRoutes, solutionRoutes, toolRoutes } from '../../config/routes';
 import { WeizMark } from '../weiz-mark';
 import { LocaleSwitcher } from './locale-switcher';
+import { ThemeSwitcher } from './theme-switcher';
 
 /**
  * Top navigation (brief §5.1): logo · Solutions ▾ · Tools ▾ · Resources ·
@@ -144,6 +145,7 @@ export function Nav({ g }: { g: GlobalDoc }) {
         </nav>
 
         <div className="ms-auto hidden items-center gap-3 lg:flex">
+          <ThemeSwitcher />
           <LocaleSwitcher />
           <a
             href={`${g.site.appUrl}/login`}
@@ -228,7 +230,8 @@ export function Nav({ g }: { g: GlobalDoc }) {
               {g.nav.startTrial}
             </a>
           </div>
-          <div className="pt-4">
+          <div className="flex items-center gap-3 pt-4">
+            <ThemeSwitcher />
             <LocaleSwitcher />
           </div>
         </nav>

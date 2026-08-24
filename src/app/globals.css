@@ -37,8 +37,10 @@
   color-scheme: light dark;
 }
 
+/* Theme: the OS setting is the default; a stored choice on
+   <html data-theme> overrides it (pre-paint script in the root layout). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --bg: #0b1120;
     --surface: #111827;
     --surface-2: #0f172a;
@@ -58,6 +60,35 @@
 
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
   }
+}
+
+:root[data-theme='dark'] {
+  --bg: #0b1120;
+  --surface: #111827;
+  --surface-2: #0f172a;
+  --fg: #e5e7eb;
+  --muted: #94a3b8;
+  --border: #1f2937;
+  --border-strong: #334155;
+
+  --accent: #a78bfa;
+  --accent-hover: #c4b5fd;
+  --accent-soft: #312960;
+  --accent-fg: #17123a;
+
+  --danger: #fca5a5;
+  --ok: #86efac;
+  --warn: #fcd34d;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
 }
 
 /* Tailwind v4 theme mapping — utilities like bg-surface, text-accent. */

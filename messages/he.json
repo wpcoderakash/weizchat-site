@@ -27,7 +27,9 @@
     "resource": {
       "blog": "בלוג",
       "informationCenter": "מרכז מידע"
-    }
+    },
+    "themeToDark": "מעבר למצב כהה",
+    "themeToLight": "מעבר למצב בהיר"
   },
   "footer": {
     "tagline": "כל שיחות הוואטסאפ של העסק בתיבה משותפת אחת — עם AI שעובד בשבילכם.",

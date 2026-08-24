@@ -44,6 +44,8 @@ export default async function LocaleLayout({
   const g = await getGlobal(locale);
 
   const fontVars = `${rubik.variable} ${plexMono.variable}`;
+  // Before first paint: a stored theme choice wins, else the OS setting.
+  const themeBoot = `(function(){try{var s=localStorage.getItem('theme');var t=s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t;}catch(e){}})();`;
   const fontStyle = {
     '--font-display': 'var(--f-rubik)',
     '--font-body': 'var(--f-rubik)',
@@ -51,13 +53,20 @@ export default async function LocaleLayout({
   } as React.CSSProperties;
 
   return (
-    <html lang={locale} dir={directionFor(locale)} className={fontVars} style={fontStyle}>
+    <html
+      lang={locale}
+      dir={directionFor(locale)}
+      className={fontVars}
+      style={fontStyle}
+      suppressHydrationWarning
+    >
       <head>
         {site.metaDomainVerification ? (
           <meta name="facebook-domain-verification" content={site.metaDomainVerification} />
         ) : null}
       </head>
       <body>
+        <script dangerouslySetInnerHTML={{ __html: themeBoot }} />
         <NextIntlClientProvider>
           <Nav g={g} />
           <div className="min-h-dvh">{children}</div>
