@@ -45,6 +45,10 @@ module.exports = {
          */
         HOSTNAME: '0.0.0.0',
         WEIZ_CONTENT_STORE: '/home/weiz-chat/weizchat-data/content-store',
+        // Where the bootstrap account's password lives. The Profile screen
+        // rewrites this file; without it, that account can only be changed
+        // by editing the file over ssh.
+        WEIZ_ENV_FILE: '/home/weiz-chat/weizchat.env',
       },
       // CMS_ADMIN_USERNAME / CMS_ADMIN_PASSWORD / NEXT_PUBLIC_META_DOMAIN_VERIFICATION
       // come from here — see DEPLOY.md.

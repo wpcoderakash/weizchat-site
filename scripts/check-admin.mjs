@@ -27,9 +27,11 @@ p.on('pageerror', (e) => { console.log('PAGEERROR:', String(e).slice(0, 140)); f
 
 // ── sign in ──
 await p.goto(`${B}/admin/login`, { waitUntil: 'networkidle' });
-await p.getByLabel('Username').click(); // after hydration, or React state stays empty
-await p.getByLabel('Username').fill(USER);
-await p.getByLabel('Password').fill(PW);
+// By id, not by label: the reveal button's accessible name also contains
+// "Password", so getByLabel matches two elements.
+await p.click('#cms-username'); // after hydration, or React state stays empty
+await p.fill('#cms-username', USER);
+await p.fill('#cms-password', PW);
 await p.getByRole('button', { name: 'Sign in' }).click();
 await p.waitForURL(/\/admin$/, { timeout: 15000 });
 check('login lands on the dashboard', true);
@@ -96,6 +98,27 @@ check('form leads screen renders', (await p.getByRole('heading', { name: 'Form L
 await p.goto(`${B}/admin/users`, { waitUntil: 'domcontentloaded' });
 await p.locator('.cms-table tbody tr').first().waitFor({ timeout: 10000 });
 check('users screen renders the bootstrap row', (await p.locator('.cms-table tbody tr').count()) >= 1);
+
+// ── profile: your own account, and the password form ──
+await p.goto(`${B}/admin/profile`, { waitUntil: 'domcontentloaded' });
+check('profile screen renders', (await p.getByRole('heading', { name: 'Profile' }).count()) === 1);
+check('it shows who you are signed in as', (await p.locator('#p-user').inputValue()) === USER.toLowerCase() || (await p.locator('#p-user').inputValue()) === USER);
+check('the change-password form is present', (await p.locator('#p-current').count()) === 1 && (await p.locator('#p-new').count()) === 1);
+// A short password must be refused by the button, before any request.
+await p.fill('#p-current', PW);
+await p.fill('#p-new', 'short');
+await p.fill('#p-confirm', 'short');
+check('a too-short password cannot be submitted', await p.getByRole('button', { name: /change password/i }).isDisabled());
+await p.fill('#p-new', 'a-long-enough-password-1');
+await p.fill('#p-confirm', 'a-different-one-entirely');
+check('mismatched passwords cannot be submitted', await p.getByRole('button', { name: /change password/i }).isDisabled());
+// A wrong current password must be refused by the server.
+await p.fill('#p-current', 'definitely-not-the-password');
+await p.fill('#p-new', 'a-long-enough-password-1');
+await p.fill('#p-confirm', 'a-long-enough-password-1');
+await p.getByRole('button', { name: /change password/i }).click();
+await p.waitForTimeout(1200);
+check('a wrong current password is refused', (await p.locator('.cms-status-err').innerText()).toLowerCase().includes('not accepted'));
 
 // ── public site at phone width: no horizontal scroll ──
 await p.setViewportSize({ width: 390, height: 800 });

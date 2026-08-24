@@ -81,9 +81,12 @@ echo "==> Switching 'current' to this release"
 # shellcheck disable=SC2029
 $SSH "$TARGET" "ln -sfn '${REMOTE_RELEASE}' '${DEPLOY_PATH}/current.new' && mv -Tf '${DEPLOY_PATH}/current.new' '${DEPLOY_PATH}/current'"
 
+# startOrReload against the ecosystem FILE, not the process name: `pm2 reload
+# <name>` keeps the environment the process already had, so a new variable in
+# the config silently never arrives.
 echo "==> Restarting"
 # shellcheck disable=SC2029
-$SSH "$TARGET" "export NVM_DIR=\"\$HOME/.nvm\"; [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\" >/dev/null 2>&1; set -a && . \$HOME/weizchat.env && set +a; pm2 reload weizchat-site --update-env || pm2 start '${DEPLOY_PATH}/current/ecosystem.config.cjs'; pm2 save"
+$SSH "$TARGET" "export NVM_DIR=\"\$HOME/.nvm\"; [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\" >/dev/null 2>&1; set -a && . \$HOME/weizchat.env && set +a; pm2 startOrReload '${DEPLOY_PATH}/current/ecosystem.config.cjs' --update-env; pm2 save"
 
 echo "==> Keeping the last five releases"
 # shellcheck disable=SC2029

@@ -72,9 +72,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                     Exit preview
                   </a>
                   <ThemeToggle label="Dark theme" />
-                  <span className="cms-chip">
+                  <a className="cms-chip cms-chip-link" href="/admin/profile">
                     {user.username} · {user.role.replace('_', ' ')}
-                  </span>
+                  </a>
                 </div>
                 {children}
               </div>

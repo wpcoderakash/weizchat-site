@@ -44,3 +44,12 @@ export const MESSAGES_DIR = fromEnv('WEIZ_MESSAGES_DIR', 'messages');
 
 /** Screenshots that ship with the repo and appear in the media library. */
 export const PUBLIC_DIR = fromEnv('WEIZ_PUBLIC_DIR', 'public');
+
+/**
+ * The production environment file, when there is one.
+ *
+ * The bootstrap account's password lives here rather than in the store, so
+ * changing it from the admin means rewriting this file. Unset in development,
+ * where the password comes from .env.local and is changed by editing it.
+ */
+export const ENV_FILE = process.env['WEIZ_ENV_FILE']?.trim() || null;

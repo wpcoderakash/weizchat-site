@@ -2,7 +2,7 @@ import { createHash, randomBytes, scryptSync, timingSafeEqual } from 'node:crypt
 import fs from 'node:fs';
 import path from 'node:path';
 import { cookies } from 'next/headers';
-import { USERS_FILE } from '../lib/paths';
+import { ENV_FILE, USERS_FILE } from '../lib/paths';
 
 /**
  * CMS authentication and roles.
@@ -228,3 +228,69 @@ export function removeUser(username: string): boolean {
 }
 
 export const CMS_COOKIE = COOKIE;
+
+/** How short a password may be. Matches what the deploy preflight enforces. */
+export const MIN_PASSWORD_LENGTH = 12;
+
+/**
+ * Change the password of the signed-in account.
+ *
+ * Two very different storage locations behind one action:
+ *
+ * - A stored user keeps a scrypt hash in the users file; rewrite it.
+ * - The bootstrap account's password is an environment variable, read from
+ *   the production env file at boot. Changing it means rewriting that file
+ *   AND updating this process's own environment, or the new password would
+ *   only take effect after a restart while the old one kept working.
+ *
+ * The current password is always required. A session cookie is enough to act
+ * as someone; it must not be enough to lock them out of their own site.
+ */
+export function changeOwnPassword(
+  username: string,
+  currentPassword: string,
+  newPassword: string,
+): { ok: true } | { ok: false; error: string } {
+  if (newPassword.length < MIN_PASSWORD_LENGTH) return { ok: false, error: 'too_short' };
+  if (newPassword === currentPassword) return { ok: false, error: 'unchanged' };
+  // The env file is read by a shell (`set -a; . file`) and by PM2. A quote or
+  // a newline in the value would break both, in ways that surface as a site
+  // that will not start.
+  if (/['\n\r]/.test(newPassword)) return { ok: false, error: 'illegal_characters' };
+
+  const user = checkCredentials(username, currentPassword);
+  if (!user) return { ok: false, error: 'current_password_wrong' };
+
+  const boot = bootstrap();
+  const isBootstrap = boot !== null && same(user.username.toLowerCase(), boot.username.toLowerCase());
+
+  if (!isBootstrap) {
+    const users = readUsers();
+    const stored = users.find((u) => u.username.toLowerCase() === user.username.toLowerCase());
+    if (!stored) return { ok: false, error: 'not_found' };
+    const credentials = hashPassword(newPassword);
+    stored.hash = credentials.hash;
+    stored.salt = credentials.salt;
+    writeUsers(users);
+    return { ok: true };
+  }
+
+  if (!ENV_FILE) return { ok: false, error: 'env_file_unknown' };
+  try {
+    const raw = fs.readFileSync(ENV_FILE, 'utf8');
+    const line = `CMS_ADMIN_PASSWORD='${newPassword}'`;
+    const next = /^CMS_ADMIN_PASSWORD=.*$/m.test(raw)
+      ? raw.replace(/^CMS_ADMIN_PASSWORD=.*$/m, line)
+      : `${raw.replace(/\n*$/, '')}\n${line}\n`;
+    // Same permissions, written in place: this file is chmod 600 and a
+    // rename from a temp file elsewhere could land it with a laxer mode.
+    fs.writeFileSync(ENV_FILE, next, { mode: 0o600 });
+  } catch (error) {
+    console.error('[cms] could not write the environment file', error);
+    return { ok: false, error: 'env_write_failed' };
+  }
+  // The running process keeps its own copy; without this the old password
+  // would go on working until the next restart.
+  process.env['CMS_ADMIN_PASSWORD'] = newPassword;
+  return { ok: true };
+}

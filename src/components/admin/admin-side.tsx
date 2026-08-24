@@ -37,6 +37,7 @@ const ICONS = {
   leads: 'M4 4h16v12H4zM4 13h5l1.5 3h3L15 13h5M8 8h8',
   site: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.4 3.8 5.6 3.8 9S14.5 18.6 12 21c-2.5-2.4-3.8-5.6-3.8-9S9.5 5.4 12 3z',
   out: 'M14 4h-8v16h8M10 12h11M18 8.5 21.5 12 18 15.5',
+  profile: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21c0-3.6 3.6-6 8-6s8 2.4 8 6',
 };
 
 interface Item {
@@ -110,6 +111,14 @@ export function AdminSide({ role, version }: { role: Role; version: string }) {
         ))}
       </nav>
       <div className="cms-side-bottom">
+        <a
+          className="cms-side-link"
+          href="/admin/profile"
+          aria-current={path === '/admin/profile' ? 'page' : undefined}
+        >
+          <Icon d={ICONS.profile} />
+          Profile
+        </a>
         <a className="cms-side-link" href="/" target="_blank" rel="noreferrer">
           <Icon d={ICONS.site} />
           View site

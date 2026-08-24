@@ -937,3 +937,18 @@
 .cms-password-row .cms-btn {
   flex: none;
 }
+
+/* The account chip doubles as the way into your own profile. */
+a.cms-chip-link {
+  text-decoration: none;
+}
+
+a.cms-chip-link:hover {
+  border-color: var(--cms-accent);
+  color: var(--cms-fg);
+}
+
+.cms-field input[readonly] {
+  background: var(--cms-sunken);
+  color: var(--cms-muted);
+}
