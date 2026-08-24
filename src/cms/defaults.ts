@@ -9,6 +9,7 @@ import type {
   SolutionDoc,
   ToolDoc,
 } from './site-schema';
+import { CONTENT_DIR, MESSAGES_DIR } from '../lib/paths';
 
 /**
  * Built-in documents, derived from the SAME sources the site rendered
@@ -24,7 +25,7 @@ const cache = new Map<string, Messages>();
 function messages(locale: string): Messages {
   const key = locale === 'he' ? 'he' : 'en';
   if (!cache.has(key)) {
-    const file = path.join(process.cwd(), 'messages', `${key}.json`);
+    const file = path.join(MESSAGES_DIR, `${key}.json`);
     cache.set(key, JSON.parse(fs.readFileSync(file, 'utf8')) as Messages);
   }
   return cache.get(key)!;
@@ -183,7 +184,7 @@ const LEGAL_TITLE_KEY: Record<string, string> = {
 export function legalDefault(slug: string, locale: string): LegalDoc {
   const titleKey = LEGAL_TITLE_KEY[slug];
   if (!titleKey) throw new Error(`unknown legal page: ${slug}`);
-  const file = path.join(process.cwd(), 'src', 'content', 'legal', `${slug}.${locale}.mdx`);
+  const file = path.join(CONTENT_DIR, 'legal', `${slug}.${locale}.mdx`);
   return {
     seo: {
       title: t(locale, `footer.legal.${titleKey}`),
@@ -276,7 +277,7 @@ export function globalDefault(locale: string): GlobalDoc {
 // ── Posts (the MDX articles remain the built-in corpus) ─────────────────────
 
 export function mdxPostFiles(collection: 'blog' | 'information-center'): string[] {
-  const dir = path.join(process.cwd(), 'src', 'content', 'articles', collection);
+  const dir = path.join(CONTENT_DIR, 'articles', collection);
   return fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith('.mdx')) : [];
 }
 
@@ -285,7 +286,7 @@ export function mdxPostDefault(
   slug: string,
   locale: string,
 ): PostDoc | null {
-  const file = path.join(process.cwd(), 'src', 'content', 'articles', collection, `${slug}.${locale}.mdx`);
+  const file = path.join(CONTENT_DIR, 'articles', collection, `${slug}.${locale}.mdx`);
   if (!fs.existsSync(file)) return null;
   const raw = fs.readFileSync(file, 'utf8');
   const match = /^---\n([\s\S]*?)\n---\n?([\s\S]*)$/.exec(raw);

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { NextResponse } from 'next/server';
 import { hasRole, isSignedIn } from '../../../../cms/auth';
+import { MEDIA_DIR, PUBLIC_DIR } from '../../../../lib/paths';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -25,7 +26,7 @@ export const dynamic = 'force-dynamic';
  * 404 in production — which is exactly what happened when the automated
  * check first ran. /media/<name> is served by a route handler instead.
  */
-const MEDIA_DIR = path.join(process.cwd(), 'content-store', 'media');
+
 const MAX_BYTES = 8 * 1024 * 1024;
 
 /** Magic numbers, so a .png that is really something else is refused. */
@@ -44,7 +45,7 @@ export async function GET(): Promise<NextResponse> {
   const dirs: { dir: string; prefix: string }[] = [
     { dir: MEDIA_DIR, prefix: '/media' },
     // The product screenshots ship with the repo and are pickable too.
-    { dir: path.join(process.cwd(), 'public', 'product'), prefix: '/product' },
+    { dir: path.join(PUBLIC_DIR, 'product'), prefix: '/product' },
   ];
   const files = dirs.flatMap(({ dir, prefix }) =>
     fs.existsSync(dir)

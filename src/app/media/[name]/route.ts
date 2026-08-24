@@ -1,11 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { NextResponse } from 'next/server';
+import { MEDIA_DIR } from '../../../lib/paths';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const MEDIA_DIR = path.join(process.cwd(), 'content-store', 'media');
+
 
 const TYPES: Record<string, string> = {
   '.png': 'image/png',

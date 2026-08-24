@@ -47,3 +47,7 @@ next-env.d.ts
 # CMS content store
 content-store/
 undefined/
+
+# Build output of scripts/build-release.sh — never committed.
+release/
+.deploy.env

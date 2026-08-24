@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { z } from 'zod';
+import { LEADS_DIR } from '../lib/paths';
 
 /**
  * Form leads — real capture, replacing the mailto-only forms. A lead is
@@ -12,7 +13,7 @@ import { z } from 'zod';
  * personal data.
  */
 
-const LEADS_DIR = path.join(process.cwd(), 'content-store', 'leads');
+
 
 /** What the public intake accepts. Everything is capped — this is an
  *  unauthenticated write path. */

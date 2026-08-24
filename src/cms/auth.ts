@@ -2,6 +2,7 @@ import { createHash, randomBytes, scryptSync, timingSafeEqual } from 'node:crypt
 import fs from 'node:fs';
 import path from 'node:path';
 import { cookies } from 'next/headers';
+import { USERS_FILE } from '../lib/paths';
 
 /**
  * CMS authentication and roles.
@@ -42,7 +43,7 @@ export interface CmsUser {
 }
 
 const COOKIE = 'weizchat_cms';
-const USERS_FILE = path.join(process.cwd(), 'content-store', 'users.json');
+
 
 function bootstrap(): { username: string; password: string } | null {
   const username = process.env.CMS_ADMIN_USERNAME;

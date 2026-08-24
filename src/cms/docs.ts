@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { z } from 'zod';
+import { STORE_DIR } from '../lib/paths';
 
 /**
  * The generic CMS document store (ADR-0032, extended site-wide).
@@ -33,7 +34,7 @@ export interface Envelope<T> {
   lastAction?: 'saved' | 'published' | 'unpublished';
 }
 
-const STORE_DIR = path.join(process.cwd(), 'content-store');
+
 
 /** Slugs and locales are ours or validated upstream; keep the join tight anyway. */
 function fileFor(kind: DocKind, slug: string, locale: string): string {

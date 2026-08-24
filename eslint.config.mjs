@@ -19,6 +19,9 @@ const eslintConfig = defineConfig([
     ".next/**",
     "out/**",
     "build/**",
+    // Deploy artefact of scripts/build-release.sh: built code and vendored
+    // dependencies, none of it ours to lint.
+    "release/**",
     "next-env.d.ts",
   ]),
 ]);

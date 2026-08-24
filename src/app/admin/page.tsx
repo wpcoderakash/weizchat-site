@@ -1,11 +1,11 @@
 import fs from 'node:fs';
-import path from 'node:path';
 import { redirect } from 'next/navigation';
 import { adminConfigured, currentUser, listUsers } from '../../cms/auth';
 import { recentActivity, type ActivityRow } from '../../cms/docs';
 import { countNewLeads } from '../../cms/leads';
 import { adminListPosts } from '../../cms/posts';
 import { PAGES, pageBySlug } from '../../cms/registry';
+import { MEDIA_DIR } from '../../lib/paths';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,7 +19,7 @@ export const dynamic = 'force-dynamic';
 function mediaCount(): number {
   try {
     return fs
-      .readdirSync(path.join(process.cwd(), 'content-store', 'media'))
+      .readdirSync(MEDIA_DIR)
       .filter((f) => !f.startsWith('.')).length;
   } catch {
     return 0;
