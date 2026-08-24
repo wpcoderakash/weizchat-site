@@ -42,6 +42,9 @@ echo "==> Deploying to ${TARGET}:${DEPLOY_PATH}"
 echo "==> Checking the server"
 $SSH "$TARGET" bash -s <<'REMOTE'
 set -euo pipefail
+export NVM_DIR="$HOME/.nvm"
+# shellcheck disable=SC1091
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" >/dev/null 2>&1 || true
 mkdir -p ~/weizchat-data/content-store ~/logs ~/htdocs/www.weiz.chat/releases
 missing=0
 command -v node >/dev/null || { echo "MISSING  node is not installed (need 20+)"; missing=1; }
@@ -71,7 +74,7 @@ rsync -az --delete --info=progress2 -e "$SSH" "$ROOT/release/" "${TARGET}:${REMO
 
 echo "==> Preflight on the server"
 # shellcheck disable=SC2029
-$SSH "$TARGET" "cd '${REMOTE_RELEASE}' && set -a && . /home/${DEPLOY_USER}/weizchat.env && set +a && NODE_ENV=production node scripts/preflight.mjs"
+$SSH "$TARGET" "export NVM_DIR=\"\$HOME/.nvm\"; [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\" >/dev/null 2>&1; cd '${REMOTE_RELEASE}' && set -a && . \$HOME/weizchat.env && set +a && NODE_ENV=production node scripts/preflight.mjs"
 
 echo "==> Switching 'current' to this release"
 # shellcheck disable=SC2029
@@ -79,7 +82,7 @@ $SSH "$TARGET" "ln -sfn '${REMOTE_RELEASE}' '${DEPLOY_PATH}/current.new' && mv -
 
 echo "==> Restarting"
 # shellcheck disable=SC2029
-$SSH "$TARGET" "pm2 reload weizchat-site --update-env || pm2 start '${DEPLOY_PATH}/current/ecosystem.config.cjs'"
+$SSH "$TARGET" "export NVM_DIR=\"\$HOME/.nvm\"; [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\" >/dev/null 2>&1; set -a && . \$HOME/weizchat.env && set +a; pm2 reload weizchat-site --update-env || pm2 start '${DEPLOY_PATH}/current/ecosystem.config.cjs'; pm2 save"
 
 echo "==> Keeping the last five releases"
 # shellcheck disable=SC2029

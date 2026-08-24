@@ -24,7 +24,20 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: 3000,
-        HOSTNAME: '127.0.0.1',
+        /*
+         * 0.0.0.0, deliberately, and NOT 127.0.0.1.
+         *
+         * Binding the loopback address looks safer but breaks the site: Next
+         * then builds middleware rewrite URLs on a different origin than the
+         * request, downgrades the rewrite to a redirect, and every page
+         * answers 307 to itself — an infinite loop. Verified on this server.
+         * ('localhost' is worse still: it binds IPv6 only, so nginx cannot
+         * reach it at all.)
+         *
+         * The app is not exposed by this: the host firewall drops external
+         * traffic to 3000, so only nginx on the box reaches it.
+         */
+        HOSTNAME: '0.0.0.0',
         WEIZ_CONTENT_STORE: '/home/weiz-chat/weizchat-data/content-store',
       },
       // CMS_ADMIN_USERNAME / CMS_ADMIN_PASSWORD / NEXT_PUBLIC_META_DOMAIN_VERIFICATION
