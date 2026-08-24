@@ -64,8 +64,13 @@ if (!user || !password) {
   problems.push('CMS_ADMIN_USERNAME and CMS_ADMIN_PASSWORD must both be set — the admin refuses to run without them');
 } else if (password.length < 8) {
   problems.push('CMS_ADMIN_PASSWORD is shorter than 8 characters');
-} else if (process.env.NODE_ENV === 'production' && password === '@Weiz2026') {
-  problems.push('CMS_ADMIN_PASSWORD is still the development password — set a different one for production');
+} else if (/REPLACE_ME|changeme|password/i.test(password)) {
+  problems.push('CMS_ADMIN_PASSWORD still looks like the example value');
+} else if (process.env.NODE_ENV === 'production' && password.length < 12) {
+  // No literal to compare against: this file is published, and a known
+  // password in it would be a password to rotate. Length is the honest proxy
+  // for "not the short one you use locally".
+  problems.push('CMS_ADMIN_PASSWORD is under 12 characters — too short for a public site');
 }
 
 // ── Things worth knowing, but not fatal ─────────────────────────────────────

@@ -8,11 +8,11 @@
  */
 import { createRequire } from 'node:module';
 const require = createRequire('/Users/akashbiswas/Desktop/whatsapp sass Project/package.json');
+import { cmsCredentials } from './lib/credentials.mjs';
 const { chromium } = require('@playwright/test');
 
 const B = process.env.BASE ?? 'http://localhost:3002';
-const USER = process.env.CMS_ADMIN_USERNAME ?? 'dev@weiz.co.il';
-const PW = process.env.CMS_ADMIN_PASSWORD ?? '@Weiz2026';
+const { username: USER, password: PW } = cmsCredentials();
 
 let fails = 0;
 function check(name, ok, detail = '') {

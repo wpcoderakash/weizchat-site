@@ -9,10 +9,11 @@
  */
 import { createRequire } from 'node:module';
 const require = createRequire('/Users/akashbiswas/Desktop/whatsapp sass Project/package.json');
+import { cmsCredentials } from './lib/credentials.mjs';
 const { chromium } = require('@playwright/test');
 
 const B = process.env.BASE ?? 'http://localhost:3002';
-const ADMIN = { username: 'dev@weiz.co.il', password: '@Weiz2026' };
+const ADMIN = cmsCredentials();
 let fails = 0;
 const check = (name, ok, extra = '') => {
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${extra ? ' — ' + extra : ''}`);
