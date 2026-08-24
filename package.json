@@ -10,12 +10,19 @@
     "check:pages": "node scripts/check-pages.mjs",
     "check:tools": "node scripts/check-tools.mjs",
     "check:articles": "node scripts/check-articles.mjs",
-    "check:all": "node scripts/check-pages.mjs && node scripts/check-tools.mjs && node scripts/check-articles.mjs && node scripts/check-a11y.mjs && node scripts/check-cms.mjs && node scripts/check-admin.mjs",
+    "check:all": "node --no-warnings=MODULE_TYPELESS_PACKAGE_JSON scripts/check-markdown-roundtrip.mjs && node scripts/check-pages.mjs && node scripts/check-tools.mjs && node scripts/check-articles.mjs && node scripts/check-a11y.mjs && node scripts/check-cms.mjs && node scripts/check-admin.mjs",
     "check:a11y": "node scripts/check-a11y.mjs",
     "check:cms": "node scripts/check-cms.mjs",
-    "check:admin": "node scripts/check-admin.mjs"
+    "check:admin": "node scripts/check-admin.mjs",
+    "check:markdown": "node --no-warnings=MODULE_TYPELESS_PACKAGE_JSON scripts/check-markdown-roundtrip.mjs"
   },
   "dependencies": {
+    "@tiptap/core": "^3.30.3",
+    "@tiptap/extension-table": "^3.30.3",
+    "@tiptap/markdown": "^3.30.3",
+    "@tiptap/pm": "^3.30.3",
+    "@tiptap/react": "^3.30.3",
+    "@tiptap/starter-kit": "^3.30.3",
     "gray-matter": "^4.0.3",
     "next": "16.3.1",
     "next-intl": "^4.13.7",

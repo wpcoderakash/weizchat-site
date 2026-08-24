@@ -5,6 +5,7 @@ import type { DocStatus } from '../../cms/docs';
 import type { PostDoc } from '../../cms/site-schema';
 import type { Collection } from '../../cms/posts';
 import { AreaField, ImageField, TextField } from './fields';
+import { RichMarkdownField } from './rich-text';
 
 /**
  * The post editor: title, description, date, tags, featured image, and a
@@ -267,16 +268,12 @@ export function PostEditor({
         </div>
 
         <div className="cms-card">
-          <div className="cms-sec-head">
-            <span style={{ fontWeight: 600 }}>Body (markdown)</span>
-          </div>
           <div className="cms-body">
-            <textarea
-              aria-label="Body"
-              className="cms-markdown"
+            <RichMarkdownField
+              label="Body"
               rows={30}
               value={doc.body}
-              onChange={(e) => edit({ body: e.target.value })}
+              onChange={(next) => edit({ body: next })}
             />
           </div>
         </div>

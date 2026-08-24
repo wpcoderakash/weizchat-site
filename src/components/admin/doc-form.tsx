@@ -3,6 +3,7 @@
 import type { CmsImage, CmsLink } from '../../cms/schema';
 import type { Field, FieldGroup } from '../../cms/descriptors';
 import { AreaField, ImageField, ItemControls, LinkField, TextField, moveItem } from './fields';
+import { RichMarkdownField } from './rich-text';
 
 /**
  * The generic document form: renders a page kind's field descriptors
@@ -88,15 +89,11 @@ function FieldRow({
     }
     case 'markdown':
       return (
-        <div className="cms-field">
-          <label>{field.label}</label>
-          <textarea
-            className="cms-markdown"
-            rows={26}
-            value={String(current ?? '')}
-            onChange={(e) => onChange(setPath(value, field.path, e.target.value))}
-          />
-        </div>
+        <RichMarkdownField
+          label={field.label}
+          value={String(current ?? '')}
+          onChange={(next) => onChange(setPath(value, field.path, next))}
+        />
       );
     case 'toggle':
       return (

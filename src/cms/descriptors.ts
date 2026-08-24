@@ -203,7 +203,7 @@ const contactGroups: FieldGroup[] = [
 const legalGroups: FieldGroup[] = [
   {
     title: 'Document',
-    fields: [{ kind: 'markdown', path: 'body', label: 'Body (markdown — the # heading is the page title)' }],
+    fields: [{ kind: 'markdown', path: 'body', label: 'Body — the first heading is the page title' }],
   },
 ];
 
