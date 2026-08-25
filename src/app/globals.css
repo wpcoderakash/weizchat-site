@@ -329,27 +329,41 @@ button.theme-toggle:hover:not(:disabled) {
   }
 }
 
-/* The official logo ships on its own near-black ground. Presenting it on a
-   plate keeps that deliberate on a light page, rather than a bare black
-   rectangle that reads as a rendering fault — and never modifies the mark. */
+/* Two files, one lockup: white lettering for dark surfaces, near-black for
+   pale ones. No plate behind either — the logo sits on the page. CSS picks,
+   so the right one is there in the first paint. */
 .weiz-logo {
   display: inline-block;
-  padding: 0.3rem 0.45rem;
-  border-radius: 10px;
-  background: #0b0b0b;
   line-height: 0;
 }
 
+.weiz-logo img {
+  display: block;
+  block-size: auto;
+  max-inline-size: 100%;
+}
+
+/* Light is the default ground. */
+.weiz-logo .weiz-logo-dark {
+  display: none;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .weiz-logo {
-    padding: 0;
-    background: none;
+  :root:not([data-theme='light']) .weiz-logo .weiz-logo-dark {
+    display: block;
+  }
+
+  :root:not([data-theme='light']) .weiz-logo .weiz-logo-light {
+    display: none;
   }
 }
 
-:root[data-theme='dark'] .weiz-logo {
-  padding: 0;
-  background: none;
+:root[data-theme='dark'] .weiz-logo .weiz-logo-dark {
+  display: block;
+}
+
+:root[data-theme='dark'] .weiz-logo .weiz-logo-light {
+  display: none;
 }
 
 .weiz-logo img {
