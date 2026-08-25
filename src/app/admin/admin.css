@@ -964,6 +964,18 @@ a.cms-chip-link:hover {
   line-height: 0;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .weiz-logo {
+    padding: 0;
+    background: none;
+  }
+}
+
+:root[data-theme='dark'] .weiz-logo {
+  padding: 0;
+  background: none;
+}
+
 .weiz-logo img {
   display: block;
   block-size: auto;
