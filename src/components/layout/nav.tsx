@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '../../i18n/navigation';
 import type { GlobalDoc } from '../../cms/site-schema';
 import { resourceRoutes, solutionRoutes, toolRoutes } from '../../config/routes';
-import { WeizMark } from '../weiz-mark';
+import { WeizLogo } from '../weiz-logo';
 import { LocaleSwitcher } from './locale-switcher';
 import { ThemeSwitcher } from './theme-switcher';
 
@@ -118,9 +118,10 @@ export function Nav({ g }: { g: GlobalDoc }) {
       className="sticky top-0 z-50 border-b border-border bg-surface/90 backdrop-blur"
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-2 px-6">
-        <Link href="/" className="flex items-center gap-2.5 font-semibold text-fg">
-          <WeizMark size={26} />
-          <span className="text-lg">WeizChat</span>
+        {/* The lockup carries the name; the word beside it said it twice —
+            on screen and to a screen reader. */}
+        <Link href="/" className="flex items-center" aria-label="WeizChat">
+          <WeizLogo width={116} priority />
         </Link>
 
         {/* Desktop */}

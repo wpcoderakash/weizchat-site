@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import type { Role } from '../../cms/auth';
+import { WeizLogo } from '../weiz-logo';
 
 /**
  * The admin sidebar — matched to the owner's Weiz Admin layout: brand at
@@ -87,14 +88,10 @@ export function AdminSide({ role, version }: { role: Role; version: string }) {
 
   return (
     <aside className="cms-side">
-      <a className="cms-side-brand" href="/admin">
-        <span className="logo" aria-hidden>
-          W
-        </span>
-        <span>
-          <strong>WeizChat</strong>
-          <span className="sub">Content Manager</span>
-        </span>
+      <a className="cms-side-brand" href="/admin" aria-label="WeizChat Content Manager">
+        {/* The lockup carries the name; the words beside it would repeat it. */}
+        <WeizLogo width={132} priority />
+        <span className="sub">Content Manager</span>
       </a>
       <nav aria-label="Admin">
         {groups.map((g, i) => (

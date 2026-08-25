@@ -438,8 +438,9 @@
 
 .cms-side-brand {
   display: flex;
-  align-items: center;
-  gap: 0.6rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
   padding: 0.2rem 0.55rem 1rem;
   color: var(--cms-fg);
   text-decoration: none;
@@ -951,4 +952,20 @@ a.cms-chip-link:hover {
 .cms-field input[readonly] {
   background: var(--cms-sunken);
   color: var(--cms-muted);
+}
+
+/* The official logo ships on its own near-black ground; the plate keeps that
+   deliberate on both themes and gives the mark its clear space. */
+.weiz-logo {
+  display: inline-block;
+  padding: 0.45rem 0.6rem;
+  border-radius: 10px;
+  background: #0b0b0b;
+  line-height: 0;
+}
+
+.weiz-logo img {
+  display: block;
+  block-size: auto;
+  max-inline-size: 100%;
 }

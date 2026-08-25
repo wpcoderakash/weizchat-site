@@ -328,3 +328,20 @@ button.theme-toggle:hover:not(:disabled) {
     transition: none;
   }
 }
+
+/* The official logo ships on its own near-black ground. Presenting it on a
+   plate keeps that deliberate on a light page, rather than a bare black
+   rectangle that reads as a rendering fault — and never modifies the mark. */
+.weiz-logo {
+  display: inline-block;
+  padding: 0.3rem 0.45rem;
+  border-radius: 10px;
+  background: #0b0b0b;
+  line-height: 0;
+}
+
+.weiz-logo img {
+  display: block;
+  block-size: auto;
+  max-inline-size: 100%;
+}

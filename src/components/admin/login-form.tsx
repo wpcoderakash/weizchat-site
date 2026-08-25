@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { WeizLogo } from '../weiz-logo';
 
 /** The CMS sign-in. One password, one failure message. */
 export function LoginForm() {
@@ -40,7 +41,10 @@ export function LoginForm() {
   return (
     <div className="cms-login">
       <form onSubmit={submit} className="cms-card" style={{ padding: '1.25rem' }}>
-        <h1 style={{ marginTop: 0, fontSize: '1.1rem' }}>WeizChat CMS</h1>
+        <WeizLogo width={150} priority />
+        <h1 style={{ margin: '0.35rem 0 0', fontSize: '0.95rem', color: 'var(--cms-muted)' }}>
+          Content Manager
+        </h1>
         <div className="cms-field">
           <label htmlFor="cms-username">Username</label>
           <input

@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '../../i18n/navigation';
 import type { GlobalDoc } from '../../cms/site-schema';
 import { legalRoutes, resourceRoutes, solutionRoutes, toolRoutes } from '../../config/routes';
-import { WeizMark } from '../weiz-mark';
+import { WeizLogo } from '../weiz-logo';
 import { LocaleSwitcher } from './locale-switcher';
 
 /**
@@ -43,9 +43,8 @@ export function Footer({ g }: { g: GlobalDoc }) {
     <footer className="border-t border-border bg-surface-2">
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
-          <p className="flex items-center gap-2.5 font-semibold text-fg">
-            <WeizMark size={24} />
-            <span className="text-lg">WeizChat</span>
+          <p className="flex items-center">
+            <WeizLogo width={112} />
           </p>
           <p className="mt-3 max-w-xs text-sm text-muted">{g.footer.tagline}</p>
           <address className="mt-5 text-sm not-italic leading-relaxed text-muted">
