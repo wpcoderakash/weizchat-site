@@ -187,9 +187,9 @@ const LEGAL_TITLE_KEY: Record<string, string> = {
 export function legalDefault(slug: string, locale: string): LegalDoc {
   const titleKey = LEGAL_TITLE_KEY[slug];
   if (!titleKey) throw new Error(`unknown legal page: ${slug}`);
-  // English-only documents have no translated file; so might a future one.
-  // Fall back rather than throw — a legal page that 500s is worse than a
-  // legal page in the wrong language.
+  // Every legal document ships in both languages. The fallback is a guard,
+  // not a feature: if a translation is ever missing, serving the English
+  // text beats a 500 on a page people reach when they are already unhappy.
   const localised = path.join(CONTENT_DIR, 'legal', `${slug}.${locale}.mdx`);
   const file = fs.existsSync(localised)
     ? localised
