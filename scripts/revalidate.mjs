@@ -49,13 +49,42 @@ if (!u || !p) {
   process.exit(0);
 }
 
-const login = await fetch(`${BASE}/api/admin/session`, {
-  method: 'POST',
-  headers: { 'content-type': 'application/json' },
-  body: JSON.stringify({ username: u, password: p }),
-});
-if (!login.ok) {
-  console.log(`WARN  could not sign in to revalidate (${login.status}).`);
+/**
+ * Wait for the app to answer before asking it to do anything.
+ *
+ * This runs seconds after `pm2 reload`, and the first deploy that used it
+ * hit a 502: the proxy was up, the new process was not. Retrying beats
+ * sleeping a fixed amount, which is either too short or wasted.
+ */
+async function signIn() {
+  const deadline = Date.now() + 60_000;
+  let last = 0;
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const res = await fetch(`${BASE}/api/admin/session`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ username: u, password: p }),
+      });
+      if (res.ok) return res;
+      last = res.status;
+      // 502/503 mean "not up yet". A 401 is a real answer — stop.
+      if (res.status !== 502 && res.status !== 503) return res;
+    } catch {
+      last = 0; // connection refused: also "not up yet"
+    }
+    if (Date.now() > deadline) {
+      console.log(`WARN  the site never came up to revalidate (last: ${last || 'no response'}).`);
+      return null;
+    }
+    if (attempt === 1) console.log('    waiting for the site to come up…');
+    await new Promise((r) => setTimeout(r, 2000));
+  }
+}
+
+const login = await signIn();
+if (!login || !login.ok) {
+  console.log(`WARN  could not sign in to revalidate${login ? ` (${login.status})` : ''}.`);
   process.exit(0);
 }
 const cookie = (login.headers.getSetCookie?.() ?? []).map((c) => c.split(';')[0]).join('; ');
