@@ -25,6 +25,26 @@ export const resourceRoutes = [
 ] as const;
 
 /**
+ * Legal documents published in English only (owner's decision, 2026-08-26).
+ *
+ * The site is bilingual, these documents are not: the owner will not
+ * maintain two versions, and a translation that quietly falls out of date
+ * is worse than none. English is the binding text — which is independent
+ * of the terms being governed by Israeli law.
+ *
+ * The accessibility statement is deliberately NOT on this list. Israeli
+ * accessibility regulations expect a Hebrew statement from an
+ * Israeli-facing site, so it stays translated.
+ */
+export const ENGLISH_ONLY_LEGAL = new Set([
+  'privacy-policy',
+  'terms',
+  'dpa',
+  'data-deletion',
+  'security',
+]);
+
+/**
  * The legal links the footer shows. Owner's choice (2026-08-26): three.
  *
  * `/dpa`, `/data-deletion` and `/security` still resolve — they are simply

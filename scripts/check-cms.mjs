@@ -89,17 +89,30 @@ check('suspended editor cannot sign in', (await signIn({ username: 'writer@test.
 }
 
 // ── 3. Page kind: legal (markdown) + Hebrew path revalidation ──────────────
+// Runs against the accessibility statement, the one legal document still
+// published in Hebrew. Terms and the rest are English-only, so a Hebrew
+// publish for them would be edited into a document the site never serves.
 {
-  const get = await api(admin, '/api/admin/docs/page/terms/he');
+  const get = await api(admin, '/api/admin/docs/page/accessibility/he');
   const { doc } = await get.json();
-  doc.body = '# תנאים חדשים\n\nגרסה שנערכה מהמערכת.';
-  await api(admin, '/api/admin/docs/page/terms/he', { method: 'PUT', body: JSON.stringify(doc) });
-  await api(admin, '/api/admin/docs/page/terms/he', { method: 'POST', body: JSON.stringify({ action: 'publish' }) });
-  const pub = await pageText('/heb/terms');
-  check('legal markdown publish reaches /heb path', pub.text.includes('תנאים חדשים'));
-  await api(admin, '/api/admin/docs/page/terms/he', { method: 'DELETE' });
-  const back = await pageText('/heb/terms');
-  check('legal reset restores the shipped document', back.text.includes('תנאי שימוש'));
+  doc.body = '# נגישות חדשה\n\nגרסה שנערכה מהמערכת.';
+  await api(admin, '/api/admin/docs/page/accessibility/he', { method: 'PUT', body: JSON.stringify(doc) });
+  await api(admin, '/api/admin/docs/page/accessibility/he', { method: 'POST', body: JSON.stringify({ action: 'publish' }) });
+  const pub = await pageText('/heb/accessibility');
+  check('legal markdown publish reaches /heb path', pub.text.includes('נגישות חדשה'));
+  await api(admin, '/api/admin/docs/page/accessibility/he', { method: 'DELETE' });
+  const back = await pageText('/heb/accessibility');
+  check('legal reset restores the shipped document', back.text.includes('הצהרת נגישות'));
+}
+
+// ── 3b. English-only legal documents ───────────────────────────────────────
+// The owner publishes these in one language; the Hebrew route must serve the
+// English text and say so, rather than 404 or render an empty document.
+{
+  const heb = await pageText('/heb/terms');
+  check('an English-only document still answers on the Hebrew path',
+    heb.text.includes('מסמך זה מתפרסם באנגלית בלבד'));
+  check('…and serves the English body', heb.text.includes('Governing law'));
 }
 
 // ── 4. Global content on every page ────────────────────────────────────────

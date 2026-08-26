@@ -187,11 +187,18 @@ const LEGAL_TITLE_KEY: Record<string, string> = {
 export function legalDefault(slug: string, locale: string): LegalDoc {
   const titleKey = LEGAL_TITLE_KEY[slug];
   if (!titleKey) throw new Error(`unknown legal page: ${slug}`);
-  const file = path.join(CONTENT_DIR, 'legal', `${slug}.${locale}.mdx`);
+  // English-only documents have no translated file; so might a future one.
+  // Fall back rather than throw — a legal page that 500s is worse than a
+  // legal page in the wrong language.
+  const localised = path.join(CONTENT_DIR, 'legal', `${slug}.${locale}.mdx`);
+  const file = fs.existsSync(localised)
+    ? localised
+    : path.join(CONTENT_DIR, 'legal', `${slug}.en.mdx`);
+  const titleLocale = file === localised ? locale : 'en';
   return {
     seo: {
-      title: t(locale, `footer.legal.${titleKey}`),
-      description: t(locale, `footer.legal.${titleKey}`),
+      title: t(titleLocale, `footer.legal.${titleKey}`),
+      description: t(titleLocale, `footer.legal.${titleKey}`),
     },
     body: fs.readFileSync(file, 'utf8'),
   };

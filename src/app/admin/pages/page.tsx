@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { isSignedIn } from '../../../cms/auth';
 import { docStatus } from '../../../cms/docs';
 import { LISTED_PAGES } from '../../../cms/registry';
+import { ENGLISH_ONLY_LEGAL } from '../../../config/routes';
 
 export const dynamic = 'force-dynamic';
 
@@ -59,9 +60,16 @@ export default async function PagesList() {
                     </a>
                   </td>
                   <td>
-                    <a href={`/admin/pages/${def.slug}/he`} style={{ fontWeight: 400 }}>
-                      {badge(status.he)}
-                    </a>
+                    {/* No Hebrew editor for a document published in English
+                        only — offering one invites edits nobody will ever
+                        see on the site. */}
+                    {ENGLISH_ONLY_LEGAL.has(def.slug) ? (
+                      <span className="cms-note">English only</span>
+                    ) : (
+                      <a href={`/admin/pages/${def.slug}/he`} style={{ fontWeight: 400 }}>
+                        {badge(status.he)}
+                      </a>
+                    )}
                   </td>
                 </tr>
               ))}
