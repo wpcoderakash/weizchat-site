@@ -120,6 +120,25 @@ await p.getByRole('button', { name: /change password/i }).click();
 await p.waitForTimeout(1200);
 check('a wrong current password is refused', (await p.locator('.cms-status-err').innerText()).toLowerCase().includes('not accepted'));
 
+// ── global editor: the contact block (owner request, 2026-08-26) ──
+// The point of these is that the owner can manage phone, WhatsApp and
+// offices WITHOUT touching a number that a link depends on.
+await p.setViewportSize({ width: 1280, height: 900 });
+await p.goto(`${B}/admin/global/en`, { waitUntil: 'domcontentloaded' });
+const body = await p.locator('body').innerText();
+check('global editor offers the contact group', body.includes('Contact — phone, WhatsApp and offices'));
+check('it explains the dial format', body.includes('Tapping it starts a call'));
+check('it explains the WhatsApp format', body.includes('Tapping it opens a WhatsApp chat'));
+check('offices are listed as repeater items', (await p.getByText(/^Office \d+$/).count()) >= 2);
+check('a map link can be left blank', body.includes('Leave blank to open a map search'));
+
+// Adding an office must not require knowing anything about links.
+const officeCountBefore = await p.getByText(/^Office \d+$/).count();
+await p.getByRole('button', { name: /add office/i }).first().click();
+await p.waitForTimeout(300);
+check('a new office can be added',
+  (await p.getByText(/^Office \d+$/).count()) === officeCountBefore + 1);
+
 // ── public site at phone width: no horizontal scroll ──
 await p.setViewportSize({ width: 390, height: 800 });
 await p.goto(`${B}/`, { waitUntil: 'networkidle' });

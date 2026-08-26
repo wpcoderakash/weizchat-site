@@ -9,15 +9,20 @@ export function TextField({
   value,
   onChange,
   placeholder,
+  hint,
 }: {
   label: string;
   value: string;
   onChange: (next: string) => void;
   placeholder?: string;
+  hint?: string;
 }) {
   // A generated id, so the label is programmatically tied to its input —
   // without it the field is unusable with a screen reader.
   const id = useId();
+  // The hint is wired with aria-describedby rather than left as loose text:
+  // a format rule nobody hears is a format rule that gets broken.
+  const hintId = `${id}-hint`;
   return (
     <div className="cms-field">
       <label htmlFor={id}>{label}</label>
@@ -27,7 +32,13 @@ export function TextField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        aria-describedby={hint ? hintId : undefined}
       />
+      {hint ? (
+        <p className="cms-note" id={hintId}>
+          {hint}
+        </p>
+      ) : null}
     </div>
   );
 }

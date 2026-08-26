@@ -48,6 +48,7 @@ function FieldRow({
       return (
         <TextField
           label={field.label}
+          hint={field.hint}
           value={String(current ?? '')}
           onChange={(v) => onChange(setPath(value, field.path, v))}
         />

@@ -9,7 +9,7 @@
  * up here.
  */
 export type Field =
-  | { kind: 'text'; path: string; label: string }
+  | { kind: 'text'; path: string; label: string; hint?: string }
   | { kind: 'area'; path: string; label: string; rows?: number; optional?: boolean }
   | { kind: 'markdown'; path: string; label: string }
   | { kind: 'toggle'; path: string; label: string; hint?: string }
@@ -186,6 +186,7 @@ const contactGroups: FieldGroup[] = [
       { kind: 'text', path: 'details.companyId', label: 'Company number label' },
       { kind: 'text', path: 'details.address', label: 'Address label' },
       { kind: 'text', path: 'details.phone', label: 'Phone label' },
+      { kind: 'text', path: 'details.whatsapp', label: 'WhatsApp label' },
       { kind: 'text', path: 'details.email', label: 'Email label' },
     ],
   },
@@ -275,6 +276,59 @@ export const globalGroups: FieldGroup[] = [
       { kind: 'text', path: 'site.phone', label: 'Phone' },
       { kind: 'text', path: 'site.supportEmail', label: 'Support email' },
       { kind: 'text', path: 'site.appUrl', label: 'App URL (login buttons)' },
+    ],
+  },
+  {
+    title: 'Contact — phone, WhatsApp and offices',
+    fields: [
+      {
+        kind: 'text',
+        path: 'contact.phone.label',
+        label: 'Phone — as shown',
+        hint: 'What visitors read. Space it however looks best.',
+      },
+      {
+        kind: 'text',
+        path: 'contact.phone.number',
+        label: 'Phone — as dialled',
+        hint: 'Full international number, no spaces: +380662169131. Tapping it starts a call.',
+      },
+      {
+        kind: 'text',
+        path: 'contact.whatsapp.label',
+        label: 'WhatsApp — as shown',
+        hint: 'What visitors read.',
+      },
+      {
+        kind: 'text',
+        path: 'contact.whatsapp.number',
+        label: 'WhatsApp — as messaged',
+        hint: 'Full international number, no spaces: +972544747742. Tapping it opens a WhatsApp chat.',
+      },
+      {
+        kind: 'area',
+        path: 'contact.whatsappMessage',
+        label: 'WhatsApp opening message',
+        rows: 2,
+      },
+      { kind: 'text', path: 'contact.officesTitle', label: 'Offices heading' },
+      {
+        kind: 'repeater',
+        path: 'contact.offices',
+        label: 'Offices',
+        itemLabel: 'Office',
+        fields: [
+          { kind: 'text', path: 'label', label: 'City or country' },
+          { kind: 'area', path: 'address', label: 'Address', rows: 2 },
+          {
+            kind: 'text',
+            path: 'mapUrl',
+            label: 'Map link',
+            hint: 'Leave blank to open a map search of the address. Or paste a Google Maps share link.',
+          },
+        ],
+        newItem: () => ({ ...item('office'), label: 'New office', address: 'Street, city, country', mapUrl: '' }),
+      },
     ],
   },
   {

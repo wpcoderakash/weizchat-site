@@ -80,6 +80,8 @@ export const contactDocSchema = z.object({
     companyId: z.string().min(1),
     address: z.string().min(1),
     phone: z.string().min(1),
+    /** Defaulted so an already-published contact page keeps parsing. */
+    whatsapp: z.string().min(1).default('WhatsApp'),
     email: z.string().min(1),
   }),
   supportTitle: z.string().min(1),
@@ -107,6 +109,76 @@ export const legalDocSchema = z.object({
   body: z.string().min(1),
 });
 export type LegalDoc = z.infer<typeof legalDocSchema>;
+
+/**
+ * A number a visitor can act on: what they read, and what the link does.
+ *
+ * Two fields rather than one because they have genuinely different rules.
+ * `label` is for humans and may be spaced or localised however reads best;
+ * `number` is machine input and must be strict E.164, because `wa.me`
+ * silently accepts a malformed number and lands the visitor on an error
+ * page rather than a chat. Splitting them means a pretty label can never
+ * break the link.
+ */
+export const contactPointSchema = z.object({
+  label: z.string().min(1),
+  number: z
+    .string()
+    .regex(/^\+[1-9]\d{6,14}$/, 'Use full international format with no spaces, e.g. +972544747742'),
+});
+export type ContactPoint = z.infer<typeof contactPointSchema>;
+
+/** One office. `mapUrl` blank derives a maps search from the address. */
+export const officeSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1),
+  address: z.string().min(1),
+  mapUrl: z
+    .string()
+    .refine((v) => v === '' || v.startsWith('https://'), 'Leave blank, or paste a full https:// map link')
+    .default(''),
+});
+export type Office = z.infer<typeof officeSchema>;
+
+/**
+ * Contact methods and offices (owner request, 2026-08-26).
+ *
+ * `.default()` is load-bearing, not tidiness: a `global/site` document is
+ * already published, and a newly required field would fail `safeParse`,
+ * which silently discards the WHOLE document and falls back to built-ins —
+ * every nav and footer edit with it. A default makes older documents parse
+ * and adopt the new block instead.
+ */
+export const contactBlockSchema = z
+  .object({
+    phone: contactPointSchema,
+    whatsapp: contactPointSchema,
+    /** Prefilled into the WhatsApp composer. Blank sends an empty chat. */
+    whatsappMessage: z.string().default(''),
+    officesTitle: z.string().min(1),
+    offices: z.array(officeSchema).default([]),
+  })
+  .default({
+    phone: { label: '+380 66 216 9131', number: '+380662169131' },
+    whatsapp: { label: '+972 54 474 7742', number: '+972544747742' },
+    whatsappMessage: '',
+    officesTitle: 'Offices',
+    offices: [
+      {
+        id: 'office-kyiv',
+        label: 'Kiev',
+        address: 'Gulliver Business Center, 17 Esplanadna Kyiv, Ukraine',
+        mapUrl: '',
+      },
+      {
+        id: 'office-israel',
+        label: 'Israel',
+        address: 'Paz Complex, Moshav Ein Vered',
+        mapUrl: '',
+      },
+    ],
+  });
+export type ContactBlock = z.infer<typeof contactBlockSchema>;
 
 /**
  * The global chrome, per locale: navigation, footer, site identity and the
@@ -169,6 +241,7 @@ export const globalDocSchema = z.object({
     address: z.string().min(1),
     phone: z.string().min(1),
   }),
+  contact: contactBlockSchema,
   shared: z.object({
     ctaTrial: z.string().min(1),
     ctaDemo: z.string().min(1),

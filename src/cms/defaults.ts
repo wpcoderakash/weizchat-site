@@ -149,6 +149,7 @@ export function contactDefault(locale: string): ContactDoc {
       companyId: t(locale, `${ns}.details.companyId`),
       address: t(locale, `${ns}.details.address`),
       phone: t(locale, `${ns}.details.phone`),
+      whatsapp: t(locale, `${ns}.details.whatsapp`),
       email: t(locale, `${ns}.details.email`),
     },
     supportTitle: t(locale, `${ns}.supportTitle`),
@@ -251,6 +252,29 @@ export function globalDefault(locale: string): GlobalDoc {
       companyId: '__COMPANY_ID__',
       address: '__ADDRESS__',
       phone: '__PHONE__',
+    },
+    // Real values, not placeholders: these are the numbers and offices the
+    // site already publishes, and a placeholder number would ship a link
+    // that dials nothing. `officesTitle` is the only translated part.
+    contact: {
+      phone: { label: '+380 66 216 9131', number: '+380662169131' },
+      whatsapp: { label: '+972 54 474 7742', number: '+972544747742' },
+      whatsappMessage: '',
+      officesTitle: t(locale, 'footer.offices'),
+      offices: [
+        {
+          id: 'office-kyiv',
+          label: 'Kiev',
+          address: 'Gulliver Business Center, 17 Esplanadna Kyiv, Ukraine',
+          mapUrl: '',
+        },
+        {
+          id: 'office-israel',
+          label: 'Israel',
+          address: 'Paz Complex, Moshav Ein Vered',
+          mapUrl: '',
+        },
+      ],
     },
     shared: {
       ctaTrial: t(locale, 'solutions.common.ctaTrial'),

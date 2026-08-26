@@ -2,14 +2,19 @@ import { useTranslations } from 'next-intl';
 import { Link } from '../../i18n/navigation';
 import type { GlobalDoc } from '../../cms/site-schema';
 import { legalRoutes, resourceRoutes, solutionRoutes, toolRoutes } from '../../config/routes';
+import { ContactLinks, OfficeList } from '../contact/contact-details';
 import { WeizLogo } from '../weiz-logo';
 import { LocaleSwitcher } from './locale-switcher';
 
 /**
  * Footer (brief §5.14): legal identity, every legal link, solutions, tools,
  * resources, language switcher — and the rule-0.1 trademark attribution,
- * verbatim, on every page. Legal identity fields are __PLACEHOLDER__ values
- * from site.ts until the owner supplies the real ones (brief SECTION 10).
+ * verbatim, on every page.
+ *
+ * Phone, WhatsApp and offices come from the CMS contact block and render as
+ * links, not text: on a phone, tapping the number calls it or opens the
+ * chat. Deriving those hrefs from the machine field is what keeps a pretty
+ * label from breaking the link — see lib/contact-links.
  */
 export function Footer({ g }: { g: GlobalDoc }) {
   const t = useTranslations('footer');
@@ -47,19 +52,14 @@ export function Footer({ g }: { g: GlobalDoc }) {
             <WeizLogo width={112} />
           </p>
           <p className="mt-3 max-w-xs text-sm text-muted">{g.footer.tagline}</p>
-          <address className="mt-5 text-sm not-italic leading-relaxed text-muted">
-            {g.site.legalName}
-            <br />
-            {g.footer.companyId}: {g.site.companyId}
-            <br />
-            {g.site.address}
-            <br />
-            <a href={`mailto:${g.site.supportEmail}`} className="hover:text-fg">
-              {g.site.supportEmail}
-            </a>
-            <br />
-            {g.site.phone}
-          </address>
+          <div className="mt-5 text-sm leading-relaxed text-muted">
+            <p className="font-medium text-fg">{g.site.legalName}</p>
+            <p>
+              {g.footer.companyId}: {g.site.companyId}
+            </p>
+          </div>
+          <ContactLinks contact={g.contact} email={g.site.supportEmail} className="mt-3" />
+          <OfficeList contact={g.contact} className="mt-6" />
           <div className="mt-5">
             <LocaleSwitcher />
           </div>

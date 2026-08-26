@@ -3,6 +3,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { site } from '../../../config/site';
 import { getGlobal, getPageDoc } from '../../../cms/load';
 import type { ContactDoc } from '../../../cms/site-schema';
+import { ContactDetailsRows, OfficeCard } from '../../../components/contact/contact-page-details';
 import { ContactForm } from '../../../components/contact/contact-form';
 import { metaFromSeo } from '../../../lib/seo';
 
@@ -27,6 +28,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   setRequestLocale(locale);
   const [doc, g] = await Promise.all([getPageDoc<ContactDoc>('contact', locale), getGlobal(locale)]);
 
+  // `telephone` takes the dialable number, not the display label: this block
+  // is read by machines, and "Call Us +380662169131" is not a phone number.
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -34,32 +37,15 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
     legalName: g.site.legalName,
     url: site.url,
     email: g.site.supportEmail,
-    telephone: g.site.phone,
+    telephone: g.contact.phone.number,
     address: { '@type': 'PostalAddress', streetAddress: g.site.address },
     identifier: g.site.companyId,
+    location: g.contact.offices.map((office) => ({
+      '@type': 'Place',
+      name: office.label,
+      address: { '@type': 'PostalAddress', streetAddress: office.address },
+    })),
   };
-
-  const rows: [string, React.ReactNode][] = [
-    [doc.details.legalName, g.site.legalName],
-    [doc.details.companyId, g.site.companyId],
-    [doc.details.address, g.site.address],
-    [
-      doc.details.phone,
-      <span key="phone" dir="ltr">
-        {g.site.phone}
-      </span>,
-    ],
-    [
-      doc.details.email,
-      <a
-        key="email"
-        href={`mailto:${g.site.supportEmail}`}
-        className="text-accent hover:text-accent-hover"
-      >
-        {g.site.supportEmail}
-      </a>,
-    ],
-  ];
 
   return (
     <main>
@@ -81,14 +67,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
         <div>
           <h2 className="text-2xl">{doc.detailsTitle}</h2>
-          <dl className="mt-6 divide-y divide-border rounded-card border border-border bg-surface">
-            {rows.map(([label, value], i) => (
-              <div key={i} className="flex flex-wrap items-baseline gap-x-4 gap-y-1 px-5 py-4">
-                <dt className="w-40 shrink-0 text-sm text-muted">{label}</dt>
-                <dd className="font-medium">{value}</dd>
-              </div>
-            ))}
-          </dl>
+          <ContactDetailsRows labels={doc.details} g={g} />
+          <OfficeCard contact={g.contact} />
           <div className="mt-6 rounded-card border border-border bg-surface p-5">
             <h3 className="font-semibold">{doc.supportTitle}</h3>
             <p className="mt-2 text-sm text-muted">{doc.supportBody}</p>

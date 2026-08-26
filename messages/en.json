@@ -65,7 +65,11 @@
       "security": "Security"
     },
     "metaAttribution": "WhatsApp is a trademark of Meta Platforms, Inc. We are an independent software provider and are not affiliated with, endorsed by, or sponsored by Meta Platforms, Inc.",
-    "rights": "All rights reserved"
+    "rights": "All rights reserved",
+    "offices": "Offices",
+    "viewMap": "View on map",
+    "callUs": "Call",
+    "whatsappUs": "Chat on WhatsApp"
   },
   "solutions": {
     "common": {
@@ -343,7 +347,8 @@
       "companyId": "Company number",
       "address": "Address",
       "phone": "Phone",
-      "email": "Email"
+      "email": "Email",
+      "whatsapp": "WhatsApp"
     },
     "supportTitle": "Existing customer?",
     "supportBody": "Write from the email address on your account and mention your organization name — it gets to the right place faster.",
