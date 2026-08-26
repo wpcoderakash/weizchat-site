@@ -88,6 +88,12 @@ echo "==> Restarting"
 # shellcheck disable=SC2029
 $SSH "$TARGET" "export NVM_DIR=\"\$HOME/.nvm\"; [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\" >/dev/null 2>&1; set -a && . \$HOME/weizchat.env && set +a; pm2 startOrReload '${DEPLOY_PATH}/current/ecosystem.config.cjs' --update-env; pm2 save"
 
+# The release ships HTML prerendered on the build machine, which has no
+# content store — so without this the live pages fall back to __PLACEHOLDER__
+# defaults until someone happens to publish from the CMS.
+echo "==> Revalidating published content"
+node scripts/revalidate.mjs || echo "WARN  revalidation failed; publish anything from the CMS to refresh"
+
 echo "==> Keeping the last five releases"
 # shellcheck disable=SC2029
 $SSH "$TARGET" "cd '${DEPLOY_PATH}/releases' && ls -1t | tail -n +6 | xargs -r rm -rf"
