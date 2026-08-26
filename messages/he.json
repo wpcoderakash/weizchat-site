@@ -32,7 +32,6 @@
   },
   "footer": {
     "tagline": "כל שיחות הוואטסאפ של העסק בתיבה משותפת אחת — עם AI שעובד בשבילכם.",
-    "companyId": "ח.פ",
     "solutionsTitle": "פתרונות",
     "toolsTitle": "כלים חינמיים",
     "resourcesTitle": "משאבים",
@@ -344,8 +343,6 @@
     "detailsTitle": "פרטי החברה",
     "details": {
       "legalName": "שם החברה",
-      "companyId": "ח.פ",
-      "address": "כתובת",
       "phone": "טלפון",
       "email": "אימייל",
       "whatsapp": "וואטסאפ"

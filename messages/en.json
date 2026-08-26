@@ -32,7 +32,6 @@
   },
   "footer": {
     "tagline": "Every business WhatsApp conversation in one shared inbox — with AI that works for you.",
-    "companyId": "Company ID",
     "solutionsTitle": "Solutions",
     "toolsTitle": "Free tools",
     "resourcesTitle": "Resources",
@@ -344,8 +343,6 @@
     "detailsTitle": "Company details",
     "details": {
       "legalName": "Legal name",
-      "companyId": "Company number",
-      "address": "Address",
       "phone": "Phone",
       "email": "Email",
       "whatsapp": "WhatsApp"

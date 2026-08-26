@@ -77,7 +77,6 @@ export const contactDocSchema = z.object({
   detailsTitle: z.string().min(1),
   details: z.object({
     legalName: z.string().min(1),
-    companyId: z.string().min(1),
     phone: z.string().min(1),
     /** Defaulted so an already-published contact page keeps parsing. */
     whatsapp: z.string().min(1).default('WhatsApp'),
@@ -221,7 +220,6 @@ export const globalDocSchema = z.object({
     toolsTitle: z.string().min(1),
     resourcesTitle: z.string().min(1),
     legalTitle: z.string().min(1),
-    companyId: z.string().min(1),
     rights: z.string().min(1),
     legalLabels: z.object({
       privacy: z.string().min(1),
@@ -241,7 +239,6 @@ export const globalDocSchema = z.object({
     supportEmail: z.string().min(3),
     appUrl: z.string().min(1),
     legalName: z.string().min(1),
-    companyId: z.string().min(1),
   }),
   contact: contactBlockSchema,
   shared: z.object({

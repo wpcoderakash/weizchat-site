@@ -52,12 +52,7 @@ export function Footer({ g }: { g: GlobalDoc }) {
             <WeizLogo width={112} />
           </p>
           <p className="mt-3 max-w-xs text-sm text-muted">{g.footer.tagline}</p>
-          <div className="mt-5 text-sm leading-relaxed text-muted">
-            <p className="font-medium text-fg">{g.site.legalName}</p>
-            <p>
-              {g.footer.companyId}: {g.site.companyId}
-            </p>
-          </div>
+          <p className="mt-5 text-sm font-medium leading-relaxed text-fg">{g.site.legalName}</p>
           <ContactLinks contact={g.contact} email={g.site.supportEmail} className="mt-3" />
           <OfficeList contact={g.contact} className="mt-6" />
           <div className="mt-5">

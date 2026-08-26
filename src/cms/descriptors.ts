@@ -183,7 +183,6 @@ const contactGroups: FieldGroup[] = [
     fields: [
       { kind: 'text', path: 'detailsTitle', label: 'Heading' },
       { kind: 'text', path: 'details.legalName', label: 'Legal name label' },
-      { kind: 'text', path: 'details.companyId', label: 'Company number label' },
       { kind: 'text', path: 'details.phone', label: 'Phone label' },
       { kind: 'text', path: 'details.whatsapp', label: 'WhatsApp label' },
       { kind: 'text', path: 'details.email', label: 'Email label' },
@@ -256,7 +255,6 @@ export const globalGroups: FieldGroup[] = [
       { kind: 'text', path: 'footer.toolsTitle', label: 'Tools column title' },
       { kind: 'text', path: 'footer.resourcesTitle', label: 'Resources column title' },
       { kind: 'text', path: 'footer.legalTitle', label: 'Legal column title' },
-      { kind: 'text', path: 'footer.companyId', label: 'Company-number label' },
       { kind: 'text', path: 'footer.rights', label: '"All rights reserved"' },
       { kind: 'text', path: 'footer.legalLabels.privacy', label: 'Privacy link' },
       { kind: 'text', path: 'footer.legalLabels.terms', label: 'Terms link' },
@@ -267,10 +265,9 @@ export const globalGroups: FieldGroup[] = [
     ],
   },
   {
-    title: 'Company identity (legal name and number)',
+    title: 'Company identity',
     fields: [
       { kind: 'text', path: 'site.legalName', label: 'Legal name' },
-      { kind: 'text', path: 'site.companyId', label: 'Company number' },
       { kind: 'text', path: 'site.supportEmail', label: 'Support email' },
       { kind: 'text', path: 'site.appUrl', label: 'App URL (login buttons)' },
     ],

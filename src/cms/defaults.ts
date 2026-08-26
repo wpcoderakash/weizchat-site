@@ -146,7 +146,6 @@ export function contactDefault(locale: string): ContactDoc {
     detailsTitle: t(locale, `${ns}.detailsTitle`),
     details: {
       legalName: t(locale, `${ns}.details.legalName`),
-      companyId: t(locale, `${ns}.details.companyId`),
       phone: t(locale, `${ns}.details.phone`),
       whatsapp: t(locale, `${ns}.details.whatsapp`),
       email: t(locale, `${ns}.details.email`),
@@ -233,7 +232,6 @@ export function globalDefault(locale: string): GlobalDoc {
       toolsTitle: t(locale, 'footer.toolsTitle'),
       resourcesTitle: t(locale, 'footer.resourcesTitle'),
       legalTitle: t(locale, 'footer.legalTitle'),
-      companyId: t(locale, 'footer.companyId'),
       rights: t(locale, 'footer.rights'),
       legalLabels: {
         privacy: t(locale, 'footer.legal.privacy'),
@@ -248,7 +246,6 @@ export function globalDefault(locale: string): GlobalDoc {
       supportEmail: 'office@weiz.co.il',
       appUrl: 'https://app.weiz.chat',
       legalName: '__LEGAL_NAME__',
-      companyId: '__COMPANY_ID__',
     },
     // Real values, not placeholders: these are the numbers and offices the
     // site already publishes, and a placeholder number would ship a link

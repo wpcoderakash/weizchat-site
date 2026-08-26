@@ -43,7 +43,6 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
     ...(g.contact.offices[0]
       ? { address: { '@type': 'PostalAddress', streetAddress: g.contact.offices[0].address } }
       : {}),
-    identifier: g.site.companyId,
     location: g.contact.offices.map((office) => ({
       '@type': 'Place',
       name: office.label,

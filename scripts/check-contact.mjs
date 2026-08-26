@@ -125,9 +125,11 @@ check('…keeping every existing edit',
 // `site.address` and `site.phone` were removed once the contact block made
 // them duplicates. The published document still carries them, so removal has
 // to be a strip, not a parse error.
-check('…and tolerates the retired site.address / site.phone',
+check('…and tolerates the retired address / phone / companyId fields',
   migrated.success && migrated.data.site.address === undefined
-    && migrated.data.site.phone === undefined,
+    && migrated.data.site.phone === undefined
+    && migrated.data.site.companyId === undefined
+    && migrated.data.footer.companyId === undefined,
   migrated.success ? JSON.stringify(Object.keys(migrated.data.site)) : '');
 
 fs.rmSync(out, { recursive: true, force: true });
