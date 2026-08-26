@@ -33,8 +33,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: g.site.legalName,
-    legalName: g.site.legalName,
+    name: site.name,
     url: site.url,
     email: g.site.supportEmail,
     telephone: g.contact.phone.number,

@@ -120,15 +120,19 @@ check('…and adopts a working contact block',
   migrated.success && /^\+\d+$/.test(migrated.data.contact.whatsapp.number),
   migrated.success ? migrated.data.contact.whatsapp.number : '');
 check('…keeping every existing edit',
-  migrated.success && migrated.data.site.legalName === 'Weiz Chat Technologies');
+  migrated.success && migrated.data.site.supportEmail === 'office@weiz.co.il'
+    && migrated.data.nav.solutions === 'a');
 
 // `site.address` and `site.phone` were removed once the contact block made
 // them duplicates. The published document still carries them, so removal has
 // to be a strip, not a parse error.
-check('…and tolerates the retired address / phone / companyId fields',
-  migrated.success && migrated.data.site.address === undefined
-    && migrated.data.site.phone === undefined
-    && migrated.data.site.companyId === undefined
+// Five identity fields have been retired since this document was published.
+// Each removal has to be a strip, not a parse error, or the store's
+// safeParse fallback would throw away every other edit in the file.
+check('…and tolerates every retired identity field',
+  migrated.success
+    && ['address', 'phone', 'companyId', 'legalName']
+         .every((k) => migrated.data.site[k] === undefined)
     && migrated.data.footer.companyId === undefined,
   migrated.success ? JSON.stringify(Object.keys(migrated.data.site)) : '');
 

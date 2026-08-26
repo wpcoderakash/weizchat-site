@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '../../i18n/navigation';
 import type { GlobalDoc } from '../../cms/site-schema';
 import { legalRoutes, resourceRoutes, solutionRoutes, toolRoutes } from '../../config/routes';
+import { site } from '../../config/site';
 import { ContactLinks, OfficeList } from '../contact/contact-details';
 import { WeizLogo } from '../weiz-logo';
 import { LocaleSwitcher } from './locale-switcher';
@@ -52,8 +53,7 @@ export function Footer({ g }: { g: GlobalDoc }) {
             <WeizLogo width={112} />
           </p>
           <p className="mt-3 max-w-xs text-sm text-muted">{g.footer.tagline}</p>
-          <p className="mt-5 text-sm font-medium leading-relaxed text-fg">{g.site.legalName}</p>
-          <ContactLinks contact={g.contact} email={g.site.supportEmail} className="mt-3" />
+          <ContactLinks contact={g.contact} email={g.site.supportEmail} className="mt-5" />
           <OfficeList contact={g.contact} className="mt-6" />
           <div className="mt-5">
             <LocaleSwitcher />
@@ -73,7 +73,7 @@ export function Footer({ g }: { g: GlobalDoc }) {
           {/* Rule 0.1 — trademark attribution, do not reword casually. */}
           <p>{t('metaAttribution')}</p>
           <p>
-            © {new Date().getFullYear()} {g.site.legalName} · {g.footer.rights}
+            © {new Date().getFullYear()} {site.name} · {g.footer.rights}
           </p>
         </div>
       </div>

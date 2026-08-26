@@ -17,7 +17,6 @@ export function ContactDetailsRows({
   g: GlobalDoc;
 }) {
   const rows: [string, React.ReactNode][] = [
-    [labels.legalName, g.site.legalName],
     [
       labels.phone,
       <a key="phone" href={telHref(g.contact.phone)} className="text-accent hover:text-accent-hover" dir="ltr">

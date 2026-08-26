@@ -107,14 +107,14 @@ check('suspended editor cannot sign in', (await signIn({ username: 'writer@test.
   const get = await api(admin, '/api/admin/docs/global/site/en');
   const { doc } = await get.json();
   doc.nav.startTrial = 'CMS TRIAL BUTTON';
-  doc.site.legalName = 'Weiz Test Ltd';
+  doc.footer.tagline = 'CMS FOOTER TAGLINE';
   await api(admin, '/api/admin/docs/global/site/en', { method: 'PUT', body: JSON.stringify(doc) });
   await api(admin, '/api/admin/docs/global/site/en', { method: 'POST', body: JSON.stringify({ action: 'publish' }) });
   const home = await pageText('/');
   const deep = await pageText('/tools/qr-code-generator');
   check('global nav change reaches the home page', home.text.includes('CMS TRIAL BUTTON'));
   check('global nav change reaches a deep page', deep.text.includes('CMS TRIAL BUTTON'));
-  check('global identity change reaches the footer', home.text.includes('Weiz Test Ltd'));
+  check('global footer change reaches the footer', home.text.includes('CMS FOOTER TAGLINE'));
   check(
     'trademark attribution survives (locked)',
     home.text.includes('independent software provider'),

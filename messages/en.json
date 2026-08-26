@@ -342,7 +342,6 @@
     "formSub": "Tell us a little about your business and what you want WhatsApp to do for it.",
     "detailsTitle": "Company details",
     "details": {
-      "legalName": "Legal name",
       "phone": "Phone",
       "email": "Email",
       "whatsapp": "WhatsApp"

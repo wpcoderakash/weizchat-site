@@ -76,7 +76,6 @@ export const contactDocSchema = z.object({
   formSub: z.string().min(1),
   detailsTitle: z.string().min(1),
   details: z.object({
-    legalName: z.string().min(1),
     phone: z.string().min(1),
     /** Defaulted so an already-published contact page keeps parsing. */
     whatsapp: z.string().min(1).default('WhatsApp'),
@@ -231,14 +230,14 @@ export const globalDocSchema = z.object({
     }),
   }),
   /**
-   * Who the company is. Where it is and how to reach it live in `contact` —
-   * they were duplicated here, and a second copy of an address is a second
-   * copy to forget to update.
+   * Site-wide wiring. Deliberately not an identity block any more: the owner
+   * removed the legal name, number and registered address, so the site
+   * presents itself as the WeizChat brand (config/site.ts) and names no
+   * legal entity. Restoring one is a field here plus its renderers.
    */
   site: z.object({
     supportEmail: z.string().min(3),
     appUrl: z.string().min(1),
-    legalName: z.string().min(1),
   }),
   contact: contactBlockSchema,
   shared: z.object({
