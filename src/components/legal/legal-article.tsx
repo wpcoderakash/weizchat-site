@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { docStatus } from '../../cms/docs';
 import { getPageDoc } from '../../cms/load';
-import type { LegalDoc } from '../../cms/site-schema';
+import { legalDocSchema, type LegalDoc } from '../../cms/site-schema';
 import { metaFromSeo } from '../../lib/seo';
 
 /**
@@ -27,8 +28,27 @@ export type LegalSlug =
   | 'data-deletion'
   | 'security';
 
-/** The draft date of the current built-in text, shown as "last updated". */
-const UPDATED = '2026-08-20';
+/**
+ * The date the SHIPPED text was drafted. Only used for a document nobody has
+ * republished through the CMS.
+ */
+const BUILT_IN_UPDATED = '2026-08-20';
+
+/**
+ * When this document was last actually changed.
+ *
+ * It used to be one hardcoded constant on every legal page, which meant all
+ * six claimed the same date no matter when each was really edited — and kept
+ * claiming it after the owner republished two of them. The store already
+ * records a real timestamp per document per locale; use that, and fall back
+ * to the built-in date only when nothing has been published.
+ */
+function lastUpdated(slug: LegalSlug, locale: string): string {
+  const stamp = docStatus(legalDocSchema, 'page', slug, locale).updatedAt;
+  if (!stamp) return BUILT_IN_UPDATED;
+  const at = new Date(stamp);
+  return Number.isNaN(at.getTime()) ? BUILT_IN_UPDATED : at.toISOString().slice(0, 10);
+}
 
 /**
  * Documents whose text the owner has had reviewed and replaced (2026-08-26).
@@ -75,7 +95,7 @@ export function makeLegalPage(slug: LegalSlug, _titleKey: string) {
           />
         </article>
         <p className="mt-10 border-t border-border pt-4 text-sm text-muted">
-          {t('updated')}: {UPDATED}
+          {t('updated')}: {lastUpdated(slug, locale)}
         </p>
       </main>
     );
