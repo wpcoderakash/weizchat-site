@@ -13,7 +13,11 @@ import { metaFromSeo } from '../../lib/seo';
  *
  * The lawyer-review notice stays in CODE, not in the document: it must be
  * impossible to delete from the editor until counsel actually signs off,
- * at which point removing it is a deliberate one-line change here.
+ * at which point removing it is a deliberate change here.
+ *
+ * It is per-document rather than global, because sign-off arrives that way.
+ * Clearing it for every page at once would put a reviewed stamp on
+ * documents that still show `__LEGAL_NAME__` to visitors.
  */
 export type LegalSlug =
   | 'privacy-policy'
@@ -25,6 +29,14 @@ export type LegalSlug =
 
 /** The draft date of the current built-in text, shown as "last updated". */
 const UPDATED = '2026-08-20';
+
+/**
+ * Documents whose text the owner has had reviewed and replaced (2026-08-26).
+ *
+ * Add a slug here only when its real text is published — not when it is
+ * merely written. Everything absent still renders the review warning.
+ */
+const REVIEWED: ReadonlySet<LegalSlug> = new Set<LegalSlug>(['terms', 'privacy-policy']);
 
 export function makeLegalPage(slug: LegalSlug, _titleKey: string) {
   void _titleKey;
@@ -47,13 +59,15 @@ export function makeLegalPage(slug: LegalSlug, _titleKey: string) {
 
     return (
       <main className="mx-auto max-w-3xl px-6 py-14">
-        {/* Brief §9.5: visible until a lawyer approves the text. */}
-        <div
-          role="note"
-          className="mb-8 rounded-card border border-warn/40 bg-warn/10 p-4 text-sm font-medium text-warn"
-        >
-          {t('lawyerNotice')}
-        </div>
+        {/* Brief §9.5: visible until a lawyer approves THIS document. */}
+        {REVIEWED.has(slug) ? null : (
+          <div
+            role="note"
+            className="mb-8 rounded-card border border-warn/40 bg-warn/10 p-4 text-sm font-medium text-warn"
+          >
+            {t('lawyerNotice')}
+          </div>
+        )}
         <article className="legal-prose">
           <MDXRemote
             source={doc.body}

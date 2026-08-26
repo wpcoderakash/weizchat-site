@@ -44,6 +44,13 @@ const PATHS = [
 ];
 
 /** Deliberate, owner-supplied-later tokens. Anything else is a bug. */
+// Legal documents, and which of them the owner has had reviewed. Kept in
+// step with REVIEWED in components/legal/legal-article.tsx.
+const LEGAL_SLUGS = new Set([
+  'privacy-policy', 'terms', 'accessibility', 'dpa', 'data-deletion', 'security',
+]);
+const REVIEWED_LEGAL = new Set(['terms', 'privacy-policy']);
+
 const ALLOWED_PLACEHOLDERS = new Set([
   '__LEGAL_NAME__',
   '__COMPANY_ID__',
@@ -110,6 +117,20 @@ for (const locale of ['he', 'en']) {
 
     const badge = text.match(BADGE_CLAIMS);
     if (badge) problems.push(`partner claim: "${badge[0]}"`);
+
+    // The lawyer-review warning is per-document. A reviewed document must not
+    // still carry it, and an unreviewed one must not have lost it — clearing
+    // the notice site-wide would stamp "approved" on working drafts.
+    const slug = new URL(url).pathname.replace(/^\/(?:heb\/|en\/)?/, '').replace(/\/$/, '');
+    if (LEGAL_SLUGS.has(slug)) {
+      const warned = /must be reviewed by a lawyer|טרם נבדק|עורך דין/i.test(text);
+      if (REVIEWED_LEGAL.has(slug) && warned) {
+        problems.push('reviewed document still shows the lawyer-review notice');
+      }
+      if (!REVIEWED_LEGAL.has(slug) && !warned) {
+        problems.push('unreviewed document is missing the lawyer-review notice');
+      }
+    }
 
     if (problems.length) {
       failures += 1;
