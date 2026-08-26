@@ -38,7 +38,11 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
     url: site.url,
     email: g.site.supportEmail,
     telephone: g.contact.phone.number,
-    address: { '@type': 'PostalAddress', streetAddress: g.site.address },
+    // The registered address is the first office; there is no longer a
+    // separate copy of it to drift out of date.
+    ...(g.contact.offices[0]
+      ? { address: { '@type': 'PostalAddress', streetAddress: g.contact.offices[0].address } }
+      : {}),
     identifier: g.site.companyId,
     location: g.contact.offices.map((office) => ({
       '@type': 'Place',

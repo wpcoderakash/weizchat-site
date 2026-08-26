@@ -122,6 +122,14 @@ check('…and adopts a working contact block',
 check('…keeping every existing edit',
   migrated.success && migrated.data.site.legalName === 'Weiz Chat Technologies');
 
+// `site.address` and `site.phone` were removed once the contact block made
+// them duplicates. The published document still carries them, so removal has
+// to be a strip, not a parse error.
+check('…and tolerates the retired site.address / site.phone',
+  migrated.success && migrated.data.site.address === undefined
+    && migrated.data.site.phone === undefined,
+  migrated.success ? JSON.stringify(Object.keys(migrated.data.site)) : '');
+
 fs.rmSync(out, { recursive: true, force: true });
 console.log(fails === 0 ? '\nCONTACT BLOCK OK' : `\n${fails} FAILED`);
 process.exit(fails === 0 ? 0 : 1);

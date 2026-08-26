@@ -184,7 +184,6 @@ const contactGroups: FieldGroup[] = [
       { kind: 'text', path: 'detailsTitle', label: 'Heading' },
       { kind: 'text', path: 'details.legalName', label: 'Legal name label' },
       { kind: 'text', path: 'details.companyId', label: 'Company number label' },
-      { kind: 'text', path: 'details.address', label: 'Address label' },
       { kind: 'text', path: 'details.phone', label: 'Phone label' },
       { kind: 'text', path: 'details.whatsapp', label: 'WhatsApp label' },
       { kind: 'text', path: 'details.email', label: 'Email label' },
@@ -268,12 +267,10 @@ export const globalGroups: FieldGroup[] = [
     ],
   },
   {
-    title: 'Company identity (footer, contact page, JSON-LD)',
+    title: 'Company identity (legal name and number)',
     fields: [
       { kind: 'text', path: 'site.legalName', label: 'Legal name' },
       { kind: 'text', path: 'site.companyId', label: 'Company number' },
-      { kind: 'text', path: 'site.address', label: 'Address' },
-      { kind: 'text', path: 'site.phone', label: 'Phone' },
       { kind: 'text', path: 'site.supportEmail', label: 'Support email' },
       { kind: 'text', path: 'site.appUrl', label: 'App URL (login buttons)' },
     ],

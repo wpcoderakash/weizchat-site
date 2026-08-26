@@ -6,8 +6,8 @@ import { mailHref, mapHref, telHref, whatsappHref } from '../../lib/contact-link
  *
  * Split out of the page so the row list is data rather than JSX buried in a
  * server component — and so the phone and WhatsApp rows are unmistakably
- * links. The registered address stays its own row: it is the legal address
- * Meta's reviewers check, which is not necessarily where anyone sits.
+ * links. Addresses are not rows: they live in the offices card below, which
+ * holds all of them and makes each one open a map.
  */
 export function ContactDetailsRows({
   labels,
@@ -19,7 +19,6 @@ export function ContactDetailsRows({
   const rows: [string, React.ReactNode][] = [
     [labels.legalName, g.site.legalName],
     [labels.companyId, g.site.companyId],
-    [labels.address, g.site.address],
     [
       labels.phone,
       <a key="phone" href={telHref(g.contact.phone)} className="text-accent hover:text-accent-hover" dir="ltr">

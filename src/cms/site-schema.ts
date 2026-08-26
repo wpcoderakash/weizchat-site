@@ -78,7 +78,6 @@ export const contactDocSchema = z.object({
   details: z.object({
     legalName: z.string().min(1),
     companyId: z.string().min(1),
-    address: z.string().min(1),
     phone: z.string().min(1),
     /** Defaulted so an already-published contact page keeps parsing. */
     whatsapp: z.string().min(1).default('WhatsApp'),
@@ -233,13 +232,16 @@ export const globalDocSchema = z.object({
       security: z.string().min(1),
     }),
   }),
+  /**
+   * Who the company is. Where it is and how to reach it live in `contact` —
+   * they were duplicated here, and a second copy of an address is a second
+   * copy to forget to update.
+   */
   site: z.object({
     supportEmail: z.string().min(3),
     appUrl: z.string().min(1),
     legalName: z.string().min(1),
     companyId: z.string().min(1),
-    address: z.string().min(1),
-    phone: z.string().min(1),
   }),
   contact: contactBlockSchema,
   shared: z.object({
