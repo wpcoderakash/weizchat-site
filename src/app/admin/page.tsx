@@ -4,7 +4,7 @@ import { adminConfigured, currentUser, listUsers } from '../../cms/auth';
 import { recentActivity, type ActivityRow } from '../../cms/docs';
 import { countNewLeads } from '../../cms/leads';
 import { adminListPosts } from '../../cms/posts';
-import { PAGES, pageBySlug } from '../../cms/registry';
+import { LISTED_PAGES, pageBySlug } from '../../cms/registry';
 import { MEDIA_DIR } from '../../lib/paths';
 
 export const dynamic = 'force-dynamic';
@@ -127,7 +127,7 @@ export default async function AdminHome() {
         </div>
 
         <div className="cms-stats">
-          <Stat k="Pages" n={PAGES.length} icon="pages" />
+          <Stat k="Pages" n={LISTED_PAGES.length} icon="pages" />
           <Stat k="Posts" n={posts.length} icon="posts" />
           <Stat k="Media files" n={mediaCount()} icon="media" />
           <Stat k="New leads" n={countNewLeads()} icon="leads" />

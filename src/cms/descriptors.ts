@@ -257,10 +257,7 @@ export const globalGroups: FieldGroup[] = [
       { kind: 'text', path: 'footer.rights', label: '"All rights reserved"' },
       { kind: 'text', path: 'footer.legalLabels.privacy', label: 'Privacy link' },
       { kind: 'text', path: 'footer.legalLabels.terms', label: 'Terms link' },
-      { kind: 'text', path: 'footer.legalLabels.dpa', label: 'DPA link' },
-      { kind: 'text', path: 'footer.legalLabels.dataDeletion', label: 'Data deletion link' },
       { kind: 'text', path: 'footer.legalLabels.accessibility', label: 'Accessibility link' },
-      { kind: 'text', path: 'footer.legalLabels.security', label: 'Security link' },
     ],
   },
   {

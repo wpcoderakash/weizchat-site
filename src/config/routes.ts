@@ -24,11 +24,15 @@ export const resourceRoutes = [
   { href: '/information-center', key: 'informationCenter' },
 ] as const;
 
+/**
+ * The legal links the footer shows. Owner's choice (2026-08-26): three.
+ *
+ * `/dpa`, `/data-deletion` and `/security` still resolve — they are simply
+ * not linked. `/data-deletion` in particular is a URL Meta asks for during
+ * app setup, so it stays reachable rather than 404ing.
+ */
 export const legalRoutes = [
   { href: '/privacy-policy', key: 'privacy' },
   { href: '/terms', key: 'terms' },
-  { href: '/dpa', key: 'dpa' },
-  { href: '/data-deletion', key: 'dataDeletion' },
   { href: '/accessibility', key: 'accessibility' },
-  { href: '/security', key: 'security' },
 ] as const;

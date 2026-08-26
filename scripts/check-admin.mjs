@@ -52,7 +52,11 @@ check('toggle back to light', (await p.evaluate(() => document.documentElement.d
 await p.getByRole('link', { name: 'Pages' }).first().click();
 await p.waitForURL(/\/admin\/pages/);
 const rows = await p.locator('.cms-table tbody tr').count();
-check('pages list shows all 20 pages', rows === 20, String(rows));
+check('pages list shows the 17 listed pages', rows === 17, String(rows));
+// The three legal pages dropped from the footer are unlisted, not deleted —
+// they still have to answer, because Meta asks for the data-deletion URL.
+check('the admin does not list the unlinked legal pages',
+  !/Data processing addendum|Data deletion|>Security</.test(await p.locator('body').innerText()));
 
 await p.getByRole('link', { name: 'Landing page' }).click();
 await p.waitForURL(/\/admin\/pages\/home\/en/);

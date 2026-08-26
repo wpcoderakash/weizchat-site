@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { isSignedIn } from '../../../cms/auth';
 import { docStatus } from '../../../cms/docs';
-import { PAGES } from '../../../cms/registry';
+import { LISTED_PAGES } from '../../../cms/registry';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 export default async function PagesList() {
   if (!(await isSignedIn())) redirect('/admin/login');
 
-  const rows = PAGES.map((def) => ({
+  const rows = LISTED_PAGES.map((def) => ({
     def,
     status: {
       en: docStatus(def.schema, 'page', def.slug, 'en'),

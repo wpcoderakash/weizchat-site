@@ -43,6 +43,15 @@ export interface PageDef {
   publicPath: string;
   /** null = a bespoke editor exists (the landing page). */
   groups: FieldGroup[] | null;
+  /**
+   * false = the page still renders and is still reachable, it just does not
+   * appear in the admin's page list.
+   *
+   * Unregistering it instead would 500 the route, because `pageBySlug` is
+   * what the page component reads its content through — the admin list and
+   * the renderer share this table.
+   */
+  listed: boolean;
 }
 
 function page(
@@ -53,8 +62,9 @@ function page(
   builtIn: PageDef['builtIn'],
   publicPath: string,
   groups: FieldGroup[] | null,
+  listed = true,
 ): PageDef {
-  return { slug, title, kind, schema, builtIn, publicPath, groups };
+  return { slug, title, kind, schema, builtIn, publicPath, groups, listed };
 }
 
 export const PAGES: PageDef[] = [
@@ -74,11 +84,14 @@ export const PAGES: PageDef[] = [
   page('conversation-pricing-calculator', 'Tool: pricing calculator', 'tool', toolDocSchema, (l) => toolDefault('conversation-pricing-calculator', l), '/tools/conversation-pricing-calculator', GROUPS['tool']!),
   page('privacy-policy', 'Privacy policy', 'legal', legalDocSchema, (l) => legalDefault('privacy-policy', l), '/privacy-policy', GROUPS['legal']!),
   page('terms', 'Terms of service', 'legal', legalDocSchema, (l) => legalDefault('terms', l), '/terms', GROUPS['legal']!),
-  page('dpa', 'Data processing addendum', 'legal', legalDocSchema, (l) => legalDefault('dpa', l), '/dpa', GROUPS['legal']!),
+  page('dpa', 'Data processing addendum', 'legal', legalDocSchema, (l) => legalDefault('dpa', l), '/dpa', GROUPS['legal']!, false),
   page('accessibility', 'Accessibility statement', 'legal', legalDocSchema, (l) => legalDefault('accessibility', l), '/accessibility', GROUPS['legal']!),
-  page('data-deletion', 'Data deletion', 'legal', legalDocSchema, (l) => legalDefault('data-deletion', l), '/data-deletion', GROUPS['legal']!),
-  page('security', 'Security', 'legal', legalDocSchema, (l) => legalDefault('security', l), '/security', GROUPS['legal']!),
+  page('data-deletion', 'Data deletion', 'legal', legalDocSchema, (l) => legalDefault('data-deletion', l), '/data-deletion', GROUPS['legal']!, false),
+  page('security', 'Security', 'legal', legalDocSchema, (l) => legalDefault('security', l), '/security', GROUPS['legal']!, false),
 ];
+
+/** What the admin lists. Unlisted pages still render on the public site. */
+export const LISTED_PAGES: PageDef[] = PAGES.filter((def) => def.listed);
 
 export function pageBySlug(slug: string): PageDef | null {
   return PAGES.find((p) => p.slug === slug) ?? null;

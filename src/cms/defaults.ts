@@ -179,6 +179,11 @@ const LEGAL_TITLE_KEY: Record<string, string> = {
   security: 'security',
 };
 
+/**
+ * `footer.legal.*` does double duty: it titles the page itself, not only the
+ * footer link. So the keys for pages dropped from the footer stay — deleting
+ * them with the links broke the build on /dpa and /security.
+ */
 export function legalDefault(slug: string, locale: string): LegalDoc {
   const titleKey = LEGAL_TITLE_KEY[slug];
   if (!titleKey) throw new Error(`unknown legal page: ${slug}`);
@@ -235,10 +240,7 @@ export function globalDefault(locale: string): GlobalDoc {
       legalLabels: {
         privacy: t(locale, 'footer.legal.privacy'),
         terms: t(locale, 'footer.legal.terms'),
-        dpa: t(locale, 'footer.legal.dpa'),
-        dataDeletion: t(locale, 'footer.legal.dataDeletion'),
         accessibility: t(locale, 'footer.legal.accessibility'),
-        security: t(locale, 'footer.legal.security'),
       },
     },
     site: {

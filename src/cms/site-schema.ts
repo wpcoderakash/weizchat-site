@@ -223,10 +223,7 @@ export const globalDocSchema = z.object({
     legalLabels: z.object({
       privacy: z.string().min(1),
       terms: z.string().min(1),
-      dpa: z.string().min(1),
-      dataDeletion: z.string().min(1),
       accessibility: z.string().min(1),
-      security: z.string().min(1),
     }),
   }),
   /**
