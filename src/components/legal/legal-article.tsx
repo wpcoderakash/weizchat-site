@@ -56,7 +56,16 @@ function lastUpdated(slug: LegalSlug, locale: string): string {
  * Add a slug here only when its real text is published — not when it is
  * merely written. Everything absent still renders the review warning.
  */
-const REVIEWED: ReadonlySet<LegalSlug> = new Set<LegalSlug>(['terms', 'privacy-policy']);
+const REVIEWED: ReadonlySet<LegalSlug> = new Set<LegalSlug>([
+  'terms',
+  'privacy-policy',
+  // 2026-08-31: real text published for both (placeholders resolved, content
+  // matches the published privacy policy); the owner directed the release for
+  // Meta verification. dpa and security still carry placeholders and keep
+  // the notice.
+  'data-deletion',
+  'accessibility',
+]);
 
 export function makeLegalPage(slug: LegalSlug, _titleKey: string) {
   void _titleKey;
