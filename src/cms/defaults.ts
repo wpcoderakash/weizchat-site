@@ -251,7 +251,7 @@ export function globalDefault(locale: string): GlobalDoc {
       },
     },
     site: {
-      supportEmail: 'office@weiz.co.il',
+      supportEmail: 'chat@weiz.co.il',
       appUrl: 'https://app.weiz.chat',
     },
     // Real values, not placeholders: these are the numbers and offices the

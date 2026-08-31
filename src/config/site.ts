@@ -10,7 +10,7 @@ export const site = {
   domain: 'weiz.chat',
   url: 'https://weiz.chat',
   appUrl: 'https://app.weiz.chat',
-  supportEmail: 'office@weiz.co.il',
+  supportEmail: 'chat@weiz.co.il',
 
   /**
    * Meta partner status — rule §0.2. Stays 'none' until Meta approves us.
