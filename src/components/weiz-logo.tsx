@@ -12,7 +12,7 @@ import Image from 'next/image';
  * Both are shipped and CSS chooses; no JavaScript, so the correct one is in
  * the first paint rather than swapping after hydration.
  *
- * Intrinsic size is 912 x 514. Callers give a width and the height follows,
+ * Intrinsic size is 1430 x 514. Callers give a width and the height follows,
  * so the aspect ratio is never touched.
  */
 export function WeizLogo({
@@ -24,7 +24,7 @@ export function WeizLogo({
   priority?: boolean;
   className?: string;
 }) {
-  const height = Math.round((width * 514) / 912);
+  const height = Math.round((width * 514) / 1430);
   return (
     <span className={className ? `weiz-logo ${className}` : 'weiz-logo'}>
       <Image
