@@ -15,9 +15,16 @@ export function LocaleSwitcher() {
   const pathname = usePathname();
   const t = useTranslations('nav');
 
+  // The English page lists English first (owner request, 2026-09-06); the
+  // Hebrew page keeps the routing order untouched.
+  const locales =
+    locale === 'en'
+      ? ['en' as const, ...routing.locales.filter((l) => l !== 'en')]
+      : routing.locales;
+
   return (
     <nav aria-label={t('languageSwitcher')} className="flex items-center gap-1 text-sm">
-      {routing.locales.map((l) => (
+      {locales.map((l) => (
         <Link
           key={l}
           href={pathname}
