@@ -33,7 +33,7 @@ export function LocaleSwitcher() {
           className={
             l === locale
               ? 'rounded-full bg-accent-soft px-2.5 py-1 font-semibold text-accent'
-              : 'rounded-full px-2.5 py-1 text-muted hover:text-fg'
+              : 'rounded-full px-2.5 py-1 text-muted hover:bg-accent-soft/60 hover:text-fg'
           }
         >
           {NATIVE_NAMES[l]}
