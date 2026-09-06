@@ -180,11 +180,15 @@ export function Nav({ g }: { g: GlobalDoc }) {
         </button>
       </div>
 
-      {/* Mobile panel */}
+      {/* Mobile panel. It lives inside the sticky header, so it MUST scroll
+          internally: without the max-height the rows past the viewport (the
+          language switcher is the last one) are unreachable on short phones,
+          and the page cannot scroll a sticky element. The bottom padding
+          lets the last rows scroll clear of the cookie-consent banner. */}
       {mobileOpen ? (
         <nav
           aria-label={t('primary')}
-          className="border-t border-border bg-surface px-6 py-4 lg:hidden"
+          className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-border bg-surface px-6 py-4 pb-28 lg:hidden"
         >
           <p className="pb-1 text-xs font-semibold uppercase tracking-wide text-muted">
             {g.nav.solutions}
