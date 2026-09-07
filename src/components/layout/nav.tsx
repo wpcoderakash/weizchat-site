@@ -121,7 +121,7 @@ export function Nav({ g }: { g: GlobalDoc }) {
         {/* The lockup carries the name; the word beside it said it twice —
             on screen and to a screen reader. */}
         <Link href="/" className="flex items-center" aria-label="WeizChat">
-          <WeizLogo width={116} priority />
+          <WeizLogo width={167} priority />
         </Link>
 
         {/* Desktop */}
