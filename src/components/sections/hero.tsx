@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import type { CmsSection } from '../../cms/schema';
 import { CmsCta } from './cms-link';
-import { WeizLogo } from '../weiz-logo';
 
 type Hero = Extract<CmsSection, { id: 'hero' }>;
 
@@ -17,9 +16,6 @@ export function Hero({ data }: { data: Hero }) {
     <section className="border-b border-border bg-surface">
       <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-16 lg:grid-cols-2 lg:py-24">
         <div>
-          {/* The brand lockup opens the hero — big and theme-aware (the
-              component ships a light and a dark variant). */}
-          <WeizLogo width={200} priority className="mb-7 block" />
           <h1 className="text-4xl sm:text-5xl">{data.title}</h1>
           <p className="mt-5 max-w-lg text-lg text-muted">{data.sub}</p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
