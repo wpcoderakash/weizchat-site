@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { EyeIcon } from './eye-icon';
 import { WeizLogo } from '../weiz-logo';
 
 /** The CMS sign-in. One password, one failure message. */
@@ -80,7 +81,7 @@ export function LoginForm() {
               aria-label={reveal ? 'Hide password' : 'Show password'}
               title={reveal ? 'Hide password' : 'Show password'}
             >
-              {reveal ? 'Hide' : 'Show'}
+              <EyeIcon off={reveal} />
             </button>
           </div>
         </div>

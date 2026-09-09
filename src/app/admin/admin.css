@@ -351,22 +351,22 @@
 }
 
 .cms-login .cms-password-row input {
-  padding-right: 3.6rem;
+  padding-right: 2.7rem;
 }
 
 .cms-reveal {
   position: absolute;
   top: 50%;
-  right: 0.4rem;
+  right: 0.35rem;
   transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
   border: none;
   background: transparent;
   color: var(--cms-muted);
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 0.3rem 0.45rem;
-  border-radius: 6px;
+  border-radius: 7px;
   cursor: pointer;
 }
 
@@ -374,6 +374,12 @@
 .cms-reveal:focus-visible {
   color: var(--cms-accent);
   background: color-mix(in srgb, var(--cms-accent) 10%, transparent);
+}
+
+.cms-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .cms-login-submit {

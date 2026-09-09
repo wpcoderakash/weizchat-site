@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { Role } from '../../cms/auth';
+import { EyeIcon } from './eye-icon';
 
 const MIN = 12;
 
@@ -82,7 +83,10 @@ export function ProfileForm({ username, role }: { username: string; role: Role }
               className="cms-btn cms-btn-icon"
               onClick={() => setReveal((r) => !r)}
               aria-pressed={reveal}
+              aria-label={reveal ? 'Hide passwords' : 'Show passwords'}
+              title={reveal ? 'Hide passwords' : 'Show passwords'}
             >
+              <EyeIcon off={reveal} />
               {reveal ? 'Hide' : 'Show'}
             </button>
           </div>
