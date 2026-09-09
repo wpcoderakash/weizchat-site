@@ -40,11 +40,11 @@ export function LoginForm() {
 
   return (
     <div className="cms-login">
-      <form onSubmit={submit} className="cms-card" style={{ padding: '1.25rem' }}>
-        <WeizLogo width={150} priority />
-        <h1 style={{ margin: '0.35rem 0 0', fontSize: '0.95rem', color: 'var(--cms-muted)' }}>
-          Content Manager
-        </h1>
+      <form onSubmit={submit} className="cms-card cms-login-card">
+        <header className="cms-login-head">
+          <WeizLogo width={148} priority />
+          <h1 className="cms-login-plane">Content Manager</h1>
+        </header>
         <div className="cms-field">
           <label htmlFor="cms-username">Username</label>
           <input
@@ -74,7 +74,7 @@ export function LoginForm() {
                 worth more than hiding it from a shoulder they chose. */}
             <button
               type="button"
-              className="cms-btn cms-btn-icon"
+              className="cms-reveal"
               onClick={() => setReveal((r) => !r)}
               aria-pressed={reveal}
               aria-label={reveal ? 'Hide password' : 'Show password'}
@@ -89,9 +89,17 @@ export function LoginForm() {
             {error}
           </p>
         ) : null}
-        <button type="submit" className="cms-btn cms-btn-primary" disabled={busy || !username.trim() || !password.trim()}>
+        <button
+          type="submit"
+          className="cms-btn cms-btn-primary cms-login-submit"
+          disabled={busy || !username.trim() || !password.trim()}
+        >
           {busy ? 'Checking…' : 'Sign in'}
         </button>
+
+        <p className="cms-login-foot">
+          <a href="/">Back to weiz.chat</a>
+        </p>
       </form>
     </div>
   );
