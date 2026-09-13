@@ -224,7 +224,7 @@ export function Nav({ g }: { g: GlobalDoc }) {
             {g.nav.login}
           </button>
           <a
-            href={`${g.site.appUrl}/login`}
+            href={`${g.site.appUrl}/register`}
             className="rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-accent-fg hover:bg-accent-hover"
           >
             {g.nav.startTrial}
@@ -311,7 +311,7 @@ export function Nav({ g }: { g: GlobalDoc }) {
               {g.nav.login}
             </button>
             <a
-              href={`${g.site.appUrl}/login`}
+              href={`${g.site.appUrl}/register`}
               className="rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-accent-fg"
             >
               {g.nav.startTrial}
