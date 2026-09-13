@@ -29,26 +29,66 @@
       "informationCenter": "Information center"
     },
     "themeSwitch": "Dark theme",
-    "loginDialog": {
-      "kicker": "Welcome back.",
-      "title": "Log in to your account",
+    "authDialog": {
+      "close": "Close",
+      "continue": "Continue",
+      "back": "Back",
+      "change": "Change",
+      "loading": "One moment…",
+      "handingOff": "Signing you in…",
       "emailLabel": "Email",
       "emailPlaceholder": "you@company.com",
-      "continue": "Continue",
-      "noAccount": "New to WeizChat?",
-      "startTrial": "Start your free trial",
-      "close": "Close"
-    },
-    "registerDialog": {
-      "kicker": "Start building.",
-      "title": "Create your account",
-      "emailLabel": "Work email",
-      "emailPlaceholder": "you@company.com",
-      "continue": "Continue",
-      "reassurance": "Free to start. No credit card.",
-      "hasAccount": "Already have an account?",
-      "logIn": "Log in",
-      "close": "Close"
+      "codeSentTo": "We sent a 6-digit code to",
+      "codeLabel": "Verification code",
+      "codeHint": "Enter the six digits from the email.",
+      "verify": "Verify",
+      "resend": "Send a new code",
+      "show": "Show",
+      "hide": "Hide",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "login": {
+        "kicker": "Welcome back.",
+        "title": "Log in to your account",
+        "passwordLabel": "Password",
+        "signIn": "Sign in",
+        "useCodeInstead": "Email me a code instead",
+        "forgotPassword": "Forgot password?",
+        "resetSent": "If that address has an account, a reset link is on its way.",
+        "noAccount": "New to WeizChat?",
+        "startTrial": "Start your free trial"
+      },
+      "register": {
+        "kicker": "Start building.",
+        "title": "Create your account",
+        "accountTitle": "Set up your account",
+        "accountHint": "This is how you will sign in, and what your team sees.",
+        "nameLabel": "Full name",
+        "businessLabel": "Business name",
+        "passwordLabel": "Password",
+        "passwordHint": "At least 8 characters. You will sign in with this from now on.",
+        "confirmLabel": "Confirm password",
+        "createAccount": "Create account",
+        "reassurance": "Free to start. No credit card.",
+        "hasAccount": "Already have an account?",
+        "logIn": "Log in"
+      },
+      "strength": {
+        "label": "Password strength",
+        "weak": "Weak",
+        "fair": "Fair",
+        "good": "Good",
+        "strong": "Strong",
+        "tip": "Length beats symbols — three unrelated words beat P@ssw0rd!"
+      },
+      "errors": {
+        "invalidCode": "That code is not valid. Check it and try again.",
+        "invalidCredentials": "Email or password is incorrect.",
+        "rateLimited": "Too many attempts. Wait a few minutes and try again.",
+        "passwordTooWeak": "That password is too short or too common. Try a longer, less predictable one.",
+        "passwordMismatch": "Those two passwords do not match.",
+        "error": "Something went wrong. Please try again."
+      }
     }
   },
   "footer": {

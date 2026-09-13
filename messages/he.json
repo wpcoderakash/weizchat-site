@@ -29,26 +29,66 @@
       "informationCenter": "מרכז מידע"
     },
     "themeSwitch": "מצב כהה",
-    "loginDialog": {
-      "kicker": "ברוכים השבים.",
-      "title": "התחברות לחשבון שלך",
+    "authDialog": {
+      "close": "סגירה",
+      "continue": "המשך",
+      "back": "חזרה",
+      "change": "שינוי",
+      "loading": "רגע…",
+      "handingOff": "מחברים אותך…",
       "emailLabel": "אימייל",
       "emailPlaceholder": "you@company.com",
-      "continue": "המשך",
-      "noAccount": "חדשים ב-WeizChat?",
-      "startTrial": "התחילו ניסיון חינם",
-      "close": "סגירה"
-    },
-    "registerDialog": {
-      "kicker": "מתחילים לבנות.",
-      "title": "יצירת חשבון",
-      "emailLabel": "אימייל עבודה",
-      "emailPlaceholder": "you@company.com",
-      "continue": "המשך",
-      "reassurance": "מתחילים בחינם. בלי כרטיס אשראי.",
-      "hasAccount": "כבר יש לכם חשבון?",
-      "logIn": "התחברות",
-      "close": "סגירה"
+      "codeSentTo": "שלחנו קוד בן 6 ספרות אל",
+      "codeLabel": "קוד אימות",
+      "codeHint": "הזינו את שש הספרות מהאימייל.",
+      "verify": "אימות",
+      "resend": "שליחת קוד חדש",
+      "show": "הצגה",
+      "hide": "הסתרה",
+      "showPassword": "הצגת הסיסמה",
+      "hidePassword": "הסתרת הסיסמה",
+      "login": {
+        "kicker": "ברוכים השבים.",
+        "title": "התחברות לחשבון שלך",
+        "passwordLabel": "סיסמה",
+        "signIn": "כניסה",
+        "useCodeInstead": "שלחו לי קוד באימייל במקום",
+        "forgotPassword": "שכחתם סיסמה?",
+        "resetSent": "אם לכתובת הזו יש חשבון, קישור לאיפוס בדרך אליכם.",
+        "noAccount": "חדשים ב-WeizChat?",
+        "startTrial": "התחילו ניסיון חינם"
+      },
+      "register": {
+        "kicker": "מתחילים לבנות.",
+        "title": "יצירת חשבון",
+        "accountTitle": "הגדרת החשבון שלך",
+        "accountHint": "כך תתחברו למערכת, וכך הצוות שלכם יראה אתכם.",
+        "nameLabel": "שם מלא",
+        "businessLabel": "שם העסק",
+        "passwordLabel": "סיסמה",
+        "passwordHint": "לפחות 8 תווים. מעכשיו תתחברו איתה.",
+        "confirmLabel": "אימות סיסמה",
+        "createAccount": "יצירת חשבון",
+        "reassurance": "מתחילים בחינם. בלי כרטיס אשראי.",
+        "hasAccount": "כבר יש לכם חשבון?",
+        "logIn": "התחברות"
+      },
+      "strength": {
+        "label": "חוזק הסיסמה",
+        "weak": "חלשה",
+        "fair": "סבירה",
+        "good": "טובה",
+        "strong": "חזקה",
+        "tip": "אורך עדיף על תווים מיוחדים — שלוש מילים אקראיות עדיפות על P@ssw0rd!"
+      },
+      "errors": {
+        "invalidCode": "הקוד אינו תקין. בדקו ונסו שוב.",
+        "invalidCredentials": "אימייל או סיסמה שגויים.",
+        "rateLimited": "יותר מדי ניסיונות. המתינו כמה דקות ונסו שוב.",
+        "passwordTooWeak": "הסיסמה קצרה מדי או נפוצה מדי. נסו סיסמה ארוכה ופחות צפויה.",
+        "passwordMismatch": "שתי הסיסמאות אינן זהות.",
+        "error": "משהו השתבש. נסו שוב."
+      }
     }
   },
   "footer": {
