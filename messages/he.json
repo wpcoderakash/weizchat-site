@@ -28,7 +28,17 @@
       "blog": "בלוג",
       "informationCenter": "מרכז מידע"
     },
-    "themeSwitch": "מצב כהה"
+    "themeSwitch": "מצב כהה",
+    "loginDialog": {
+      "kicker": "ברוכים השבים.",
+      "title": "התחברות לחשבון שלך",
+      "emailLabel": "אימייל",
+      "emailPlaceholder": "you@company.com",
+      "continue": "המשך",
+      "noAccount": "חדשים ב-WeizChat?",
+      "startTrial": "התחילו ניסיון חינם",
+      "close": "סגירה"
+    }
   },
   "footer": {
     "tagline": "כל שיחות הוואטסאפ של העסק בתיבה משותפת אחת — עם AI שעובד בשבילכם.",

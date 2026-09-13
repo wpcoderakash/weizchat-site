@@ -1,13 +1,18 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { Link, usePathname } from '../../i18n/navigation';
-import type { GlobalDoc } from '../../cms/site-schema';
-import { resourceRoutes, solutionRoutes, toolRoutes } from '../../config/routes';
-import { WeizLogo } from '../weiz-logo';
-import { LocaleSwitcher } from './locale-switcher';
-import { ThemeSwitcher } from './theme-switcher';
+import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "../../i18n/navigation";
+import type { GlobalDoc } from "../../cms/site-schema";
+import {
+  resourceRoutes,
+  solutionRoutes,
+  toolRoutes,
+} from "../../config/routes";
+import { WeizLogo } from "../weiz-logo";
+import { LocaleSwitcher } from "./locale-switcher";
+import { LoginDialog } from "./login-dialog";
+import { ThemeSwitcher } from "./theme-switcher";
 
 /**
  * Top navigation (brief §5.1): logo · Solutions ▾ · Tools ▾ · Resources ·
@@ -16,7 +21,7 @@ import { ThemeSwitcher } from './theme-switcher';
  * outside click closes; position uses logical properties so RTL mirrors.
  */
 
-type MenuId = 'solutions' | 'tools' | null;
+type MenuId = "solutions" | "tools" | null;
 
 function Chevron({ open }: { open: boolean }) {
   return (
@@ -25,19 +30,70 @@ function Chevron({ open }: { open: boolean }) {
       width={10}
       height={10}
       aria-hidden="true"
-      className={`transition-transform ${open ? 'rotate-180' : ''}`}
+      className={`transition-transform ${open ? "rotate-180" : ""}`}
     >
-      <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      <path
+        d="M2 4l4 4 4-4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
     </svg>
   );
 }
 
 export function Nav({ g }: { g: GlobalDoc }) {
-  const t = useTranslations('nav');
+  const t = useTranslations("nav");
   const pathname = usePathname();
   const [openMenu, setOpenMenu] = useState<MenuId>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const rootRef = useRef<HTMLElement>(null);
+
+  // The sign-in dialog. `?login` opens it on arrival so the door is linkable
+  // (www.weiz.chat/?login), and opening pushes a history entry so the phone's
+  // Back gesture closes the dialog instead of leaving the site. Read from
+  // window rather than useSearchParams: that hook would drag this layout out
+  // of static prerendering for one boolean.
+  // Initial state, not an effect: the answer is known before first paint, and
+  // nothing in the dialog's server markup depends on it — showModal() is a
+  // DOM call the dialog makes after mount — so the client may start true where
+  // the server rendered false without the two trees disagreeing.
+  const [loginOpen, setLoginOpen] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      new URLSearchParams(window.location.search).has("login"),
+  );
+  const pushedLoginRef = useRef(false);
+
+  useEffect(() => {
+    function onPopState() {
+      pushedLoginRef.current = false;
+      setLoginOpen(false);
+    }
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  function openLogin() {
+    setOpenMenu(null);
+    setMobileOpen(false);
+    if (!new URLSearchParams(window.location.search).has("login")) {
+      window.history.pushState({ login: true }, "", "?login");
+      pushedLoginRef.current = true;
+    }
+    setLoginOpen(true);
+  }
+
+  function closeLogin() {
+    setLoginOpen(false);
+    if (pushedLoginRef.current) {
+      pushedLoginRef.current = false;
+      window.history.back();
+    } else {
+      // Arrived by link: tidy the address without adding to history.
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }
 
   // Any navigation closes everything (state adjusted during render, per the
   // React "adjusting state when a prop changes" pattern — no effect needed).
@@ -50,25 +106,29 @@ export function Nav({ g }: { g: GlobalDoc }) {
 
   useEffect(() => {
     function onPointerDown(event: PointerEvent) {
-      if (rootRef.current && !rootRef.current.contains(event.target as Node)) setOpenMenu(null);
+      if (rootRef.current && !rootRef.current.contains(event.target as Node))
+        setOpenMenu(null);
     }
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         setOpenMenu(null);
         setMobileOpen(false);
       }
     }
-    document.addEventListener('pointerdown', onPointerDown);
-    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
     return () => {
-      document.removeEventListener('pointerdown', onPointerDown);
-      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
     };
   }, []);
 
-  const solutionLabel = (key: string) => g.solutionLabels[key as keyof typeof g.solutionLabels];
-  const toolLabel = (key: string) => g.toolLabels[key as keyof typeof g.toolLabels];
-  const resourceLabel = (key: string) => g.resourceLabels[key as keyof typeof g.resourceLabels];
+  const solutionLabel = (key: string) =>
+    g.solutionLabels[key as keyof typeof g.solutionLabels];
+  const toolLabel = (key: string) =>
+    g.toolLabels[key as keyof typeof g.toolLabels];
+  const resourceLabel = (key: string) =>
+    g.resourceLabels[key as keyof typeof g.resourceLabels];
 
   const dropdown = (
     id: Exclude<MenuId, null>,
@@ -100,7 +160,7 @@ export function Nav({ g }: { g: GlobalDoc }) {
               className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-fg hover:bg-accent-soft/60"
             >
               {labelOf(item.key)}
-              {'comingSoon' in item && item.comingSoon ? (
+              {"comingSoon" in item && item.comingSoon ? (
                 <span className="rounded-full bg-accent-soft px-2 py-0.5 text-xs font-semibold text-accent">
                   {g.nav.comingSoon}
                 </span>
@@ -125,9 +185,17 @@ export function Nav({ g }: { g: GlobalDoc }) {
         </Link>
 
         {/* Desktop */}
-        <nav aria-label={t('primary')} className="ms-6 hidden items-center gap-1 lg:flex">
-          {dropdown('solutions', g.nav.solutions, solutionRoutes, solutionLabel)}
-          {dropdown('tools', g.nav.tools, toolRoutes, toolLabel)}
+        <nav
+          aria-label={t("primary")}
+          className="ms-6 hidden items-center gap-1 lg:flex"
+        >
+          {dropdown(
+            "solutions",
+            g.nav.solutions,
+            solutionRoutes,
+            solutionLabel,
+          )}
+          {dropdown("tools", g.nav.tools, toolRoutes, toolLabel)}
           {resourceRoutes.map((r) => (
             <Link
               key={r.href}
@@ -148,12 +216,13 @@ export function Nav({ g }: { g: GlobalDoc }) {
         <div className="ms-auto hidden items-center gap-3 lg:flex">
           <ThemeSwitcher />
           <LocaleSwitcher />
-          <a
-            href={`${g.site.appUrl}/login`}
+          <button
+            type="button"
+            onClick={openLogin}
             className="rounded-full border border-border-strong px-4 py-1.5 text-sm font-semibold text-fg hover:border-accent hover:text-accent"
           >
             {g.nav.login}
-          </a>
+          </button>
           <a
             href={`${g.site.appUrl}/login`}
             className="rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-accent-fg hover:bg-accent-hover"
@@ -166,15 +235,23 @@ export function Nav({ g }: { g: GlobalDoc }) {
         <button
           type="button"
           aria-expanded={mobileOpen}
-          aria-label={t('menu')}
+          aria-label={t("menu")}
           onClick={() => setMobileOpen(!mobileOpen)}
           className="ms-auto rounded-lg border border-border p-2 lg:hidden"
         >
           <svg viewBox="0 0 20 20" width={18} height={18} aria-hidden="true">
             {mobileOpen ? (
-              <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" strokeWidth="1.8" />
+              <path
+                d="M4 4l12 12M16 4L4 16"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              />
             ) : (
-              <path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" strokeWidth="1.8" />
+              <path
+                d="M2 5h16M2 10h16M2 15h16"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              />
             )}
           </svg>
         </button>
@@ -187,16 +264,20 @@ export function Nav({ g }: { g: GlobalDoc }) {
           lets the last rows scroll clear of the cookie-consent banner. */}
       {mobileOpen ? (
         <nav
-          aria-label={t('primary')}
+          aria-label={t("primary")}
           className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-border bg-surface px-6 py-4 pb-28 lg:hidden"
         >
           <p className="pb-1 text-xs font-semibold uppercase tracking-wide text-muted">
             {g.nav.solutions}
           </p>
           {solutionRoutes.map((r) => (
-            <Link key={r.href} href={r.href} className="flex items-center gap-2 py-1.5 text-fg">
+            <Link
+              key={r.href}
+              href={r.href}
+              className="flex items-center gap-2 py-1.5 text-fg"
+            >
               {solutionLabel(r.key)}
-              {'comingSoon' in r && r.comingSoon ? (
+              {"comingSoon" in r && r.comingSoon ? (
                 <span className="rounded-full bg-accent-soft px-2 py-0.5 text-xs font-semibold text-accent">
                   {g.nav.comingSoon}
                 </span>
@@ -222,12 +303,13 @@ export function Nav({ g }: { g: GlobalDoc }) {
             </Link>
           </div>
           <div className="flex items-center gap-3 pt-4">
-            <a
-              href={`${g.site.appUrl}/login`}
+            <button
+              type="button"
+              onClick={openLogin}
               className="rounded-full border border-border-strong px-4 py-1.5 text-sm font-semibold"
             >
               {g.nav.login}
-            </a>
+            </button>
             <a
               href={`${g.site.appUrl}/login`}
               className="rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-accent-fg"
@@ -241,6 +323,11 @@ export function Nav({ g }: { g: GlobalDoc }) {
           </div>
         </nav>
       ) : null}
+      <LoginDialog
+        appUrl={g.site.appUrl}
+        open={loginOpen}
+        onClose={closeLogin}
+      />
     </header>
   );
 }

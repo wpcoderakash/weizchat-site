@@ -28,7 +28,17 @@
       "blog": "Blog",
       "informationCenter": "Information center"
     },
-    "themeSwitch": "Dark theme"
+    "themeSwitch": "Dark theme",
+    "loginDialog": {
+      "kicker": "Welcome back.",
+      "title": "Log in to your account",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@company.com",
+      "continue": "Continue",
+      "noAccount": "New to WeizChat?",
+      "startTrial": "Start your free trial",
+      "close": "Close"
+    }
   },
   "footer": {
     "tagline": "Every business WhatsApp conversation in one shared inbox — with AI that works for you.",
