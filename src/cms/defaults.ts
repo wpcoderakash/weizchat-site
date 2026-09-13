@@ -41,7 +41,8 @@ function t(locale: string, dotPath: string): string {
   return node;
 }
 
-const APP_LOGIN = 'https://app.weiz.chat/login';
+/** Where a "Start free trial" button goes: the funnel the words describe. */
+const APP_REGISTER = 'https://app.weiz.chat/register';
 
 // ── Solutions ───────────────────────────────────────────────────────────────
 
@@ -128,7 +129,7 @@ export function pricingDefault(locale: string): PricingDoc {
     included: included.map((id) => ({ id, text: t(locale, `${ns}.included.${id}`) })),
     faqTitle: t(locale, `${ns}.faqTitle`),
     faq: faq.map((id) => ({ id, q: t(locale, `${ns}.faq.${id}.q`), a: t(locale, `${ns}.faq.${id}.a`) })),
-    ctaTrial: { label: t(locale, `${ns}.ctaTrial`), href: APP_LOGIN, newTab: false, enabled: true },
+    ctaTrial: { label: t(locale, `${ns}.ctaTrial`), href: APP_REGISTER, newTab: false, enabled: true },
     ctaContact: { label: t(locale, `${ns}.ctaContact`), href: '/contact', newTab: false, enabled: true },
   };
 }
