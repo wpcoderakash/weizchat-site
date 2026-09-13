@@ -60,6 +60,7 @@ function api(appUrl: string, token: string | null) {
     method: "GET" | "POST" | "PATCH",
     path: string,
     body?: unknown,
+    options: { credentials?: RequestCredentials } = {},
   ): Promise<{ ok: boolean; status: number; json: Record<string, unknown> }> {
     const headers: Record<string, string> = { ...BEARER_HEADER };
     if (body !== undefined) headers["content-type"] = "application/json";
@@ -68,7 +69,9 @@ function api(appUrl: string, token: string | null) {
       method,
       headers,
       body: body === undefined ? undefined : JSON.stringify(body),
-      credentials: "omit",
+      // "omit" by design: the session travels as a bearer token, never as a
+      // cookie, on every call but one — see handOff.
+      credentials: options.credentials ?? "omit",
     });
     let json: Record<string, unknown> = {};
     try {
@@ -171,9 +174,17 @@ export function AuthDialog({
     bearer: string,
     next: "app" | "onboarding",
   ): Promise<void> {
+    // The handoff answer carries two halves: the code in the body, and a
+    // marker cookie for app.weiz.chat that only THIS browser receives. The
+    // navigation below sends the cookie back, which is what proves to the
+    // app that the browser spending the code is the one that asked for it.
+    // "include" is what lets the browser keep that cookie; www and app are
+    // one site, so it is a first-party cookie, not a third-party one.
     const res = await api(appUrl, bearer)(
       "POST",
       `/api/v1/auth/handoff?next=${next}`,
+      undefined,
+      { credentials: "include" },
     );
     const url = res.json["handoff_url"];
     if (!res.ok || typeof url !== "string") {
