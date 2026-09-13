@@ -1,11 +1,11 @@
-import type { Metadata } from 'next';
-import Image from 'next/image';
-import { setRequestLocale } from 'next-intl/server';
-import { Link } from '../../i18n/navigation';
-import { getGlobal, getPageDoc } from '../../cms/load';
-import type { SolutionDoc } from '../../cms/site-schema';
-import { metaFromSeo } from '../../lib/seo';
-import { WaitlistCta } from './waitlist-cta';
+import type { Metadata } from "next";
+import Image from "next/image";
+import { setRequestLocale } from "next-intl/server";
+import { Link } from "../../i18n/navigation";
+import { getGlobal, getPageDoc } from "../../cms/load";
+import type { SolutionDoc } from "../../cms/site-schema";
+import { metaFromSeo } from "../../lib/seo";
+import { WaitlistCta } from "./waitlist-cta";
 
 /**
  * One template for every solution page (brief §4), fed by its CMS
@@ -27,7 +27,10 @@ export function makeSolutionPage(slug: string) {
   async function Page({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     setRequestLocale(locale);
-    const [doc, g] = await Promise.all([getPageDoc<SolutionDoc>(slug, locale), getGlobal(locale)]);
+    const [doc, g] = await Promise.all([
+      getPageDoc<SolutionDoc>(slug, locale),
+      getGlobal(locale),
+    ]);
 
     return (
       <main>
@@ -46,7 +49,7 @@ export function makeSolutionPage(slug: string) {
             {doc.comingSoon ? null : (
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
-                  href={`${g.site.appUrl}/login`}
+                  href={`${g.site.appUrl}/register`}
                   className="rounded-full bg-accent px-6 py-3 font-semibold text-accent-fg hover:bg-accent-hover"
                 >
                   {g.shared.ctaTrial}
@@ -80,7 +83,10 @@ export function makeSolutionPage(slug: string) {
         <section className="mx-auto max-w-6xl px-6 py-14 lg:py-16">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {doc.features.map((feature) => (
-              <div key={feature.id} className="rounded-card border border-border bg-surface p-6">
+              <div
+                key={feature.id}
+                className="rounded-card border border-border bg-surface p-6"
+              >
                 <h2 className="text-lg font-semibold">{feature.title}</h2>
                 <p className="mt-2 text-muted">{feature.body}</p>
               </div>
@@ -112,10 +118,12 @@ export function makeSolutionPage(slug: string) {
             />
           ) : (
             <div className="flex flex-wrap items-center justify-between gap-4 rounded-card bg-accent px-8 py-8 text-accent-fg">
-              <p className="text-xl font-semibold">{g.shared.solutionsCloser}</p>
+              <p className="text-xl font-semibold">
+                {g.shared.solutionsCloser}
+              </p>
               <div className="flex flex-wrap gap-3">
                 <a
-                  href={`${g.site.appUrl}/login`}
+                  href={`${g.site.appUrl}/register`}
                   className="rounded-full bg-surface px-5 py-2.5 font-semibold text-accent hover:opacity-90"
                 >
                   {g.shared.ctaTrial}
