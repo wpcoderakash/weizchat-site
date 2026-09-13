@@ -639,12 +639,12 @@ export function AuthDialog({
           <WeizLogo width={132} />
         </div>
 
-        <p className="mt-6 text-2xl font-semibold leading-tight tracking-[-0.022em] text-muted/80">
+        <p className="mt-6 text-center text-2xl font-semibold leading-tight tracking-[-0.022em] text-muted/80">
           {t(`${door}.kicker`)}
         </p>
         <h2
           id="auth-dialog-title"
-          className="mt-0.5 text-2xl font-bold leading-tight tracking-[-0.022em] text-fg"
+          className="mt-0.5 text-center text-2xl font-bold leading-tight tracking-[-0.022em] text-fg"
         >
           {stage === "account"
             ? t("register.accountTitle")
