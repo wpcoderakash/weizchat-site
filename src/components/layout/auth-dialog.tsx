@@ -635,7 +635,9 @@ export function AuthDialog({
           </svg>
         </button>
 
-        <WeizLogo width={132} />
+        <div className="flex justify-center">
+          <WeizLogo width={132} />
+        </div>
 
         <p className="mt-6 text-2xl font-semibold leading-tight tracking-[-0.022em] text-muted/80">
           {t(`${door}.kicker`)}
