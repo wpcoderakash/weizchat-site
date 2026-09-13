@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "../../i18n/navigation";
 import type { GlobalDoc } from "../../cms/site-schema";
@@ -11,7 +11,7 @@ import {
 } from "../../config/routes";
 import { WeizLogo } from "../weiz-logo";
 import { LocaleSwitcher } from "./locale-switcher";
-import { LoginDialog } from "./login-dialog";
+import { AuthDialog, type AuthMode } from "./auth-dialog";
 import { ThemeSwitcher } from "./theme-switcher";
 
 /**
@@ -49,51 +49,108 @@ export function Nav({ g }: { g: GlobalDoc }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const rootRef = useRef<HTMLElement>(null);
 
-  // The sign-in dialog. `?login` opens it on arrival so the door is linkable
-  // (www.weiz.chat/?login), and opening pushes a history entry so the phone's
-  // Back gesture closes the dialog instead of leaving the site. Read from
-  // window rather than useSearchParams: that hook would drag this layout out
-  // of static prerendering for one boolean.
+  // The two doors into the app — sign in and start a trial — open as a dialog
+  // over this page rather than as a page load. `?login` / `?register` open one
+  // on arrival so each door is linkable, and opening pushes a history entry so
+  // the phone's Back gesture closes the dialog instead of leaving the site.
+  //
   // Initial state, not an effect: the answer is known before first paint, and
-  // nothing in the dialog's server markup depends on it — showModal() is a
-  // DOM call the dialog makes after mount — so the client may start true where
-  // the server rendered false without the two trees disagreeing.
-  const [loginOpen, setLoginOpen] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      new URLSearchParams(window.location.search).has("login"),
-  );
-  const pushedLoginRef = useRef(false);
+  // nothing in the dialog's server markup depends on it — showModal() is a DOM
+  // call the dialog makes after mount — so the client may start open where the
+  // server rendered closed without the two trees disagreeing. Read from window
+  // rather than useSearchParams, which would drag this layout out of static
+  // prerendering for one string.
+  const [auth, setAuth] = useState<AuthMode | null>(() => {
+    if (typeof window === "undefined") return null;
+    const q = new URLSearchParams(window.location.search);
+    return q.has("register") ? "register" : q.has("login") ? "login" : null;
+  });
+  const pushedAuthRef = useRef(false);
 
-  useEffect(() => {
-    function onPopState() {
-      pushedLoginRef.current = false;
-      setLoginOpen(false);
-    }
-    window.addEventListener("popstate", onPopState);
-    return () => window.removeEventListener("popstate", onPopState);
-  }, []);
-
-  function openLogin() {
+  const openAuth = useCallback((mode: AuthMode) => {
     setOpenMenu(null);
     setMobileOpen(false);
-    if (!new URLSearchParams(window.location.search).has("login")) {
-      window.history.pushState({ login: true }, "", "?login");
-      pushedLoginRef.current = true;
+    const q = new URLSearchParams(window.location.search);
+    if (!q.has(mode)) {
+      // Switching doors while one is open replaces the entry rather than
+      // stacking a second one, so a single Back still lands on the page.
+      const alreadyOpen = document.querySelector("dialog[open]") !== null;
+      if (alreadyOpen) {
+        window.history.replaceState({ auth: mode }, "", `?${mode}`);
+      } else {
+        window.history.pushState({ auth: mode }, "", `?${mode}`);
+        pushedAuthRef.current = true;
+      }
     }
-    setLoginOpen(true);
-  }
+    setAuth(mode);
+  }, []);
 
-  function closeLogin() {
-    setLoginOpen(false);
-    if (pushedLoginRef.current) {
-      pushedLoginRef.current = false;
+  function closeAuth() {
+    setAuth(null);
+    if (pushedAuthRef.current) {
+      pushedAuthRef.current = false;
       window.history.back();
     } else {
       // Arrived by link: tidy the address without adding to history.
       window.history.replaceState(null, "", window.location.pathname);
     }
   }
+
+  useEffect(() => {
+    function onPopState() {
+      pushedAuthRef.current = false;
+      setAuth(null);
+    }
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  // Every link to the app's /login or /register, anywhere on the site — the
+  // header, the hero, a closing CTA, a solution page, the dialog's own footer
+  // — opens the dialog on a plain click. The links stay real links: with
+  // JavaScript off, from a middle-click, a modifier key or a new-tab target
+  // they go where they say, and nothing content-rendered had to change.
+  useEffect(() => {
+    const app = new URL(g.site.appUrl);
+    function onClick(event: globalThis.MouseEvent) {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      )
+        return;
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const anchor = target.closest("a[href]");
+      if (
+        !(anchor instanceof HTMLAnchorElement) ||
+        anchor.target === "_blank" ||
+        anchor.hasAttribute("download")
+      )
+        return;
+      let url: URL;
+      try {
+        url = new URL(anchor.href);
+      } catch {
+        return;
+      }
+      if (url.origin !== app.origin) return;
+      const mode: AuthMode | null =
+        url.pathname === "/login"
+          ? "login"
+          : url.pathname === "/register"
+            ? "register"
+            : null;
+      if (mode === null) return;
+      event.preventDefault();
+      openAuth(mode);
+    }
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, [g.site.appUrl, openAuth]);
 
   // Any navigation closes everything (state adjusted during render, per the
   // React "adjusting state when a prop changes" pattern — no effect needed).
@@ -216,13 +273,12 @@ export function Nav({ g }: { g: GlobalDoc }) {
         <div className="ms-auto hidden items-center gap-3 lg:flex">
           <ThemeSwitcher />
           <LocaleSwitcher />
-          <button
-            type="button"
-            onClick={openLogin}
+          <a
+            href={`${g.site.appUrl}/login`}
             className="rounded-full border border-border-strong px-4 py-1.5 text-sm font-semibold text-fg hover:border-accent hover:text-accent"
           >
             {g.nav.login}
-          </button>
+          </a>
           <a
             href={`${g.site.appUrl}/register`}
             className="rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-accent-fg hover:bg-accent-hover"
@@ -303,13 +359,12 @@ export function Nav({ g }: { g: GlobalDoc }) {
             </Link>
           </div>
           <div className="flex items-center gap-3 pt-4">
-            <button
-              type="button"
-              onClick={openLogin}
+            <a
+              href={`${g.site.appUrl}/login`}
               className="rounded-full border border-border-strong px-4 py-1.5 text-sm font-semibold"
             >
               {g.nav.login}
-            </button>
+            </a>
             <a
               href={`${g.site.appUrl}/register`}
               className="rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-accent-fg"
@@ -323,11 +378,7 @@ export function Nav({ g }: { g: GlobalDoc }) {
           </div>
         </nav>
       ) : null}
-      <LoginDialog
-        appUrl={g.site.appUrl}
-        open={loginOpen}
-        onClose={closeLogin}
-      />
+      <AuthDialog appUrl={g.site.appUrl} mode={auth} onClose={closeAuth} />
     </header>
   );
 }

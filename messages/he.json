@@ -38,6 +38,17 @@
       "noAccount": "חדשים ב-WeizChat?",
       "startTrial": "התחילו ניסיון חינם",
       "close": "סגירה"
+    },
+    "registerDialog": {
+      "kicker": "מתחילים לבנות.",
+      "title": "יצירת חשבון",
+      "emailLabel": "אימייל עבודה",
+      "emailPlaceholder": "you@company.com",
+      "continue": "המשך",
+      "reassurance": "מתחילים בחינם. בלי כרטיס אשראי.",
+      "hasAccount": "כבר יש לכם חשבון?",
+      "logIn": "התחברות",
+      "close": "סגירה"
     }
   },
   "footer": {

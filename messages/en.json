@@ -38,6 +38,17 @@
       "noAccount": "New to WeizChat?",
       "startTrial": "Start your free trial",
       "close": "Close"
+    },
+    "registerDialog": {
+      "kicker": "Start building.",
+      "title": "Create your account",
+      "emailLabel": "Work email",
+      "emailPlaceholder": "you@company.com",
+      "continue": "Continue",
+      "reassurance": "Free to start. No credit card.",
+      "hasAccount": "Already have an account?",
+      "logIn": "Log in",
+      "close": "Close"
     }
   },
   "footer": {

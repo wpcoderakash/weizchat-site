@@ -5,8 +5,11 @@ import type { FormEvent, MouseEvent } from "react";
 import { useTranslations } from "next-intl";
 import { WeizLogo } from "../weiz-logo";
 
+export type AuthMode = "login" | "register";
+
 /**
- * The sign-in door, opened over the landing page from the header's "Log in".
+ * The two doors into the app, opened over the landing page: sign in, and
+ * start a trial. One card, two sets of words.
  *
  * ## Why it takes an address and not a password
  *
@@ -14,29 +17,47 @@ import { WeizLogo } from "../weiz-logo";
  * posted from this origin could never set it: Safari refuses third-party
  * cookies on cross-site requests and iframes outright, and Chrome is going the
  * same way. So this dialog does what the reference it is modelled on does —
- * collects the address, then continues to the app, where the same card (same
- * lockup, same heading, over a picture of this very page) takes the password
- * with the address already filled in. To the visitor it is one flow.
+ * collects the address, then continues to the app, where the same card takes
+ * the password (or sends the sign-up code) with the address already filled
+ * in. To the visitor it is one flow. The same is true of registration: the
+ * code, the password and the workspace are all created on the app host.
  *
  * ## A native <dialog>
  *
  * `showModal()` gives the focus trap, Escape, inertness of the page behind and
  * the `::backdrop` layer for free, with no library. Everything positional uses
  * logical properties, so Hebrew mirrors it without a second rule.
+ *
+ * ## The footer links switch doors
+ *
+ * "Start your free trial" under sign-in and "Log in" under registration are
+ * ordinary links to the app. The nav intercepts every plain click on a link
+ * to the app's /login or /register and opens this dialog instead, so those
+ * links simply switch the mode — and still work as links with JavaScript off
+ * or from a middle-click.
  */
-export function LoginDialog({
+export function AuthDialog({
   appUrl,
-  open,
+  mode,
   onClose,
 }: {
   appUrl: string;
-  open: boolean;
+  /** Which door is open; null when closed. */
+  mode: AuthMode | null;
   onClose: () => void;
 }) {
-  const t = useTranslations("nav.loginDialog");
+  const tLogin = useTranslations("nav.loginDialog");
+  const tRegister = useTranslations("nav.registerDialog");
   const ref = useRef<HTMLDialogElement>(null);
   const [email, setEmail] = useState("");
 
+  // The words shown are the door that was last OPEN. While the card closes
+  // `mode` is already null, and flipping the copy to a default door mid-close
+  // would be a visible flicker — so the last real mode is kept.
+  const [shown, setShown] = useState<AuthMode>("login");
+  if (mode !== null && mode !== shown) setShown(mode);
+
+  const open = mode !== null;
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -44,17 +65,19 @@ export function LoginDialog({
     if (!open && el.open) el.close();
   }, [open]);
 
+  const t = shown === "login" ? tLogin : tRegister;
+  const path = shown === "login" ? "/login" : "/register";
+
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const target = new URL("/login", appUrl);
+    const target = new URL(path, appUrl);
     target.searchParams.set("identifier", email.trim());
     window.location.assign(target.toString());
   }
 
-  // Every way out — the X, the backdrop, Escape, or `open` flipping false —
-  // goes through the element's own close(). Its `close` event is then the one
-  // place the parent hears about it, so closeLogin runs exactly once and the
-  // history bookkeeping cannot double up.
+  // Every way out — the X, the backdrop, Escape, or `mode` going null — goes
+  // through the element's own close(). Its `close` event is then the one place
+  // the parent hears about it, so the history bookkeeping runs exactly once.
   function close() {
     ref.current?.close();
   }
@@ -70,7 +93,7 @@ export function LoginDialog({
       ref={ref}
       onClose={onClose}
       onClick={onBackdropClick}
-      aria-labelledby="login-dialog-title"
+      aria-labelledby="auth-dialog-title"
       className="m-auto w-[min(27rem,calc(100vw-2rem))] rounded-[22px] border-0 bg-surface p-0 text-fg shadow-[0_2px_6px_rgb(2_6_23/0.18),0_36px_80px_-24px_rgb(2_6_23/0.58)] backdrop:bg-[rgb(8_6_24/0.58)] backdrop:backdrop-blur-[4px]"
     >
       <div className="relative px-8 pb-6 pt-8">
@@ -103,7 +126,7 @@ export function LoginDialog({
           {t("kicker")}
         </p>
         <h2
-          id="login-dialog-title"
+          id="auth-dialog-title"
           className="mt-0.5 text-2xl font-bold leading-tight tracking-[-0.022em] text-fg"
         >
           {t("title")}
@@ -111,13 +134,13 @@ export function LoginDialog({
 
         <form onSubmit={submit} className="mt-6 flex flex-col gap-2">
           <label
-            htmlFor="login-dialog-email"
+            htmlFor="auth-dialog-email"
             className="text-sm font-semibold text-fg"
           >
             {t("emailLabel")}
           </label>
           <input
-            id="login-dialog-email"
+            id="auth-dialog-email"
             type="email"
             name="email"
             inputMode="email"
@@ -136,16 +159,35 @@ export function LoginDialog({
           >
             {t("continue")}
           </button>
+          {shown === "register" ? (
+            <p className="mt-1 text-center text-xs text-muted">
+              {tRegister("reassurance")}
+            </p>
+          ) : null}
         </form>
 
         <p className="mt-5 text-center text-sm text-muted">
-          {t("noAccount")}{" "}
-          <a
-            href={`${appUrl}/register`}
-            className="font-semibold text-accent hover:underline"
-          >
-            {t("startTrial")}
-          </a>
+          {shown === "login" ? (
+            <>
+              {tLogin("noAccount")}{" "}
+              <a
+                href={`${appUrl}/register`}
+                className="font-semibold text-accent hover:underline"
+              >
+                {tLogin("startTrial")}
+              </a>
+            </>
+          ) : (
+            <>
+              {tRegister("hasAccount")}{" "}
+              <a
+                href={`${appUrl}/login`}
+                className="font-semibold text-accent hover:underline"
+              >
+                {tRegister("logIn")}
+              </a>
+            </>
+          )}
         </p>
       </div>
     </dialog>
