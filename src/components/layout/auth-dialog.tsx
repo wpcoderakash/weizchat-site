@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { FormEvent, MouseEvent, ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { WeizLogo } from "../weiz-logo";
+import { TurnstileWidget } from "./turnstile-widget";
 
 export type AuthMode = "login" | "register";
 
@@ -112,6 +113,14 @@ export function AuthDialog({
   // null, and flipping the copy mid-close would be a visible flicker.
   const [shown, setShown] = useState<AuthMode>("login");
   const [stage, setStage] = useState<Stage>("email");
+  // The bot check's token (single-use): sent with the code request and with
+  // the workspace creation, then the widget is remounted for a fresh one.
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState(0);
+  const spendTurnstile = () => {
+    setTurnstileToken(null);
+    setTurnstileKey((k) => k + 1);
+  };
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -198,7 +207,9 @@ export function AuthDialog({
   async function requestCode(): Promise<void> {
     const res = await call("POST", "/api/v1/auth/otp/request", {
       identifier: email,
+      ...(turnstileToken ? { turnstile_token: turnstileToken } : {}),
     });
+    spendTurnstile();
     if (!res.ok) {
       fail(res.status, "other");
       return;
@@ -279,7 +290,11 @@ export function AuthDialog({
     }
     // Creating the workspace rotates the session; the new token is the one
     // that hands off.
-    const org = await call("POST", "/api/v1/orgs", { name: business });
+    const org = await call("POST", "/api/v1/orgs", {
+      name: business,
+      ...(turnstileToken ? { turnstile_token: turnstileToken } : {}),
+    });
+    spendTurnstile();
     const rotated = org.json["session_token"];
     if (!org.ok || typeof rotated !== "string") {
       fail(org.status, "other");
@@ -403,6 +418,11 @@ export function AuthDialog({
               disabled={busy}
               onChange={(event) => setEmail(event.target.value)}
               className={field}
+            />
+            <TurnstileWidget
+              key={`email-${turnstileKey}`}
+              action="otp_request"
+              onToken={setTurnstileToken}
             />
             <button type="submit" disabled={busy} className={primary}>
               {busy ? t("loading") : t("continue")}
@@ -596,6 +616,11 @@ export function AuthDialog({
               "new-password",
               t("register.confirmLabel"),
             )}
+            <TurnstileWidget
+              key={`account-${turnstileKey}`}
+              action="create_org"
+              onToken={setTurnstileToken}
+            />
             <button type="submit" disabled={busy} className={primary}>
               {busy ? t("loading") : t("register.createAccount")}
             </button>
