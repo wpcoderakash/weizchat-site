@@ -88,7 +88,10 @@
         "passwordTooWeak": "That password is too short or too common. Try a longer, less predictable one.",
         "passwordMismatch": "Those two passwords do not match.",
         "error": "Something went wrong. Please try again."
-      }
+      },
+      "mfaHint": "This account uses two-step sign-in. Enter the code from your authenticator app.",
+      "mfaCodeLabel": "Six-digit code",
+      "mfaRecoveryHint": "Lost your phone? Enter one of your recovery codes instead."
     }
   },
   "footer": {
