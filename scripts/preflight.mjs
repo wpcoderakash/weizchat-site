@@ -77,6 +77,26 @@ if (!user || !password) {
 if (!process.env.NEXT_PUBLIC_META_DOMAIN_VERIFICATION) {
   notes.push('NEXT_PUBLIC_META_DOMAIN_VERIFICATION is unset — the Meta domain-verification meta tag will not be emitted');
 }
+
+// The bot check on the public forms is optional by design: the contact form
+// is how a stranger reaches this business, and a missing variable must not
+// quietly close it. Optional is not the same as unnoticed.
+const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_ID;
+const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+if (!siteKey && !turnstileSecret) {
+  notes.push(
+    'no Turnstile keys — the contact form and the waitlist run on the honeypot and the rate limit alone. Set NEXT_PUBLIC_TURNSTILE_SITE_ID and TURNSTILE_SECRET_KEY to add the bot check.',
+  );
+} else if (!siteKey || !turnstileSecret) {
+  // One without the other is the dangerous shape: a secret with no widget
+  // means every submission is refused, and a widget with no secret means the
+  // visitor solves a puzzle that is never checked.
+  problems.push(
+    !siteKey
+      ? 'TURNSTILE_SECRET_KEY is set but NEXT_PUBLIC_TURNSTILE_SITE_ID is not — no widget would render and every form submission would be refused'
+      : 'NEXT_PUBLIC_TURNSTILE_SITE_ID is set but TURNSTILE_SECRET_KEY is not — visitors would solve a challenge nobody verifies',
+  );
+}
 const placeholderHits = [];
 for (const dir of ['legal']) {
   const full = path.join(contentDir, dir);

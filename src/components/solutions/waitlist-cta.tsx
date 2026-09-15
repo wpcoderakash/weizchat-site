@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { TURNSTILE_SITE_KEY, TurnstileWidget } from '../layout/turnstile-widget';
 
 export interface WaitlistStrings {
   title: string;
@@ -33,6 +34,9 @@ export function WaitlistCta({
   const [value, setValue] = useState('');
   const [website, setWebsite] = useState('');
   const [state, setState] = useState<'idle' | 'busy' | 'sent' | 'failed'>('idle');
+  const [token, setToken] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
+  const onToken = useCallback((value: string | null) => setToken(value), []);
 
   const mailto = `mailto:${email}?subject=${encodeURIComponent(s.subject)}&body=${encodeURIComponent(
     s.emailBody.replace('{email}', value || '—'),
@@ -45,11 +49,19 @@ export function WaitlistCta({
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ source: 'waitlist', locale, email: value, website }),
+        body: JSON.stringify({
+          source: 'waitlist',
+          locale,
+          email: value,
+          website,
+          turnstile_token: token,
+        }),
       });
       setState(res.ok ? 'sent' : 'failed');
+      if (!res.ok) setAttempt((n) => n + 1);
     } catch {
       setState('failed');
+      setAttempt((n) => n + 1);
     }
   }
 
@@ -89,11 +101,12 @@ export function WaitlistCta({
             </div>
             <button
               type="submit"
-              disabled={state === 'busy'}
+              disabled={state === 'busy' || (Boolean(TURNSTILE_SITE_KEY) && !token)}
               className="rounded-full bg-accent px-5 py-2.5 font-semibold text-accent-fg hover:bg-accent-hover disabled:opacity-60"
             >
               {s.cta}
             </button>
+            <TurnstileWidget key={attempt} action="waitlist" onToken={onToken} />
           </form>
           {state === 'failed' ? (
             <p role="alert" className="mt-3 text-sm font-medium text-warn">
