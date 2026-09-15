@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { TURNSTILE_SITE_KEY, TurnstileWidget } from '../layout/turnstile-widget';
 
 export interface ContactFormStrings {
   name: string;
@@ -37,6 +38,13 @@ export function ContactForm({
   const [message, setMessage] = useState('');
   const [website, setWebsite] = useState('');
   const [state, setState] = useState<'idle' | 'busy' | 'sent' | 'failed'>('idle');
+  // A Turnstile token is single-use, so a failed submit has to earn another
+  // one. Bumping `attempt` remounts the widget, which is how the landing
+  // dialog does it too — one mechanism, not two.
+  const [token, setToken] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
+  const onToken = useCallback((value: string | null) => setToken(value), []);
+  const needsToken = Boolean(TURNSTILE_SITE_KEY);
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -45,11 +53,22 @@ export function ContactForm({
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ source: 'contact', locale, name, company, phone, message, website }),
+        body: JSON.stringify({
+          source: 'contact',
+          locale,
+          name,
+          company,
+          phone,
+          message,
+          website,
+          turnstile_token: token,
+        }),
       });
       setState(res.ok ? 'sent' : 'failed');
+      if (!res.ok) setAttempt((n) => n + 1);
     } catch {
       setState('failed');
+      setAttempt((n) => n + 1);
     }
   }
 
@@ -136,9 +155,10 @@ export function ContactForm({
           onChange={(e) => setWebsite(e.target.value)}
         />
       </div>
+      <TurnstileWidget key={attempt} action="contact" onToken={onToken} />
       <button
         type="submit"
-        disabled={state === 'busy'}
+        disabled={state === 'busy' || (needsToken && !token)}
         className="mt-5 rounded-full bg-accent px-6 py-2.5 font-semibold text-accent-fg hover:bg-accent-hover disabled:opacity-60"
       >
         {t.submit}
