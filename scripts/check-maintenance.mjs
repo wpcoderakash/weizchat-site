@@ -60,9 +60,20 @@ check('the real page is NOT served', !body.includes('No WhatsApp customer left w
 const heb = await visitor.request.get(`${B}/heb`, { maxRedirects: 0 });
 check('Hebrew visitors get the Hebrew notice', (await heb.text()).includes('חוזרים בקרוב'));
 
-// ── the thing that must never break ──────────────────────────────────────────
+// ── the things that must never break ─────────────────────────────────────────
 const adminDuring = await visitor.request.get(`${B}/admin/login`, { maxRedirects: 0 });
 check('THE ADMIN STAYS REACHABLE while down', adminDuring.status() === 200, String(adminDuring.status()));
+
+// The app's /privacy, /terms and /data-deletion redirect here, and those are
+// the URLs Meta has on file (ADR-0050 in the app repo). Taking the marketing
+// site down must not turn a Meta-facing policy URL into a 503.
+for (const legal of ['/privacy-policy', '/terms', '/dpa', '/data-deletion', '/security', '/accessibility', '/heb/privacy-policy', '/heb/terms']) {
+  const res = await visitor.request.get(`${B}${legal}`, { maxRedirects: 0 });
+  check(`${legal} STAYS READABLE while down`, res.status() === 200, String(res.status()));
+}
+
+const marketingDuring = await visitor.request.get(`${B}/pricing`, { maxRedirects: 0 });
+check('an ordinary page is still behind the screen', marketingDuring.status() === 503, String(marketingDuring.status()));
 
 await ap.goto(`${B}/`, { waitUntil: 'domcontentloaded' });
 check('a signed-in editor still sees the real site', (await ap.content()).includes('No WhatsApp customer left waiting'));

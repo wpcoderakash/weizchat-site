@@ -3,6 +3,7 @@ import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
 import { SESSION_COOKIE, userFromCookieValue } from './cms/auth';
 import { maintenanceHtml, readMaintenance } from './cms/maintenance';
+import { isLegalPath } from './lib/legal-paths';
 
 /*
  * Node runtime, not edge: the maintenance switch and the session check both
@@ -40,7 +41,10 @@ export default function middleware(request: NextRequest) {
     // Signed-in editors see the real site, so the content can be checked
     // before maintenance is lifted.
     const signedIn = userFromCookieValue(request.cookies.get(SESSION_COOKIE)?.value) !== null;
-    if (!signedIn) {
+    // The legal documents stay up regardless. The app's /privacy, /terms and
+    // /data-deletion redirect here, and those are the URLs Meta has on file —
+    // taking the marketing site down must not turn them into a 503.
+    if (!signedIn && !isLegalPath(request.nextUrl.pathname)) {
       const locale = request.nextUrl.pathname.startsWith('/heb') ? 'he' : 'en';
       return new NextResponse(maintenanceHtml(state, locale), {
         // 503, not 200: this is temporary, and a crawler must not record the
