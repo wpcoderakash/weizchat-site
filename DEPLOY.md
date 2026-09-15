@@ -98,6 +98,47 @@ pm2 startup            # run the command it prints, so the site survives reboot
 
 ---
 
+## Being told when someone uses the contact form
+
+A contact form message is stored as a lead for `/admin/leads`. Until these
+five are set it is stored and **nobody is emailed** — which is how the form
+behaved until 2026-09-15, and how it behaves again if any one of them is
+missing. The deploy preflight refuses a half-filled set and notes an empty one.
+
+```bash
+# in ~/weizchat.env, then: pm2 restart weizchat-site
+LEADS_NOTIFY_TO=you@weiz.co.il         # who gets told
+LEADS_MAIL_FROM=chat@weiz.co.il        # the mailbox it is sent from
+LEADS_MS_TENANT_ID=...                 # the same three values the app already
+LEADS_MS_CLIENT_ID=...                 # has in ~/weizapp.env for its sign-in
+LEADS_MS_CLIENT_SECRET=...             # codes — Azure app "Weiz.chat"
+```
+
+It sends through Microsoft 365 app-only (Graph, `Mail.Send`), the same way the
+app sends its sign-in codes, and **not** through this host's own mail server:
+`weiz.chat` publishes no SPF, DKIM or DMARC, so anything posted from here would
+be junked by Microsoft 365. Reply on the notification goes to the person who
+wrote in, not to the sending mailbox.
+
+Nothing here can break the form. The lead is written to disk first and the
+email is sent after the response, so a wrong credential or an unreachable
+Microsoft costs one line in `~/logs/` and nothing else:
+
+```bash
+pm2 logs weizchat-site --lines 200 | grep '\[leads\]'
+```
+
+| The log says | It means |
+| --- | --- |
+| `stored and notified` | it worked |
+| `not configured` | one or more of the five is missing |
+| `auth_failed` | wrong tenant, client id, or an expired client secret |
+| `permission_denied` | the Azure app has no admin-consented `Mail.Send` |
+| `rejected` | Microsoft refused the message — check `LEADS_MAIL_FROM` is a real mailbox |
+| `unreachable` | the server could not reach Microsoft; the lead is still saved |
+
+---
+
 ## Every deploy after that
 
 ```bash

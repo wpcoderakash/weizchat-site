@@ -118,6 +118,31 @@ if (!siteKey && !turnstileSecret) {
       : 'a Turnstile site key is built into this release but TURNSTILE_SECRET_KEY is not set on this server — visitors would solve a challenge nobody verifies',
   );
 }
+// ── The lead notification ───────────────────────────────────────────────────
+// A contact form that stores a message and tells nobody looks like it works.
+// All five or none: a partly-filled set fails at Microsoft, one lead at a time,
+// and the only trace is a log line on the server.
+const LEAD_MAIL_VARS = [
+  'LEADS_NOTIFY_TO',
+  'LEADS_MAIL_FROM',
+  'LEADS_MS_TENANT_ID',
+  'LEADS_MS_CLIENT_ID',
+  'LEADS_MS_CLIENT_SECRET',
+];
+const leadMailSet = LEAD_MAIL_VARS.filter((v) => (process.env[v] ?? '').trim() !== '');
+if (leadMailSet.length === 0) {
+  notes.push(
+    'no lead notification — contact form messages are stored for /admin/leads and nobody is emailed. Set ' +
+      LEAD_MAIL_VARS.join(', ') +
+      ' to be told when someone writes in.',
+  );
+} else if (leadMailSet.length < LEAD_MAIL_VARS.length) {
+  problems.push(
+    'the lead notification is half-configured, so no email would be sent. Missing: ' +
+      LEAD_MAIL_VARS.filter((v) => !leadMailSet.includes(v)).join(', '),
+  );
+}
+
 const placeholderHits = [];
 for (const dir of ['legal']) {
   const full = path.join(contentDir, dir);

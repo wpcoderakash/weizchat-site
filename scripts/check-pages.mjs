@@ -49,7 +49,7 @@ const PATHS = [
 const LEGAL_SLUGS = new Set([
   'privacy-policy', 'terms', 'accessibility', 'dpa', 'data-deletion', 'security',
 ]);
-const REVIEWED_LEGAL = new Set(['terms', 'privacy-policy']);
+const REVIEWED_LEGAL = new Set(['terms', 'privacy-policy', 'data-deletion', 'accessibility']);
 
 const ALLOWED_PLACEHOLDERS = new Set([
   '__LEGAL_NAME__',

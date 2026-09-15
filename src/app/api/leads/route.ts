@@ -1,5 +1,6 @@
-import { NextResponse, type NextRequest } from 'next/server';
+import { NextResponse, after, type NextRequest } from 'next/server';
 import { addLead, leadIntakeSchema } from '../../../cms/leads';
+import { notifyNewLead } from '../../../lib/lead-mail';
 import {
   TURNSTILE_ACTIONS,
   turnstileSecret,
@@ -20,6 +21,12 @@ import {
  * apply — deliberately, because this form is how a stranger reaches this
  * business and a missing environment variable must not quietly close it. The
  * deploy preflight says so out loud instead.
+ *
+ * A stored lead is then announced by email (`lib/lead-mail`). That runs in
+ * `after()`, past the response: the file on disk is the durable record and the
+ * notification is a convenience, so a slow or misconfigured Microsoft must not
+ * make a visitor wait, and must never make them see an error for a message
+ * that was in fact received.
  */
 
 const WINDOW_MS = 10 * 60 * 1000;
@@ -79,6 +86,7 @@ export async function POST(req: NextRequest) {
     if (!ok) return NextResponse.json({ error: 'bot_check_failed' }, { status: 403 });
   }
 
-  addLead(parsed.data);
+  const lead = addLead(parsed.data);
+  after(() => notifyNewLead(lead));
   return NextResponse.json({ ok: true }, { status: 201 });
 }

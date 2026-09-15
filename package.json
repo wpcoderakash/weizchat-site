@@ -10,7 +10,7 @@
     "check:pages": "node scripts/check-pages.mjs",
     "check:tools": "node scripts/check-tools.mjs",
     "check:articles": "node scripts/check-articles.mjs",
-    "check:all": "node --no-warnings=MODULE_TYPELESS_PACKAGE_JSON scripts/check-markdown-roundtrip.mjs && node scripts/check-subprocessors.mjs && node --no-warnings=MODULE_TYPELESS_PACKAGE_JSON scripts/check-fence-unwrap.mjs && node scripts/check-form-protection.mjs && node scripts/check-pages.mjs && node scripts/check-tools.mjs && node scripts/check-articles.mjs && node scripts/check-a11y.mjs && node scripts/check-cms.mjs && node scripts/check-admin.mjs && node scripts/check-maintenance.mjs && pnpm check:contact",
+    "check:all": "node --no-warnings=MODULE_TYPELESS_PACKAGE_JSON scripts/check-markdown-roundtrip.mjs && node scripts/check-subprocessors.mjs && node --no-warnings=MODULE_TYPELESS_PACKAGE_JSON scripts/check-fence-unwrap.mjs && node scripts/check-form-protection.mjs && node scripts/check-pages.mjs && node scripts/check-tools.mjs && node scripts/check-articles.mjs && node scripts/check-a11y.mjs && node scripts/check-cms.mjs && node scripts/check-admin.mjs && node scripts/check-maintenance.mjs && pnpm check:contact && pnpm check:lead-mail",
     "check:a11y": "node scripts/check-a11y.mjs",
     "check:cms": "node scripts/check-cms.mjs",
     "check:admin": "node scripts/check-admin.mjs",
@@ -22,7 +22,8 @@
     "check:subprocessors": "node scripts/check-subprocessors.mjs",
     "check:forms": "node scripts/check-form-protection.mjs",
     "check:fence": "node --no-warnings=MODULE_TYPELESS_PACKAGE_JSON scripts/check-fence-unwrap.mjs",
-    "check:contact": "node scripts/check-contact.mjs"
+    "check:contact": "node scripts/check-contact.mjs",
+    "check:lead-mail": "node scripts/check-lead-mail.mjs"
   },
   "dependencies": {
     "@tiptap/core": "^3.30.3",
