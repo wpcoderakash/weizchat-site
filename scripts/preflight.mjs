@@ -81,7 +81,28 @@ if (!process.env.NEXT_PUBLIC_META_DOMAIN_VERIFICATION) {
 // The bot check on the public forms is optional by design: the contact form
 // is how a stranger reaches this business, and a missing variable must not
 // quietly close it. Optional is not the same as unnoticed.
-const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_ID;
+// The site key is a BUILD-time value: Next inlines NEXT_PUBLIC_* into the
+// client bundle, so on a server it is normally absent from the environment and
+// present in the JavaScript instead. Checking the env alone would have failed
+// every correct deployment — look where the value actually is.
+function builtSiteKey() {
+  if (process.env.NEXT_PUBLIC_TURNSTILE_SITE_ID) return true;
+  const chunks = path.join(process.cwd(), '.next', 'static', 'chunks');
+  if (!fs.existsSync(chunks)) return false;
+  const stack = [chunks];
+  while (stack.length) {
+    const dir = stack.pop();
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) stack.push(full);
+      else if (entry.name.endsWith('.js') && /0x4[A-Za-z0-9_-]{10,}/.test(fs.readFileSync(full, 'utf8')))
+        return true;
+    }
+  }
+  return false;
+}
+
+const siteKey = builtSiteKey();
 const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
 if (!siteKey && !turnstileSecret) {
   notes.push(
@@ -93,8 +114,8 @@ if (!siteKey && !turnstileSecret) {
   // visitor solves a puzzle that is never checked.
   problems.push(
     !siteKey
-      ? 'TURNSTILE_SECRET_KEY is set but NEXT_PUBLIC_TURNSTILE_SITE_ID is not — no widget would render and every form submission would be refused'
-      : 'NEXT_PUBLIC_TURNSTILE_SITE_ID is set but TURNSTILE_SECRET_KEY is not — visitors would solve a challenge nobody verifies',
+      ? 'TURNSTILE_SECRET_KEY is set but no Turnstile site key is built into this release — no widget would render and every form submission would be refused. NEXT_PUBLIC_* is inlined at build time, so set NEXT_PUBLIC_TURNSTILE_SITE_ID on the machine that BUILDS (.env.production), not on the server.'
+      : 'a Turnstile site key is built into this release but TURNSTILE_SECRET_KEY is not set on this server — visitors would solve a challenge nobody verifies',
   );
 }
 const placeholderHits = [];
