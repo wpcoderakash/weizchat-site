@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { docStatus } from '../../cms/docs';
 import { getPageDoc } from '../../cms/load';
+import { unwrapPastedFence } from '../../cms/markdown';
 import { legalDocSchema, type LegalDoc } from '../../cms/site-schema';
 import { metaFromSeo } from '../../lib/seo';
 
@@ -29,10 +30,18 @@ export type LegalSlug =
   | 'security';
 
 /**
- * The date the SHIPPED text was drafted. Only used for a document nobody has
- * republished through the CMS.
+ * The date each SHIPPED text was last edited. Only used for a document nobody
+ * has republished through the CMS — but that is not the rare case it sounds
+ * like: a document can return to the shipped text at any time, because Reset
+ * in the editor deletes the stored copy. One shared constant then stamped a
+ * document edited today with the date of the oldest one, so the dates are per
+ * document and moving one means editing its line here.
  */
-const BUILT_IN_UPDATED = '2026-08-20';
+const BUILT_IN_UPDATED: Readonly<Record<string, string>> = {
+  'privacy-policy': '2026-09-15',
+  dpa: '2026-09-15',
+};
+const BUILT_IN_UPDATED_DEFAULT = '2026-08-20';
 
 /**
  * When this document was last actually changed.
@@ -44,10 +53,11 @@ const BUILT_IN_UPDATED = '2026-08-20';
  * to the built-in date only when nothing has been published.
  */
 function lastUpdated(slug: LegalSlug, locale: string): string {
+  const builtIn = BUILT_IN_UPDATED[slug] ?? BUILT_IN_UPDATED_DEFAULT;
   const stamp = docStatus(legalDocSchema, 'page', slug, locale).updatedAt;
-  if (!stamp) return BUILT_IN_UPDATED;
+  if (!stamp) return builtIn;
   const at = new Date(stamp);
-  return Number.isNaN(at.getTime()) ? BUILT_IN_UPDATED : at.toISOString().slice(0, 10);
+  return Number.isNaN(at.getTime()) ? builtIn : at.toISOString().slice(0, 10);
 }
 
 /**
@@ -99,7 +109,9 @@ export function makeLegalPage(slug: LegalSlug, _titleKey: string) {
         )}
         <article className="legal-prose">
           <MDXRemote
-            source={doc.body}
+            // A body pasted with its own ```markdown fence would otherwise
+            // render as one code sample instead of the document.
+            source={unwrapPastedFence(doc.body)}
             options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
           />
         </article>
