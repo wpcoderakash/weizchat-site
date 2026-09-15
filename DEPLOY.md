@@ -109,10 +109,23 @@ missing. The deploy preflight refuses a half-filled set and notes an empty one.
 # in ~/weizchat.env, then: pm2 restart weizchat-site
 LEADS_NOTIFY_TO=you@weiz.co.il         # who gets told
 LEADS_MAIL_FROM=chat@weiz.co.il        # the mailbox it is sent from
-LEADS_MS_TENANT_ID=...                 # the same three values the app already
-LEADS_MS_CLIENT_ID=...                 # has in ~/weizapp.env for its sign-in
-LEADS_MS_CLIENT_SECRET=...             # codes — Azure app "Weiz.chat"
+LEADS_MS_TENANT_ID=...                 # Azure app "Weiz.chat"
+LEADS_MS_CLIENT_ID=...                 # (the app's own sender, reused)
+LEADS_MS_CLIENT_SECRET=...             # a NEW secret — see below
 ```
+
+**Where the three Microsoft values come from.** The tenant id and the client id
+are on `app.weiz.chat/admin/email`, in plain text, in the Microsoft section —
+copy them from there.
+
+The **client secret cannot be copied**, from the console or from anywhere else.
+The app stores it encrypted and has no read path for it (ADR-0006 in the app
+repo: recovery is rotation, never retrieval), and Azure shows a secret's value
+only once, on the day it is created. So make a second one: Azure portal →
+**App registrations** → *Weiz.chat* → **Certificates & secrets** → **New client
+secret**, copy the **Value** column immediately (not the Secret ID), and use it
+here. An app registration holds several secrets at once and the existing one
+keeps working — the app is not disturbed.
 
 It sends through Microsoft 365 app-only (Graph, `Mail.Send`), the same way the
 app sends its sign-in codes, and **not** through this host's own mail server:
