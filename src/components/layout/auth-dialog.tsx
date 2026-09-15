@@ -41,6 +41,7 @@ type Stage =
   | "email" // both: the address
   | "password" // login: the password for it
   | "code" // both: the six digits from the inbox
+  | "mfa" // login: the second factor, when the account carries one
   | "account" // register: name, business, password
   | "forgot-sent" // login: a reset link is on its way
   | "handing-off"; // the browser is leaving for the app
@@ -113,6 +114,11 @@ export function AuthDialog({
   // null, and flipping the copy mid-close would be a visible flicker.
   const [shown, setShown] = useState<AuthMode>("login");
   const [stage, setStage] = useState<Stage>("email");
+  // Two-step sign-in (app ADR-0053). A correct password or emailed code
+  // answers with a challenge rather than a session, and this carries it to the
+  // second call. Held here and never re-sent: the credential is used once.
+  const [mfaChallenge, setMfaChallenge] = useState<string | null>(null);
+  const [mfaCode, setMfaCode] = useState("");
   // The bot check's token (single-use): sent with the code request and with
   // the workspace creation, then the widget is remounted for a fresh one.
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -223,6 +229,15 @@ export function AuthDialog({
       identifier: email,
       code,
     });
+    if (res.ok && res.json["mfa_required"] === true) {
+      const challenge = res.json["challenge"];
+      if (typeof challenge === "string") {
+        setMfaChallenge(challenge);
+        setMfaCode("");
+        setStage("mfa");
+        return;
+      }
+    }
     const bearer = res.json["session_token"];
     if (!res.ok || typeof bearer !== "string") {
       fail(res.status, "code");
@@ -250,9 +265,38 @@ export function AuthDialog({
       email,
       password,
     });
+    if (res.ok && res.json["mfa_required"] === true) {
+      const challenge = res.json["challenge"];
+      if (typeof challenge === "string") {
+        setMfaChallenge(challenge);
+        setMfaCode("");
+        setStage("mfa");
+        return;
+      }
+    }
     const bearer = res.json["session_token"];
     if (!res.ok || typeof bearer !== "string") {
       fail(res.status, "login");
+      return;
+    }
+    setToken(bearer);
+    await handOff(bearer, "app");
+  }
+
+  /**
+   * The second step. The session exists only after this for an enrolled
+   * account, so a sign-up that reaches here is already a sign-in — a person
+   * with a second factor has an account by definition.
+   */
+  async function verifySecondFactor(): Promise<void> {
+    if (!mfaChallenge) return;
+    const res = await call("POST", "/api/v1/auth/mfa/verify", {
+      challenge: mfaChallenge,
+      code: mfaCode.trim(),
+    });
+    const bearer = res.json["session_token"];
+    if (!res.ok || typeof bearer !== "string") {
+      fail(res.status, "code");
       return;
     }
     setToken(bearer);
@@ -312,7 +356,8 @@ export function AuthDialog({
         setErrorKey(null);
         setStage("password");
       } else void run(requestCode);
-    } else if (stage === "password") void run(signInWithPassword);
+    } else if (stage === "mfa") void run(verifySecondFactor);
+    else if (stage === "password") void run(signInWithPassword);
     else if (stage === "code") void run(verifyCode);
     else if (stage === "account") void run(createAccount);
   }
@@ -480,6 +525,32 @@ export function AuthDialog({
                 {t("login.forgotPassword")}
               </button>
             </p>
+          </>
+        ) : null}
+
+        {stage === "mfa" ? (
+          <>
+            <p className="text-sm text-muted">{t("mfaHint")}</p>
+            <label htmlFor="auth-dialog-mfa" className={label}>
+              {t("mfaCodeLabel")}
+            </label>
+            <input
+              id="auth-dialog-mfa"
+              inputMode="text"
+              autoComplete="one-time-code"
+              maxLength={20}
+              dir="ltr"
+              required
+              autoFocus
+              value={mfaCode}
+              disabled={busy}
+              onChange={(event) => setMfaCode(event.target.value)}
+              className={`${field} tracking-[0.2em]`}
+            />
+            <p className="text-xs text-muted">{t("mfaRecoveryHint")}</p>
+            <button type="submit" disabled={busy} className={primary}>
+              {busy ? t("loading") : t("verify")}
+            </button>
           </>
         ) : null}
 
