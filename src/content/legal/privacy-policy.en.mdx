@@ -48,9 +48,18 @@ every AI reply. We do not permit our providers to use this data to train their m
 
 | Sub-processor | Purpose |
 | --- | --- |
-| Meta Platforms, Inc. | WhatsApp Business Platform — message delivery |
-| Anthropic | AI reply generation (when the AI assistant is enabled) |
-| `__HOSTING_PROVIDER__` | Cloud hosting and storage, region `__HOSTING_REGION__` |
+| Meta Platforms, Inc. | WhatsApp Business Platform — sending and receiving messages |
+| Anthropic, PBC | AI replies, drafts and summaries (when the AI assistant is enabled) |
+| Microsoft Corporation | Transactional email — sign-in codes, invitations, service notices |
+| Cloudflare, Inc. | Authoritative DNS, and the bot check on the sign-in and registration forms |
+| Contabo GmbH (Germany) | Cloud hosting of the application, the database and uploaded media |
+| Cloud storage provider (United States) | Nightly off-site backup copies of the database and uploaded media |
+
+The application, the database and uploaded media are hosted in Germany, inside the
+European Union. Nightly off-site backup copies are held with a cloud storage provider in
+the United States; we give an account owner that provider's name on request. Meta and
+our AI model provider process on their own infrastructure, principally in the United
+States.
 
 We will update this list before adding a sub-processor and give account owners the
 chance to object.
