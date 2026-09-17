@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EyeIcon } from './eye-icon';
 import { WeizLogo } from '../weiz-logo';
 
@@ -11,6 +11,48 @@ export function LoginForm() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [reveal, setReveal] = useState(false);
+  /** Epoch ms the lockout ends, or null. Drives the countdown below. */
+  const [lockedUntil, setLockedUntil] = useState<number | null>(null);
+  const [remaining, setRemaining] = useState(0);
+  /**
+   * The wait as it was when the lock began, announced once.
+   *
+   * `role="alert"` is implicitly assertive, so ANY change to the text inside
+   * it is re-announced. The clock is `aria-hidden` and so invisible to that,
+   * but a spoken "N minutes" derived from `remaining` would still change on
+   * every minute boundary and interrupt the operator again. Fixing it at the
+   * moment of the lock means the sentence is spoken once and then left alone,
+   * while the digits keep moving for the people who can see them.
+   */
+  const [lockMinutes, setLockMinutes] = useState(0);
+
+  /*
+   * The countdown.
+   *
+   * A static "try again in 10 minutes" is read once and then becomes a
+   * question — how long is left NOW? Someone waiting reloads the page to find
+   * out, which tells them nothing because the message is gone. A ticking
+   * number answers it continuously and, more usefully, ends by itself: when it
+   * reaches zero the form clears and re-enables, so the operator knows the
+   * moment they may try again without guessing.
+   */
+  useEffect(() => {
+    if (lockedUntil === null) return;
+    const tick = () => {
+      const left = Math.max(0, Math.ceil((lockedUntil - Date.now()) / 1000));
+      setRemaining(left);
+      if (left === 0) {
+        setLockedUntil(null);
+        setError(null);
+      }
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [lockedUntil]);
+
+  const locked = lockedUntil !== null && remaining > 0;
+  const clock = `${Math.floor(remaining / 60)}:${String(remaining % 60).padStart(2, '0')}`;
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -40,11 +82,14 @@ export function LoginForm() {
       // username, a wrong password and an unconfigured admin remain
       // indistinguishable, because THAT difference is the oracle.
       if (res.status === 429) {
-        const seconds = Number(res.headers.get('retry-after') ?? '0');
-        const minutes = Math.max(1, Math.ceil(seconds / 60));
-        setError(
-          `Too many sign-in attempts. Try again in ${minutes} minute${minutes === 1 ? '' : 's'}.`,
-        );
+        // `retry-after` is the server's own number, not a guess from the
+        // budget: whatever the lockout actually has left is what the operator
+        // is shown. A missing header falls back to the configured ten minutes
+        // rather than to zero, which would tell them to retry immediately and
+        // be wrong.
+        const seconds = Number(res.headers.get('retry-after') ?? '') || 600;
+        setLockMinutes(Math.max(1, Math.ceil(seconds / 60)));
+        setLockedUntil(Date.now() + seconds * 1000);
         return;
       }
       setError('Those details were not accepted.');
@@ -103,7 +148,20 @@ export function LoginForm() {
             </button>
           </div>
         </div>
-        {error ? (
+        {locked ? (
+          <p className="cms-status cms-status-err" role="alert">
+            {/* aria-live off on the clock itself: announcing a new number every
+                second would make the page unusable with a screen reader. The
+                sentence is announced once by role="alert"; the digits update
+                silently for the people who can see them. */}
+            Too many sign-in attempts. Try again in{' '}
+            <strong aria-hidden="true">{clock}</strong>
+            <span className="sr-only">
+              {lockMinutes} minute{lockMinutes === 1 ? '' : 's'}
+            </span>
+            .
+          </p>
+        ) : error ? (
           <p className="cms-status cms-status-err" role="alert">
             {error}
           </p>
@@ -111,9 +169,9 @@ export function LoginForm() {
         <button
           type="submit"
           className="cms-btn cms-btn-primary cms-login-submit"
-          disabled={busy || !username.trim() || !password.trim()}
+          disabled={busy || locked || !username.trim() || !password.trim()}
         >
-          {busy ? 'Checking…' : 'Sign in'}
+          {busy ? 'Checking…' : locked ? `Locked — ${clock}` : 'Sign in'}
         </button>
 
         <p className="cms-login-foot">
