@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { IBM_Plex_Mono, Rubik } from 'next/font/google';
 import '../globals.css';
 import './admin.css';
@@ -37,6 +38,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // Signed in → the full shell (sidebar + topbar). Signed out (the login
   // page, or an unconfigured install) → just the frame, no chrome to leak.
   const user = await currentUser();
+  /*
+   * Every /admin route is dynamic, so `src/proxy.ts` gives this half of the
+   * site a nonce-only script policy. Next stamps its OWN script tags from
+   * the request header; a tag written by hand — the one below — is ours to
+   * stamp, and without it the browser silently drops the theme boot and the
+   * CMS renders in the wrong theme until the first paint after hydration.
+   */
+  const nonce = (await headers()).get('x-nonce') ?? undefined;
   return (
     <html
       lang="en"
@@ -52,7 +61,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       }
     >
       <body>
-        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
+        {/* suppressHydrationWarning: browsers hide a CSP nonce from the DOM
+            after parsing, so React would otherwise report "" vs the nonce. */}
+        <script
+          nonce={nonce}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: THEME_BOOT }}
+        />
         {/*
           The tool is always LTR even while editing Hebrew: an editor wants
           the chrome to sit still. The preview sets its own direction on the
