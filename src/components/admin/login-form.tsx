@@ -27,8 +27,26 @@ export function LoginForm() {
     });
     setBusy(false);
     if (!res.ok) {
-      // One message for every failure: a wrong username, a wrong password
-      // and an unconfigured admin must look identical from out here.
+      // A lockout says so. Everything else is one message.
+      //
+      // The 429 and its `retry-after` are already on the wire, so naming the
+      // lockout here tells an attacker nothing they cannot read from the
+      // response themselves. What it does do is stop the LEGITIMATE operator
+      // being told their correct password is wrong — which is exactly what
+      // happened the first time this shipped, and cost half an hour of
+      // believing the hashing had broken.
+      //
+      // The distinction that still matters is the one kept below: a wrong
+      // username, a wrong password and an unconfigured admin remain
+      // indistinguishable, because THAT difference is the oracle.
+      if (res.status === 429) {
+        const seconds = Number(res.headers.get('retry-after') ?? '0');
+        const minutes = Math.max(1, Math.ceil(seconds / 60));
+        setError(
+          `Too many sign-in attempts. Try again in ${minutes} minute${minutes === 1 ? '' : 's'}.`,
+        );
+        return;
+      }
       setError('Those details were not accepted.');
       return;
     }

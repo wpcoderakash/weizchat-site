@@ -105,7 +105,8 @@ const nextIp = () => `203.0.113.${(seq += 1) % 250}`;
 {
   const ip = nextIp();
   const statuses = [];
-  for (let i = 0; i < 8; i++) {
+  // One more than the budget, so the lock is reached rather than approached.
+  for (let i = 0; i < 13; i++) {
     statuses.push((await login(USER, 'definitely-not-the-password', ip)).status);
   }
   const locked = statuses.filter((s) => s === 429).length;
@@ -123,6 +124,14 @@ const nextIp = () => `203.0.113.${(seq += 1) % 250}`;
     'the lockout refuses even the correct password while it holds',
     correct.status === 429,
     `status ${correct.status}`,
+  );
+
+  // The operator must be able to tell a lockout from a wrong password. The
+  // first version of this could not, and the owner lost half an hour to it.
+  check(
+    'a locked-out response carries retry-after, so the form can say why',
+    Number(correct.headers.get('retry-after') ?? '0') > 0,
+    `retry-after: ${correct.headers.get('retry-after')}`,
   );
 
   // A different address is unaffected — the lockout must not become a denial

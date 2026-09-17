@@ -39,13 +39,34 @@ import { STORE_DIR } from '../lib/paths';
 const ATTEMPTS_FILE = path.join(STORE_DIR, 'login-attempts.json');
 
 /** Failures inside this window count toward a lockout. */
-const WINDOW_MS = 15 * 60 * 1000;
+const WINDOW_MS = 10 * 60 * 1000;
 
 /** How long a locked key stays locked. */
-const LOCK_MS = 15 * 60 * 1000;
+const LOCK_MS = 10 * 60 * 1000;
 
-const USER_IP_BUDGET = 5;
-const IP_BUDGET = 20;
+/**
+ * Ten, not five.
+ *
+ * `auth.ts` says the bootstrap account exists so that "whatever happens to the
+ * users file, the owner can always sign in" — and this throttle quietly took
+ * that property away the day it shipped. The owner locked himself out within
+ * the hour and, because the form reported a lockout as "those details were not
+ * accepted", spent the time believing the password hashing had broken.
+ *
+ * Exempting the bootstrap account is not the answer: it is precisely the
+ * account worth attacking. So the budget is loosened instead, and the numbers
+ * still do the job — ten attempts per ten minutes is 1,440 a day against a
+ * password scrypt already makes expensive to test. An attacker gains nothing
+ * from five more tries; the operator gains room for a mistyped password and a
+ * password manager filling the wrong field.
+ *
+ * If the owner is ever locked out with no way to wait, the recovery is to
+ * empty the counter file on the server — it is a cache, not a record:
+ *
+ *   printf '[]\n' > "$WEIZ_CONTENT_STORE/login-attempts.json"
+ */
+const USER_IP_BUDGET = 10;
+const IP_BUDGET = 30;
 
 /** A ceiling on rows, so the file cannot grow without bound under a spray. */
 const MAX_KEYS = 500;
