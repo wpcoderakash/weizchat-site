@@ -1,8 +1,17 @@
-import { createHash, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
+import { createHash, randomBytes, scrypt, timingSafeEqual } from 'node:crypto';
+import { promisify } from 'node:util';
 import fs from 'node:fs';
 import path from 'node:path';
 import { cookies } from 'next/headers';
 import { ENV_FILE, USERS_FILE } from '../lib/paths';
+import { issueSession, revokeSessionsFor, usernameForToken } from './sessions';
+
+const scryptAsync = promisify(scrypt) as (
+  password: string,
+  salt: Buffer,
+  keylen: number,
+  options: { N: number; r: number; p: number; maxmem: number },
+) => Promise<Buffer>;
 
 /**
  * CMS authentication and roles.
@@ -21,11 +30,28 @@ import { ENV_FILE, USERS_FILE } from '../lib/paths';
  *   admin        → + global content (nav, footer, site identity)
  *   super_admin  → + user management
  *
- * Sessions: an httpOnly cookie holding `username:token`, where the token
- * is derived from the user's password hash AND the bootstrap password as
- * a pepper. Changing a user's password — or the env password — signs the
- * affected sessions out. Every comparison is constant-time, and a wrong
- * username is indistinguishable from a wrong password.
+ * Sessions: an httpOnly cookie holding an opaque random token, looked up in
+ * `content-store/sessions.json` (see `sessions.ts`). Every comparison is
+ * constant-time, and a wrong username is indistinguishable from a wrong
+ * password.
+ *
+ * The token used to be DERIVED — `sha256(username : password-hash : pepper)`
+ * — which meant it never expired, survived signing out, and could only be
+ * revoked by changing a password (AUTH-008). Validity is now a fact about a
+ * stored row, so all three are ordinary operations.
+ *
+ * ## The cost of a password guess (AUTH-007)
+ *
+ * Hashing was `scryptSync(password, salt, 64)` — Node's default N=2^14, the
+ * exact figure the product raised to 2^17 in AUTH-004. This plane never got
+ * that change, so it was eight times cheaper to attack, on the origin with no
+ * lockout. Both halves are fixed: the cost is 2^17 here too, and
+ * `throttle.ts` refuses a guessing run outright.
+ *
+ * The cost lives in the record as `logN`, so raising it again does not
+ * invalidate anyone: an absent field means a legacy 2^14 hash, verification
+ * uses whatever the record says, and a successful sign-in silently rewrites
+ * the hash at the current cost.
  */
 
 export type Role = 'editor' | 'admin' | 'super_admin';
@@ -39,8 +65,22 @@ export interface CmsUser {
   /** hex scrypt hash + salt. Absent on the bootstrap account. */
   hash?: string;
   salt?: string;
+  /**
+   * The scrypt cost this hash was made at (AUTH-007). Absent means 14 — the
+   * Node default every hash written before this change used. Verification
+   * reads it from the record rather than assuming the current cost, which is
+   * what lets the cost be raised without locking anyone out.
+   */
+  logN?: number;
   createdAt?: string;
 }
+
+/** OWASP's current scrypt recommendation, and what the product uses. */
+const CURRENT_LOG_N = 17;
+/** What every hash written before AUTH-007 used: Node's `scryptSync` default. */
+const LEGACY_LOG_N = 14;
+/** Node refuses parameters above `maxmem`; 128 MB is needed at N=2^17, r=8. */
+const MAXMEM = 192 * 1024 * 1024;
 
 const COOKIE = 'weizchat_cms';
 
@@ -72,10 +112,19 @@ function writeUsers(users: CmsUser[]): void {
   fs.writeFileSync(USERS_FILE, `${JSON.stringify(users, null, 2)}\n`, 'utf8');
 }
 
-function hashPassword(password: string, saltHex?: string): { hash: string; salt: string } {
+async function hashPassword(
+  password: string,
+  saltHex?: string,
+  logN: number = CURRENT_LOG_N,
+): Promise<{ hash: string; salt: string; logN: number }> {
   const salt = saltHex ? Buffer.from(saltHex, 'hex') : randomBytes(16);
-  const hash = scryptSync(password, salt, 64);
-  return { hash: hash.toString('hex'), salt: salt.toString('hex') };
+  const hash = await scryptAsync(password, salt, 64, {
+    N: 1 << logN,
+    r: 8,
+    p: 1,
+    maxmem: MAXMEM,
+  });
+  return { hash: hash.toString('hex'), salt: salt.toString('hex'), logN };
 }
 
 function same(a: string, b: string): boolean {
@@ -84,20 +133,17 @@ function same(a: string, b: string): boolean {
   return timingSafeEqual(ha, hb);
 }
 
-/** The session token for a user — derived, never a stored secret. */
-function tokenFor(username: string, secretMaterial: string): string {
-  const pepper = bootstrap()?.password ?? '';
-  return createHash('sha256').update(`weizchat-cms:${username}:${secretMaterial}:${pepper}`).digest('hex');
-}
+/*
+ * `tokenFor` and `secretMaterialFor` used to live here: the derived-token
+ * scheme AUTH-008 replaced. They are gone rather than deprecated, because a
+ * second way to mint a session is a second thing to audit — and the whole
+ * point of the change is that a session is a row, not a calculation.
+ */
 
-function secretMaterialFor(user: { username: string }): string | null {
-  const boot = bootstrap();
-  if (boot && same(user.username.toLowerCase(), boot.username.toLowerCase())) return boot.password;
-  const stored = readUsers().find((u) => u.username.toLowerCase() === user.username.toLowerCase());
-  return stored?.status === 'active' && stored.hash ? stored.hash : null;
-}
-
-export function checkCredentials(username: string, password: string): CmsUser | null {
+export async function checkCredentials(
+  username: string,
+  password: string,
+): Promise<CmsUser | null> {
   const boot = bootstrap();
   if (!boot) return null;
   const name = username.trim().toLowerCase();
@@ -111,18 +157,51 @@ export function checkCredentials(username: string, password: string): CmsUser | 
   }
 
   const stored = readUsers().find((u) => u.username.toLowerCase() === name);
-  // Burn comparable work whether or not the user exists.
+  // Burn comparable work whether or not the user exists — and at the SAME
+  // cost, so an unknown username cannot be told from a known one by timing.
+  // An absent record is verified at the current cost, which is the more
+  // expensive of the two; a legacy record is cheaper, and that difference is
+  // erased by the upgrade below on the first successful sign-in.
   const salt = stored?.salt ?? randomBytes(16).toString('hex');
-  const attempt = hashPassword(password, salt).hash;
+  const logN = stored?.logN ?? (stored ? LEGACY_LOG_N : CURRENT_LOG_N);
+  const attempt = (await hashPassword(password, salt, logN)).hash;
   const expected = stored?.hash ?? attempt.split('').reverse().join('');
   const passOk = same(attempt, expected);
   if (!stored || stored.status !== 'active' || !passOk) return null;
+
+  // The hash is right but made at an old cost: rewrite it at the current one.
+  // This is the only moment the plaintext is in hand, so it is the only moment
+  // the upgrade is possible (AUTH-007).
+  if ((stored.logN ?? LEGACY_LOG_N) !== CURRENT_LOG_N) {
+    try {
+      const upgraded = await hashPassword(password);
+      const users = readUsers();
+      const row = users.find((u) => u.username.toLowerCase() === name);
+      if (row) {
+        row.hash = upgraded.hash;
+        row.salt = upgraded.salt;
+        row.logN = upgraded.logN;
+        writeUsers(users);
+      }
+    } catch (error) {
+      // A failed upgrade must never fail the sign-in: the password was
+      // correct, and the old hash is still valid. Next time will try again.
+      console.error('[cms] password hash upgrade failed', error);
+    }
+  }
   return stored;
 }
 
+/**
+ * Issues a session and returns the cookie to set.
+ *
+ * The value is now an opaque random token with a row behind it, not a
+ * derivation of the password (AUTH-008). Everything that made the old scheme
+ * convenient — no storage, no expiry bookkeeping — is exactly what made it
+ * impossible to revoke.
+ */
 export function sessionCookieFor(user: CmsUser): { name: string; value: string } {
-  const material = secretMaterialFor(user);
-  return { name: COOKIE, value: `${user.username}:${tokenFor(user.username, material ?? '')}` };
+  return { name: COOKIE, value: issueSession(user.username) };
 }
 
 /** The signed-in user, or null. Suspension takes effect on the next request. */
@@ -138,23 +217,23 @@ export const SESSION_COOKIE = COOKIE;
  */
 export function userFromCookieValue(raw: string | undefined): CmsUser | null {
   if (!adminConfigured() || !raw) return null;
-  const sep = raw.lastIndexOf(':');
-  if (sep <= 0) return null;
-  const username = raw.slice(0, sep);
-  const token = raw.slice(sep + 1);
 
-  const material = secretMaterialFor({ username });
-  if (!material) return null;
-  const expected = tokenFor(username, material);
-  const a = Buffer.from(token, 'utf8');
-  const b = Buffer.from(expected, 'utf8');
-  if (a.length !== b.length || !timingSafeEqual(a, b)) return null;
+  // One lookup, and it answers the expiry question at the same time: a row
+  // past `expiresAt` is not returned (AUTH-008).
+  const username = usernameForToken(raw);
+  if (!username) return null;
 
   const boot = bootstrap();
   if (boot && same(username.toLowerCase(), boot.username.toLowerCase())) {
     return { username: boot.username, role: 'super_admin', status: 'active' };
   }
-  return readUsers().find((u) => u.username.toLowerCase() === username.toLowerCase()) ?? null;
+
+  // A stored user must still exist and still be active. Suspending someone no
+  // longer waits for their cookie to expire — `revokeSessionsFor` ends their
+  // sessions at the moment of suspension — but this is the belt to that
+  // brace, and it also covers a user deleted by editing the file by hand.
+  const stored = readUsers().find((u) => u.username.toLowerCase() === username.toLowerCase());
+  return stored && stored.status === 'active' ? stored : null;
 }
 
 export async function currentUser(): Promise<CmsUser | null> {
@@ -184,12 +263,12 @@ export function listUsers(): Omit<CmsUser, 'hash' | 'salt'>[] {
   ];
 }
 
-export function upsertUser(input: {
+export async function upsertUser(input: {
   username: string;
   password?: string;
   role: Role;
   status: 'active' | 'suspended';
-}): { ok: true } | { ok: false; error: string } {
+}): Promise<{ ok: true } | { ok: false; error: string }> {
   const name = input.username.trim().toLowerCase();
   const boot = bootstrap();
   if (boot && name === boot.username.toLowerCase()) {
@@ -206,24 +285,41 @@ export function upsertUser(input: {
     return { ok: false, error: 'password_too_short' };
   }
 
-  const credentials = input.password ? hashPassword(input.password) : null;
+  const credentials = input.password ? await hashPassword(input.password) : null;
   if (existing) {
+    // Read both BEFORE assigning, or the comparison below is against the
+    // value just written and can never be true.
+    const wasActive = existing.status === 'active';
+    const hadRole = existing.role;
+
     existing.role = input.role;
     existing.status = input.status;
     if (credentials) {
       existing.hash = credentials.hash;
       existing.salt = credentials.salt;
+      existing.logN = credentials.logN;
     }
-  } else {
-    users.push({
-      username: name,
-      role: input.role,
-      status: input.status,
-      hash: credentials!.hash,
-      salt: credentials!.salt,
-      createdAt: new Date().toISOString(),
-    });
+    writeUsers(users);
+
+    // Three reasons a live session must end here, and the old derived-token
+    // scheme only ever handled the first: the password changed, the account
+    // was suspended, or the role changed (a demoted editor must not keep an
+    // admin's session). AUTH-008.
+    if (credentials || (wasActive && input.status !== 'active') || hadRole !== input.role) {
+      revokeSessionsFor(name);
+    }
+    return { ok: true };
   }
+
+  users.push({
+    username: name,
+    role: input.role,
+    status: input.status,
+    hash: credentials!.hash,
+    salt: credentials!.salt,
+    logN: credentials!.logN,
+    createdAt: new Date().toISOString(),
+  });
   writeUsers(users);
   return { ok: true };
 }
@@ -236,6 +332,8 @@ export function removeUser(username: string): boolean {
   const next = users.filter((u) => u.username.toLowerCase() !== name);
   if (next.length === users.length) return false;
   writeUsers(next);
+  // A deleted user's cookie must stop working now, not in twelve hours.
+  revokeSessionsFor(name);
   return true;
 }
 
@@ -258,11 +356,11 @@ export const MIN_PASSWORD_LENGTH = 12;
  * The current password is always required. A session cookie is enough to act
  * as someone; it must not be enough to lock them out of their own site.
  */
-export function changeOwnPassword(
+export async function changeOwnPassword(
   username: string,
   currentPassword: string,
   newPassword: string,
-): { ok: true } | { ok: false; error: string } {
+): Promise<{ ok: true } | { ok: false; error: string }> {
   if (newPassword.length < MIN_PASSWORD_LENGTH) return { ok: false, error: 'too_short' };
   if (newPassword === currentPassword) return { ok: false, error: 'unchanged' };
   // The env file is read by a shell (`set -a; . file`) and by PM2. A quote or
@@ -270,7 +368,7 @@ export function changeOwnPassword(
   // that will not start.
   if (/['\n\r]/.test(newPassword)) return { ok: false, error: 'illegal_characters' };
 
-  const user = checkCredentials(username, currentPassword);
+  const user = await checkCredentials(username, currentPassword);
   if (!user) return { ok: false, error: 'current_password_wrong' };
 
   const boot = bootstrap();
@@ -280,10 +378,15 @@ export function changeOwnPassword(
     const users = readUsers();
     const stored = users.find((u) => u.username.toLowerCase() === user.username.toLowerCase());
     if (!stored) return { ok: false, error: 'not_found' };
-    const credentials = hashPassword(newPassword);
+    const credentials = await hashPassword(newPassword);
     stored.hash = credentials.hash;
     stored.salt = credentials.salt;
+    stored.logN = credentials.logN;
     writeUsers(users);
+    // A password change answers a suspected compromise, so every session for
+    // this account ends — including, deliberately, the one doing the changing.
+    // The caller re-issues a cookie for the browser that asked.
+    revokeSessionsFor(stored.username);
     return { ok: true };
   }
 
@@ -304,5 +407,10 @@ export function changeOwnPassword(
   // The running process keeps its own copy; without this the old password
   // would go on working until the next restart.
   process.env['CMS_ADMIN_PASSWORD'] = newPassword;
+  // Explicit now, and it has to be. The old scheme peppered every token with
+  // this password, so changing it invalidated every session as a side effect.
+  // A stored session has no such coupling, so the revocation that used to be
+  // free must be asked for (AUTH-008).
+  revokeSessionsFor(user.username);
   return { ok: true };
 }

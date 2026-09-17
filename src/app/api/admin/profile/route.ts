@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const result = changeOwnPassword(
+  const result = await changeOwnPassword(
     user.username,
     body.data.currentPassword,
     body.data.newPassword,
@@ -59,10 +59,13 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // The session token is derived from the credential that just changed, so
-  // the old cookie is already invalid — including any session someone else
-  // may have had. Re-issue this one, or changing your password would sign
-  // you out of the page you are standing on.
+  // `changeOwnPassword` revokes every session for this account, deliberately:
+  // a password change answers a suspected compromise, so any other device
+  // holding a cookie is signed out. That includes the browser making this
+  // request, hence the re-issue — otherwise changing your password would sign
+  // you out of the page you are standing on. (Before AUTH-008 that revocation
+  // was a side effect of deriving the token from the password; it is explicit
+  // now, and this re-issue is what keeps the behaviour identical.)
   const cookie = sessionCookieFor(user);
   const res = NextResponse.json({ ok: true });
   res.cookies.set(cookie.name, cookie.value, {

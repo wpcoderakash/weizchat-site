@@ -31,7 +31,7 @@ export async function POST(req: Request): Promise<NextResponse> {
   if (denied) return denied;
   const body = upsertSchema.safeParse(await req.json().catch(() => null));
   if (!body.success) return NextResponse.json({ error: 'invalid' }, { status: 400 });
-  const result = upsertUser(body.data);
+  const result = await upsertUser(body.data);
   if (!result.ok) return NextResponse.json({ error: result.error }, { status: 400 });
   return NextResponse.json({ users: listUsers() });
 }
