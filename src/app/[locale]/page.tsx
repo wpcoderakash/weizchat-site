@@ -42,7 +42,7 @@ function renderSection(
   extras: {
     tierNames: Record<string, string>;
     unmetered: string;
-    quotaLabels: { campaigns: string; ai: string };
+    quotaLabels: { agents: string; agentsUnlimited: string; campaigns: string; ai: string };
     prices: PricingDoc['prices'];
     mostPopular: string;
   },
@@ -86,9 +86,14 @@ export async function LandingSections({ page, locale }: { page: LandingPage; loc
   // preview always agrees with /pricing (ADR-0032 addendum).
   const pricingDoc = await getPageDoc<PricingDoc>('pricing', locale);
   const extras = {
-    tierNames: { free: tp('tier.free.name'), pro: tp('tier.pro.name'), unlimited: tp('tier.unlimited.name') },
+    tierNames: { pro: tp('tier.pro.name'), unlimited: tp('tier.unlimited.name') },
     unmetered: tp('unmetered'),
-    quotaLabels: { campaigns: tp('campaignQuota'), ai: tp('aiQuota') },
+    quotaLabels: {
+      agents: tp('agentQuota'),
+      agentsUnlimited: tp('agentUnlimited'),
+      campaigns: tp('campaignQuota'),
+      ai: tp('aiQuota'),
+    },
     prices: pricingDoc.prices,
     mostPopular: pricingDoc.mostPopular,
   };

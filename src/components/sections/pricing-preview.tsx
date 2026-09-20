@@ -25,7 +25,7 @@ export function PricingPreview({
   data: Pricing;
   tierNames: Record<string, string>;
   unmetered: string;
-  quotaLabels: { campaigns: string; ai: string };
+  quotaLabels: { agents: string; agentsUnlimited: string; campaigns: string; ai: string };
   prices: PricingDoc['prices'];
   mostPopular: string;
 }) {
@@ -54,6 +54,10 @@ export function PricingPreview({
               <span className="text-sm text-muted">/ {data.perMonth}</span>
             </p>
             <p className="mt-3 text-sm text-muted">
+              {tier.agentSeats === null ? quotaLabels.agentsUnlimited : nf.format(tier.agentSeats)} ·{' '}
+              {quotaLabels.agents}
+            </p>
+            <p className="mt-1 text-sm text-muted">
               {tier.campaignMessagesPerMonth === null
                 ? unmetered
                 : nf.format(tier.campaignMessagesPerMonth)}{' '}

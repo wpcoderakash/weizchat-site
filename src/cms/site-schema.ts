@@ -45,8 +45,9 @@ export const pricingDocSchema = z.object({
   title: z.string().min(1),
   sub: z.string().min(1),
   /** ADR-0032 addendum: amounts are owner-editable; names and quotas stay code-owned. */
+  // Two tiers, no free one (ADR-0060). A document saved while `free` existed
+  // still parses — zod strips the key it no longer knows.
   prices: z.object({
-    free: z.string().min(1),
     pro: z.string().min(1),
     unlimited: z.string().min(1),
   }),

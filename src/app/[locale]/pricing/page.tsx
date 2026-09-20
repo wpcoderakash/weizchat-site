@@ -69,6 +69,17 @@ export default async function PricingPage({
                 <span className="text-sm text-muted">/ {doc.perMonth}</span>
               </p>
               <dl className="mt-5 flex-1 space-y-3 border-t border-border pt-5 text-sm">
+                {/* Seats are a plan limit now (ADR-0059). The label comes from
+                    i18n like the tier names do — it is a product fact, not
+                    owner-editable wrapper copy. */}
+                <div>
+                  <dt className="text-muted">{t('agentQuota')}</dt>
+                  <dd className="font-semibold">
+                    {/* "Unlimited", not the quota word "Unmetered": seats are not
+                        metered, and "unmetered agents" is not English. */}
+                    {tier.agentSeats === null ? t('agentUnlimited') : nf.format(tier.agentSeats)}
+                  </dd>
+                </div>
                 <div>
                   <dt className="text-muted">{doc.campaignQuota}</dt>
                   <dd className="font-semibold">

@@ -337,24 +337,19 @@
     "metaTitle": "Pricing",
     "metaDescription": "Simple plans for a shared WhatsApp inbox with an AI sales agent. Meta's conversation fees are charged separately by Meta.",
     "title": "Pricing that says what it costs.",
-    "sub": "Every plan includes the whole product — the plan only sets how many campaign messages and AI replies you use each month.",
+    "sub": "Every plan includes the whole product — the plan sets how many agents you seat and how many campaign messages and AI replies you send each month.",
     "mostPopular": "Most popular",
     "perMonth": "month",
     "tier": {
-      "free": {
-        "name": "Free",
-        "who": "For trying it out on a real number",
-        "price": "₪0"
-      },
       "pro": {
         "name": "Pro",
         "who": "For a team that answers all day",
-        "price": "₪299"
+        "price": "$79"
       },
       "unlimited": {
         "name": "Unlimited",
         "who": "For high volume, without counting",
-        "price": "₪799"
+        "price": "$199"
       }
     },
     "campaignQuota": "Campaign messages / month",
@@ -362,7 +357,7 @@
     "unmetered": "Unmetered",
     "talkToUs": "Talk to us",
     "metaNote": "On top of your subscription, Meta charges for conversations directly, at its own published rates. Those fees are billed by Meta, not by us, and we add nothing on top of them.",
-    "paymentsNote": "Online self-serve payment is not live yet, so we set accounts up personally — write to us and we will get you started, including the free plan.",
+    "paymentsNote": "Online self-serve payment is not live yet, so we set accounts up personally — write to us and we will get you started.",
     "includedTitle": "Every plan includes everything",
     "includedBody": "We don't lock features behind tiers. The whole product is in every plan; the plan sets your monthly volume.",
     "included": {
@@ -391,11 +386,13 @@
       },
       "trial": {
         "q": "How do I try it?",
-        "a": "Start on the free plan with your own WhatsApp Business Account. You will need a number you control and a Meta Business account — we walk you through the connection."
+        "a": "Create your workspace and look around — the inbox, the team, your customers and templates are all yours to set up before you pay anything. Connecting a WhatsApp number, sending and the AI switch on the moment a plan is active; write to us and we will set it up with you."
       }
     },
     "ctaTrial": "Start free trial",
-    "ctaContact": "Ask a question"
+    "ctaContact": "Ask a question",
+    "agentQuota": "Agents",
+    "agentUnlimited": "Unlimited"
   },
   "contact": {
     "metaTitle": "Contact",

@@ -112,7 +112,6 @@ export function pricingDefault(locale: string): PricingDoc {
     title: t(locale, `${ns}.title`),
     sub: t(locale, `${ns}.sub`),
     prices: {
-      free: t(locale, `${ns}.tier.free.price`),
       pro: t(locale, `${ns}.tier.pro.price`),
       unlimited: t(locale, `${ns}.tier.unlimited.price`),
     },

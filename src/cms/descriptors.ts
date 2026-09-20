@@ -94,7 +94,6 @@ const pricingGroups: FieldGroup[] = [
   {
     title: 'Monthly prices',
     fields: [
-      { kind: 'text', path: 'prices.free', label: 'Free tier price' },
       { kind: 'text', path: 'prices.pro', label: 'Pro tier price' },
       { kind: 'text', path: 'prices.unlimited', label: 'Unlimited tier price' },
     ],
