@@ -30,13 +30,13 @@ export function PricingPreview({ data, mostPopular }: { data: Pricing; mostPopul
   return (
     <section className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
       <h2 className="text-3xl sm:text-4xl">{data.title}</h2>
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4 xl:gap-6">
         {plans.map((plan) => {
           const quote = plan.pricing ? quoteFor(plan, plan.pricing.included_agents) : null;
           return (
             <div
               key={plan.id}
-              className={`relative rounded-card border bg-surface p-6 ${
+              className={`relative rounded-card border bg-surface p-6 lg:p-4 xl:p-6 ${
                 plan.featured ? 'border-accent shadow-lg ring-1 ring-accent/25' : 'border-border'
               }`}
             >
@@ -49,7 +49,7 @@ export function PricingPreview({ data, mostPopular }: { data: Pricing; mostPopul
               <p className="mt-3 flex items-baseline gap-1.5">
                 {quote ? (
                   <>
-                    <span dir="ltr" className="text-4xl font-bold tracking-tight tabular-nums">
+                    <span dir="ltr" className="text-4xl font-bold tracking-tight tabular-nums lg:text-3xl xl:text-4xl">
                       {money.format(quote.monthly_cents / 100)}
                     </span>
                     <span className="text-sm text-muted">/ {data.perMonth}</span>

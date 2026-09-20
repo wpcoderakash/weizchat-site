@@ -275,13 +275,13 @@ export function Nav({ g }: { g: GlobalDoc }) {
           <LocaleSwitcher />
           <a
             href={`${g.site.appUrl}/login`}
-            className="rounded-full border border-border-strong px-4 py-1.5 text-sm font-semibold text-fg hover:border-accent hover:text-accent"
+            className="whitespace-nowrap rounded-full border border-border-strong px-4 py-1.5 text-sm font-semibold text-fg hover:border-accent hover:text-accent"
           >
             {g.nav.login}
           </a>
           <a
             href={`${g.site.appUrl}/register`}
-            className="rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-accent-fg hover:bg-accent-hover"
+            className="whitespace-nowrap rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-accent-fg hover:bg-accent-hover"
           >
             {g.nav.startTrial}
           </a>

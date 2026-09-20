@@ -198,7 +198,11 @@ export function PlanCards({
       </p>
 
       {/* ── cards ────────────────────────────────────────────────────────── */}
-      <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      {/* Four across from `lg` (1024px): a laptop window is often narrower than
+          1280px, and two rows of two hid the comparison the page exists for.
+          Between lg and xl the cards are narrow, so spacing and the price step
+          down one size there and return to full size at xl. */}
+      <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-4 xl:gap-6">
         {plans.map((plan) => {
           const quote = quoteFor(plan, agents);
           const tooBig = plan.pricing !== null && quote === null;
@@ -210,7 +214,7 @@ export function PlanCards({
               key={plan.id}
               aria-labelledby={`plan-${plan.id}`}
               data-plan={plan.id}
-              className={`relative flex flex-col rounded-card border bg-surface p-6 ${
+              className={`relative flex flex-col rounded-card border bg-surface p-6 lg:p-4 xl:p-6 ${
                 plan.featured ? 'border-accent shadow-lg ring-1 ring-accent/25' : 'border-border'
               }`}
             >
@@ -235,11 +239,11 @@ export function PlanCards({
                   </>
                 ) : quote ? (
                   <>
-                    <p className="flex items-baseline gap-1.5">
+                    <p className="flex flex-wrap items-baseline gap-x-1.5">
                       <span
                         dir="ltr"
                         data-price
-                        className="text-4xl font-bold tracking-tight tabular-nums"
+                        className="text-4xl font-bold tracking-tight tabular-nums lg:text-3xl xl:text-4xl"
                       >
                         {money(perMonthCents(quote, period))}
                       </span>
