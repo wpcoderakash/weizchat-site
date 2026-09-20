@@ -337,29 +337,30 @@
     "metaTitle": "Pricing",
     "metaDescription": "Simple plans for a shared WhatsApp inbox with an AI sales agent. Meta's conversation fees are charged separately by Meta.",
     "title": "Pricing that says what it costs.",
-    "sub": "Every plan includes the whole product — the plan sets how many agents you seat and how many campaign messages and AI replies you send each month.",
+    "sub": "Every plan includes the whole product. Choose by the size of your team and how much you send each month — and pay less when you pay yearly.",
     "mostPopular": "Most popular",
-    "perMonth": "month",
     "tier": {
-      "pro": {
-        "name": "Pro",
-        "who": "For a team that answers all day",
-        "price": "$79"
+      "starter": {
+        "name": "Starter",
+        "who": "For a small team getting onto WhatsApp properly"
       },
-      "unlimited": {
-        "name": "Unlimited",
-        "who": "For high volume, without counting",
-        "price": "$199"
+      "professional": {
+        "name": "Professional",
+        "who": "For a team that answers customers all day"
+      },
+      "business": {
+        "name": "Business",
+        "who": "For several teams and serious volume"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "who": "For large operations with their own requirements"
       }
     },
-    "campaignQuota": "Campaign messages / month",
-    "aiQuota": "AI replies / month",
-    "unmetered": "Unmetered",
-    "talkToUs": "Talk to us",
     "metaNote": "On top of your subscription, Meta charges for conversations directly, at its own published rates. Those fees are billed by Meta, not by us, and we add nothing on top of them.",
     "paymentsNote": "Online self-serve payment is not live yet, so we set accounts up personally — write to us and we will get you started.",
     "includedTitle": "Every plan includes everything",
-    "includedBody": "We don't lock features behind tiers. The whole product is in every plan; the plan sets your monthly volume.",
+    "includedBody": "We don't lock features behind plans. The whole product is in every plan; the plan sets your team size, your monthly volume and your support.",
     "included": {
       "inbox": "Shared team inbox",
       "ai": "Weizic AI sales agent",
@@ -389,10 +390,232 @@
         "a": "Create your workspace and look around — the inbox, the team, your customers and templates are all yours to set up before you pay anything. Connecting a WhatsApp number, sending and the AI switch on the moment a plan is active; write to us and we will set it up with you."
       }
     },
-    "ctaTrial": "Start free trial",
+    "ctaTrial": "Get started",
     "ctaContact": "Ask a question",
-    "agentQuota": "Agents",
-    "agentUnlimited": "Unlimited"
+    "billing": {
+      "label": "Billing period",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "save": "Save {percent}%"
+    },
+    "agents": {
+      "label": "Agents on your team",
+      "hint": "Everyone who signs in to answer customers. Change it to see each plan's price.",
+      "decrease": "One agent fewer",
+      "increase": "One agent more"
+    },
+    "card": {
+      "perMonth": "/ month",
+      "billedMonthly": "Billed monthly",
+      "billedYearly": "Billed yearly — {total} a year",
+      "saves": "You save {amount} a year",
+      "includes": "{count} agents included",
+      "extra": "then {price} per extra agent / month",
+      "breakdown": "{included} included + {extra} extra",
+      "upTo": "Sold for teams of up to {max} agents",
+      "chooseLarger": "For {count} agents, look at {plan}.",
+      "cheapest": "Lowest price for {count} agents",
+      "custom": "Custom",
+      "customSub": "Priced around your volume, onboarding and support needs.",
+      "getStarted": "Get started",
+      "contactSales": "Contact sales",
+      "unlimited": "Unlimited",
+      "agentsRow": "Agents",
+      "supportRow": "Support",
+      "support": {
+        "email": "Email support",
+        "priority": "Priority support",
+        "dedicated": "Dedicated contact"
+      }
+    },
+    "limits": {
+      "campaignMessagesPerMonth": "Campaign messages / month",
+      "aiRunsPerMonth": "AI replies / month",
+      "aiAssistPerMonth": "AI writing assistant uses / month",
+      "automationRunsPerMonth": "Automation runs / month",
+      "chatbotSessionsPerMonth": "Chatbot conversations / month"
+    },
+    "limitTips": {
+      "campaignMessagesPerMonth": "Template messages sent through a campaign. Replies your team sends in a chat are never counted.",
+      "aiRunsPerMonth": "Each time Weizic, the AI agent, answers a customer. At the cap the AI steps aside and your team keeps replying.",
+      "aiAssistPerMonth": "Each time an agent uses the writing assistant in the composer — polish, translate, shorten, summarise.",
+      "automationRunsPerMonth": "Each time an automation rule fires on a conversation.",
+      "chatbotSessionsPerMonth": "Each new conversation the menu chatbot starts. A customer already talking to it always finishes."
+    },
+    "addOns": {
+      "title": "Need more of one thing?",
+      "body": "Add to a single allowance without changing plan. Add-ons are monthly, and our team switches them on for your workspace.",
+      "per": "{price} / month",
+      "item": {
+        "ai_replies": {
+          "name": "More AI replies",
+          "unit": "per {size} replies"
+        },
+        "campaign_messages": {
+          "name": "More campaign messages",
+          "unit": "per {size} messages"
+        },
+        "automation_runs": {
+          "name": "More automation runs",
+          "unit": "per {size} runs"
+        }
+      }
+    },
+    "compare": {
+      "title": "Compare the plans",
+      "body": "Every plan includes every feature. What changes between plans is how much you can do each month, and the support you get.",
+      "feature": "Feature",
+      "limitsGroup": "Monthly allowances and team size",
+      "included": "Included",
+      "about": "About {feature}",
+      "groups": {
+        "communication": "Inbox and WhatsApp",
+        "ai": "AI",
+        "crm": "Customers",
+        "campaigns": "Templates and campaigns",
+        "automation": "Chatbot and automation",
+        "team": "Team and reporting",
+        "security": "Security and data"
+      },
+      "features": {
+        "shared_inbox": {
+          "name": "Shared team inbox",
+          "tip": "One inbox for your business number, with every agent working from the same conversations."
+        },
+        "whatsapp_api": {
+          "name": "Official WhatsApp Business Platform",
+          "tip": "Built on Meta's Cloud API — no phone kept online, no unofficial bridge."
+        },
+        "embedded_signup": {
+          "name": "Guided number connection",
+          "tip": "Connect your number through Meta's own sign-up window, without copying tokens by hand."
+        },
+        "coexistence": {
+          "name": "Keep using the WhatsApp Business app",
+          "tip": "Connect a number that stays active on the phone app; messages sent from the phone appear in the inbox too."
+        },
+        "realtime": {
+          "name": "Live updates",
+          "tip": "New messages, assignments and colleagues typing appear without refreshing."
+        },
+        "media_messages": {
+          "name": "Images, documents and video",
+          "tip": "Send and receive media in the conversation."
+        },
+        "voice_notes": {
+          "name": "Voice notes",
+          "tip": "Record and send a voice note from the browser; play the ones customers send."
+        },
+        "assignment": {
+          "name": "Assignment to agents and teams",
+          "tip": "Hand a conversation to a person or a team, and see who owns what."
+        },
+        "internal_notes": {
+          "name": "Private notes",
+          "tip": "Notes for your team on a conversation. They can never be sent to the customer."
+        },
+        "ai_agent": {
+          "name": "Weizic AI sales agent",
+          "tip": "Answers customers from your own rules and knowledge, quotes real prices from your catalogue, and hands over to a person when it should."
+        },
+        "ai_writing_assistant": {
+          "name": "AI writing assistant",
+          "tip": "Nine drafting actions in the composer. It writes into the box; a person always presses send."
+        },
+        "knowledge_search": {
+          "name": "Answers from your own knowledge",
+          "tip": "Opening hours, warranty and policies you write once, searched when a customer asks."
+        },
+        "image_analysis": {
+          "name": "Understands customer photos",
+          "tip": "The AI can read a picture a customer sends, such as a part or a label."
+        },
+        "translation": {
+          "name": "Translation while you write",
+          "tip": "Translate a draft before you send it, from the writing assistant."
+        },
+        "customers": {
+          "name": "Customer records",
+          "tip": "A record per customer with their details and every conversation."
+        },
+        "labels": {
+          "name": "Labels",
+          "tip": "Tag customers and conversations, and filter by tag."
+        },
+        "custom_fields": {
+          "name": "Custom fields",
+          "tip": "Add the fields your business needs to every customer record."
+        },
+        "conversation_history": {
+          "name": "Full conversation history",
+          "tip": "Everything said with a customer, kept in one thread."
+        },
+        "import_export": {
+          "name": "Import and export",
+          "tip": "Bring customers in from a spreadsheet and take your data out again."
+        },
+        "templates": {
+          "name": "Message templates",
+          "tip": "Write templates with headers, buttons and media."
+        },
+        "template_submission": {
+          "name": "Template approval with Meta",
+          "tip": "Submit templates to Meta for approval and see their status."
+        },
+        "campaigns": {
+          "name": "Campaigns",
+          "tip": "Send an approved template to a chosen audience, only to customers who may be messaged."
+        },
+        "chatbot": {
+          "name": "Menu chatbot",
+          "tip": "A menu-driven bot that greets, routes and answers common questions."
+        },
+        "automations": {
+          "name": "Automations",
+          "tip": "Rules that act when a conversation opens, or when it has waited too long without an answer."
+        },
+        "quick_replies": {
+          "name": "Quick replies",
+          "tip": "Saved answers, shared with the team or personal."
+        },
+        "scheduled_messages": {
+          "name": "Scheduled messages",
+          "tip": "Write now, send later — if WhatsApp's 24-hour window is still open at that time."
+        },
+        "roles": {
+          "name": "Roles and permissions",
+          "tip": "Admin, manager, agent and viewer roles decide who can see and do what."
+        },
+        "invitations": {
+          "name": "Invite your team",
+          "tip": "Invite colleagues by email; they set their own password."
+        },
+        "teams": {
+          "name": "Teams",
+          "tip": "Group agents into teams for routing and assignment."
+        },
+        "activity_log": {
+          "name": "Activity log",
+          "tip": "An append-only record of who changed what in your workspace."
+        },
+        "analytics": {
+          "name": "Analytics",
+          "tip": "Conversations, messages, response times, AI outcomes and campaign delivery."
+        },
+        "two_step_sign_in": {
+          "name": "Two-step sign-in",
+          "tip": "Add an authenticator app code to any account."
+        },
+        "secure_data_management": {
+          "name": "Encrypted credentials",
+          "tip": "Your WhatsApp access tokens are stored encrypted and can never be shown again — only replaced."
+        },
+        "data_deletion": {
+          "name": "Delete a customer's data",
+          "tip": "Erase one person's data on request, or ask for the whole workspace to be closed."
+        }
+      }
+    }
   },
   "contact": {
     "metaTitle": "Contact",

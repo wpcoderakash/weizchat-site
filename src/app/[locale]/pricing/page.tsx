@@ -1,18 +1,25 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Link } from '../../../i18n/navigation';
-import { pricingTiers } from '../../../content/pricing';
+import { addOns, currency } from '../../../content/pricing';
+import { PlanCards } from '../../../components/pricing/plan-cards';
+import { CompareTable } from '../../../components/pricing/compare-table';
 import { getPageDoc } from '../../../cms/load';
 import type { PricingDoc } from '../../../cms/site-schema';
 import { CmsCta } from '../../../components/sections/cms-link';
 import { metaFromSeo } from '../../../lib/seo';
 
 /**
- * /pricing (brief §4). Tier names and limits are real product facts;
- * prices are owner-supplied placeholders. Two honesty rules the page must
- * never lose: Meta bills conversations separately, and self-serve payment
- * does not exist yet (DR-14) — so the page asks you to talk to us rather
- * than pretending there is a checkout.
+ * /pricing — a VIEW of the app's published price list (app ADR-0061).
+ *
+ * Plans, prices, limits, add-ons and the feature list all come from
+ * `content/plan-catalogue.json`, a snapshot the release script compares with
+ * the live app. Nothing on this page is typed in here, and nothing is computed
+ * here: the price for a team size is looked up in a published table.
+ *
+ * Two honesty rules the page must never lose: Meta bills conversations
+ * separately, and self-serve payment does not exist yet (DR-14) — so a plan's
+ * button opens registration (which creates a workspace that is not yet
+ * subscribed) and never pretends to be a checkout or a free trial.
  */
 export async function generateMetadata({
   params,
@@ -36,6 +43,18 @@ export default async function PricingPage({
   // mirror the code-owned plan matrix, so they are not CMS content.
   const t = await getTranslations({ locale, namespace: 'pricing' });
   const nf = new Intl.NumberFormat(locale === 'he' ? 'he-IL' : 'en-US');
+  // The catalogue also publishes an `agent` add-on: the per-agent price for a
+  // tier sold by conversation. Every priced plan shows ITS OWN per-agent price
+  // on its card, so a fourth card here saying "$10" beside a Starter card
+  // saying "$12" would only raise the question of which one is true.
+  const shownAddOns = addOns.filter((a) => a.id !== 'agent');
+  // Amounts are always written the en-US way and rendered LTR, so "$15" reads
+  // the same inside a Hebrew sentence as it does in an English one.
+  const money = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    maximumFractionDigits: 0,
+  });
 
   return (
     <main>
@@ -47,69 +66,12 @@ export default async function PricingPage({
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-14">
-        <div className="grid gap-6 md:grid-cols-3">
-          {pricingTiers.map((tier) => (
-            <div
-              key={tier.id}
-              className={`flex flex-col rounded-card border bg-surface p-6 ${
-                tier.featured ? 'border-accent shadow-lg ring-1 ring-accent/25' : 'border-border'
-              }`}
-            >
-              {tier.featured ? (
-                <span className="mb-3 self-start rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-accent">
-                  {doc.mostPopular}
-                </span>
-              ) : null}
-              <h2 className="text-xl font-semibold">{t(`tier.${tier.key}.name`)}</h2>
-              <p className="mt-1 text-sm text-muted">{t(`tier.${tier.key}.who`)}</p>
-              <p className="mt-4 flex items-baseline gap-1.5">
-                <span className="text-4xl font-bold tracking-tight tabular-nums">
-                  {doc.prices[tier.id]}
-                </span>
-                <span className="text-sm text-muted">/ {doc.perMonth}</span>
-              </p>
-              <dl className="mt-5 flex-1 space-y-3 border-t border-border pt-5 text-sm">
-                {/* Seats are a plan limit now (ADR-0059). The label comes from
-                    i18n like the tier names do — it is a product fact, not
-                    owner-editable wrapper copy. */}
-                <div>
-                  <dt className="text-muted">{t('agentQuota')}</dt>
-                  <dd className="font-semibold">
-                    {/* "Unlimited", not the quota word "Unmetered": seats are not
-                        metered, and "unmetered agents" is not English. */}
-                    {tier.agentSeats === null ? t('agentUnlimited') : nf.format(tier.agentSeats)}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted">{doc.campaignQuota}</dt>
-                  <dd className="font-semibold">
-                    {tier.campaignMessagesPerMonth === null
-                      ? doc.unmetered
-                      : nf.format(tier.campaignMessagesPerMonth)}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted">{doc.aiQuota}</dt>
-                  <dd className="font-semibold">
-                    {tier.aiRepliesPerMonth === null
-                      ? doc.unmetered
-                      : nf.format(tier.aiRepliesPerMonth)}
-                  </dd>
-                </div>
-              </dl>
-              <Link
-                href="/contact"
-                className={`mt-6 rounded-full px-5 py-2.5 text-center font-semibold ${
-                  tier.featured
-                    ? 'bg-accent text-accent-fg hover:bg-accent-hover'
-                    : 'border border-border-strong text-fg hover:border-accent hover:text-accent'
-                }`}
-              >
-                {doc.talkToUs}
-              </Link>
-            </div>
-          ))}
-        </div>
+        <PlanCards
+          mostPopular={doc.mostPopular}
+          getStartedHref={doc.ctaTrial.href}
+          contactHref={doc.ctaContact.href}
+          locale={locale}
+        />
 
         {/* Rule 0.1-adjacent honesty: Meta's fees are not ours. */}
         <div className="mt-8 grid gap-4 md:grid-cols-2">
@@ -119,6 +81,37 @@ export default async function PricingPage({
           <p className="rounded-card border border-border bg-surface p-5 text-muted">
             {doc.paymentsNote}
           </p>
+        </div>
+      </section>
+
+      <section className="border-t border-border">
+        <div className="mx-auto max-w-6xl px-6 py-14">
+          <h2 className="text-2xl sm:text-3xl">{t('addOns.title')}</h2>
+          <p className="mt-3 max-w-2xl text-muted">{t('addOns.body')}</p>
+          <ul className="mt-8 grid gap-4 sm:grid-cols-3">
+            {shownAddOns.map((addOn) => (
+              <li key={addOn.id} className="rounded-card border border-border bg-surface p-5">
+                <p className="font-semibold">{t(`addOns.item.${addOn.id}.name`)}</p>
+                <p className="mt-2 text-2xl font-bold tabular-nums">
+                  <span dir="ltr">{money.format(addOn.unit_cents / 100)}</span>{' '}
+                  <span className="text-sm font-normal text-muted">{t('card.perMonth')}</span>
+                </p>
+                <p className="mt-1 text-sm text-muted">
+                  {t(`addOns.item.${addOn.id}.unit`, { size: nf.format(addOn.unit_size) })}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="border-t border-border">
+        <div className="mx-auto max-w-6xl px-6 py-14">
+          <h2 className="text-2xl sm:text-3xl">{t('compare.title')}</h2>
+          <p className="mt-3 max-w-2xl text-muted">{t('compare.body')}</p>
+          <div className="mt-8">
+            <CompareTable locale={locale} />
+          </div>
         </div>
       </section>
 

@@ -92,21 +92,9 @@ const pricingGroups: FieldGroup[] = [
     ],
   },
   {
-    title: 'Monthly prices',
-    fields: [
-      { kind: 'text', path: 'prices.pro', label: 'Pro tier price' },
-      { kind: 'text', path: 'prices.unlimited', label: 'Unlimited tier price' },
-    ],
-  },
-  {
-    title: 'Tier cards (names and prices stay mirrored from the product)',
+    title: 'Plan cards (plans, prices and limits come from the app — not editable here)',
     fields: [
       { kind: 'text', path: 'mostPopular', label: '"Most popular" badge' },
-      { kind: 'text', path: 'perMonth', label: '"per month" wording' },
-      { kind: 'text', path: 'campaignQuota', label: 'Campaign quota label' },
-      { kind: 'text', path: 'aiQuota', label: 'AI quota label' },
-      { kind: 'text', path: 'unmetered', label: '"Unmetered" wording' },
-      { kind: 'text', path: 'talkToUs', label: 'Tier button text' },
       { kind: 'area', path: 'metaNote', label: 'Meta charges note' },
       { kind: 'area', path: 'paymentsNote', label: 'Payments note' },
     ],

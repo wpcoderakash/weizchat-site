@@ -20,6 +20,25 @@ cd "$(dirname "$0")/.."
 ROOT="$(pwd)"
 OUT="$ROOT/release"
 
+# The pricing page is a view of the app's published price list (app ADR-0061).
+# A snapshot nobody refreshed is how this site once kept selling a Free plan the
+# app had withdrawn — so a release compares the committed snapshot with the live
+# app before it builds anything.
+#   drift (1)        stop: the page would show prices or limits the app lacks.
+#   unreachable (2)  warn and carry on: nothing is known to be wrong, and a site
+#                    fix must still be shippable while the app is briefly down.
+echo "==> Comparing the plan catalogue snapshot with the live app"
+set +e
+node "$ROOT/scripts/sync-plans.mjs" --check
+plans_rc=$?
+set -e
+if [ "$plans_rc" -eq 1 ]; then
+  echo "==> STOP: refresh the snapshot (pnpm sync:plans), review the diff, commit, release again."
+  exit 1
+elif [ "$plans_rc" -ne 0 ]; then
+  echo "==> WARNING: the live catalogue could not be read — the snapshot was NOT verified."
+fi
+
 # Before building, not after: Next's file tracing walks the project, and a
 # release left in place gets copied into the next one (release/release/…).
 echo "==> Clearing any previous release"

@@ -37,26 +37,20 @@ export const toolDocSchema = z.object({
 export type ToolDoc = z.infer<typeof toolDocSchema>;
 
 /**
- * The pricing page's wrapper copy. Tier names, prices and quotas are NOT
- * here — they mirror the product's code-owned plan matrix (ADR-0032).
+ * The pricing page's wrapper copy — headline, notes, FAQ, the two bottom
+ * buttons. Plans, PRICES, limits and their labels are NOT here: they come from
+ * the app's published catalogue (`content/plan-catalogue.json`, app ADR-0061).
+ *
+ * Prices were CMS fields for a while (ADR-0032 addendum). That made this site
+ * a second source of truth for what a plan costs, and a price typed here could
+ * differ from what the app would later charge — so they went. A document saved
+ * while those fields existed still parses: zod strips keys it no longer knows.
  */
 export const pricingDocSchema = z.object({
   seo: seoSchema,
   title: z.string().min(1),
   sub: z.string().min(1),
-  /** ADR-0032 addendum: amounts are owner-editable; names and quotas stay code-owned. */
-  // Two tiers, no free one (ADR-0060). A document saved while `free` existed
-  // still parses — zod strips the key it no longer knows.
-  prices: z.object({
-    pro: z.string().min(1),
-    unlimited: z.string().min(1),
-  }),
   mostPopular: z.string().min(1),
-  perMonth: z.string().min(1),
-  campaignQuota: z.string().min(1),
-  aiQuota: z.string().min(1),
-  unmetered: z.string().min(1),
-  talkToUs: z.string().min(1),
   metaNote: z.string().min(1),
   paymentsNote: z.string().min(1),
   includedTitle: z.string().min(1),

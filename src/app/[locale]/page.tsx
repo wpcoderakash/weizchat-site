@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { setRequestLocale, getTranslations } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
 import { getPageDoc } from '../../cms/load';
 import type { PricingDoc } from '../../cms/site-schema';
 import type { CmsSection, LandingPage } from '../../cms/schema';
@@ -40,10 +40,6 @@ export async function generateMetadata({
 function renderSection(
   section: CmsSection,
   extras: {
-    tierNames: Record<string, string>;
-    unmetered: string;
-    quotaLabels: { agents: string; agentsUnlimited: string; campaigns: string; ai: string };
-    prices: PricingDoc['prices'];
     mostPopular: string;
   },
 ) {
@@ -79,24 +75,10 @@ function renderSection(
 }
 
 export async function LandingSections({ page, locale }: { page: LandingPage; locale: string }) {
-  // Plan names and quota labels stay in the product's own vocabulary, not
-  // the CMS: they mirror the code-owned plan matrix.
-  const tp = await getTranslations({ locale, namespace: 'pricing' });
-  // Amounts and the badge come from the pricing DOCUMENT, so the landing
-  // preview always agrees with /pricing (ADR-0032 addendum).
+  // The badge is wrapper copy from the pricing DOCUMENT; plans, prices and
+  // limits come from the published catalogue inside the preview itself.
   const pricingDoc = await getPageDoc<PricingDoc>('pricing', locale);
-  const extras = {
-    tierNames: { pro: tp('tier.pro.name'), unlimited: tp('tier.unlimited.name') },
-    unmetered: tp('unmetered'),
-    quotaLabels: {
-      agents: tp('agentQuota'),
-      agentsUnlimited: tp('agentUnlimited'),
-      campaigns: tp('campaignQuota'),
-      ai: tp('aiQuota'),
-    },
-    prices: pricingDoc.prices,
-    mostPopular: pricingDoc.mostPopular,
-  };
+  const extras = { mostPopular: pricingDoc.mostPopular };
   return <>{page.sections.map((section) => renderSection(section, extras))}</>;
 }
 

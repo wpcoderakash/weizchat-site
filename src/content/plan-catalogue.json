@@ -1,0 +1,857 @@
+{
+  "schema_version": 1,
+  "currency": "USD",
+  "annual_discount_bps": 2000,
+  "limit_keys": [
+    "agentSeats",
+    "campaignMessagesPerMonth",
+    "aiRunsPerMonth",
+    "aiAssistPerMonth",
+    "automationRunsPerMonth",
+    "chatbotSessionsPerMonth"
+  ],
+  "plans": [
+    {
+      "id": "starter",
+      "featured": false,
+      "support": "email",
+      "cta": "get_started",
+      "pricing": {
+        "monthly_base_cents": 3900,
+        "included_agents": 3,
+        "extra_agent_monthly_cents": 1200,
+        "max_agents": 10
+      },
+      "limits": {
+        "agentSeats": 3,
+        "campaignMessagesPerMonth": 1000,
+        "aiRunsPerMonth": 500,
+        "aiAssistPerMonth": 300,
+        "automationRunsPerMonth": 500,
+        "chatbotSessionsPerMonth": 500
+      },
+      "quotes": [
+        {
+          "agents": 1,
+          "extra_agents": 0,
+          "monthly_cents": 3900,
+          "yearly_per_month_cents": 3120,
+          "yearly_total_cents": 37440,
+          "yearly_savings_cents": 9360
+        },
+        {
+          "agents": 2,
+          "extra_agents": 0,
+          "monthly_cents": 3900,
+          "yearly_per_month_cents": 3120,
+          "yearly_total_cents": 37440,
+          "yearly_savings_cents": 9360
+        },
+        {
+          "agents": 3,
+          "extra_agents": 0,
+          "monthly_cents": 3900,
+          "yearly_per_month_cents": 3120,
+          "yearly_total_cents": 37440,
+          "yearly_savings_cents": 9360
+        },
+        {
+          "agents": 4,
+          "extra_agents": 1,
+          "monthly_cents": 5100,
+          "yearly_per_month_cents": 4080,
+          "yearly_total_cents": 48960,
+          "yearly_savings_cents": 12240
+        },
+        {
+          "agents": 5,
+          "extra_agents": 2,
+          "monthly_cents": 6300,
+          "yearly_per_month_cents": 5040,
+          "yearly_total_cents": 60480,
+          "yearly_savings_cents": 15120
+        },
+        {
+          "agents": 6,
+          "extra_agents": 3,
+          "monthly_cents": 7500,
+          "yearly_per_month_cents": 6000,
+          "yearly_total_cents": 72000,
+          "yearly_savings_cents": 18000
+        },
+        {
+          "agents": 7,
+          "extra_agents": 4,
+          "monthly_cents": 8700,
+          "yearly_per_month_cents": 6960,
+          "yearly_total_cents": 83520,
+          "yearly_savings_cents": 20880
+        },
+        {
+          "agents": 8,
+          "extra_agents": 5,
+          "monthly_cents": 9900,
+          "yearly_per_month_cents": 7920,
+          "yearly_total_cents": 95040,
+          "yearly_savings_cents": 23760
+        },
+        {
+          "agents": 9,
+          "extra_agents": 6,
+          "monthly_cents": 11100,
+          "yearly_per_month_cents": 8880,
+          "yearly_total_cents": 106560,
+          "yearly_savings_cents": 26640
+        },
+        {
+          "agents": 10,
+          "extra_agents": 7,
+          "monthly_cents": 12300,
+          "yearly_per_month_cents": 9840,
+          "yearly_total_cents": 118080,
+          "yearly_savings_cents": 29520
+        }
+      ]
+    },
+    {
+      "id": "professional",
+      "featured": true,
+      "support": "email",
+      "cta": "get_started",
+      "pricing": {
+        "monthly_base_cents": 7900,
+        "included_agents": 5,
+        "extra_agent_monthly_cents": 1000,
+        "max_agents": 25
+      },
+      "limits": {
+        "agentSeats": 5,
+        "campaignMessagesPerMonth": 5000,
+        "aiRunsPerMonth": 2000,
+        "aiAssistPerMonth": 1500,
+        "automationRunsPerMonth": 5000,
+        "chatbotSessionsPerMonth": 2500
+      },
+      "quotes": [
+        {
+          "agents": 1,
+          "extra_agents": 0,
+          "monthly_cents": 7900,
+          "yearly_per_month_cents": 6320,
+          "yearly_total_cents": 75840,
+          "yearly_savings_cents": 18960
+        },
+        {
+          "agents": 2,
+          "extra_agents": 0,
+          "monthly_cents": 7900,
+          "yearly_per_month_cents": 6320,
+          "yearly_total_cents": 75840,
+          "yearly_savings_cents": 18960
+        },
+        {
+          "agents": 3,
+          "extra_agents": 0,
+          "monthly_cents": 7900,
+          "yearly_per_month_cents": 6320,
+          "yearly_total_cents": 75840,
+          "yearly_savings_cents": 18960
+        },
+        {
+          "agents": 4,
+          "extra_agents": 0,
+          "monthly_cents": 7900,
+          "yearly_per_month_cents": 6320,
+          "yearly_total_cents": 75840,
+          "yearly_savings_cents": 18960
+        },
+        {
+          "agents": 5,
+          "extra_agents": 0,
+          "monthly_cents": 7900,
+          "yearly_per_month_cents": 6320,
+          "yearly_total_cents": 75840,
+          "yearly_savings_cents": 18960
+        },
+        {
+          "agents": 6,
+          "extra_agents": 1,
+          "monthly_cents": 8900,
+          "yearly_per_month_cents": 7120,
+          "yearly_total_cents": 85440,
+          "yearly_savings_cents": 21360
+        },
+        {
+          "agents": 7,
+          "extra_agents": 2,
+          "monthly_cents": 9900,
+          "yearly_per_month_cents": 7920,
+          "yearly_total_cents": 95040,
+          "yearly_savings_cents": 23760
+        },
+        {
+          "agents": 8,
+          "extra_agents": 3,
+          "monthly_cents": 10900,
+          "yearly_per_month_cents": 8720,
+          "yearly_total_cents": 104640,
+          "yearly_savings_cents": 26160
+        },
+        {
+          "agents": 9,
+          "extra_agents": 4,
+          "monthly_cents": 11900,
+          "yearly_per_month_cents": 9520,
+          "yearly_total_cents": 114240,
+          "yearly_savings_cents": 28560
+        },
+        {
+          "agents": 10,
+          "extra_agents": 5,
+          "monthly_cents": 12900,
+          "yearly_per_month_cents": 10320,
+          "yearly_total_cents": 123840,
+          "yearly_savings_cents": 30960
+        },
+        {
+          "agents": 11,
+          "extra_agents": 6,
+          "monthly_cents": 13900,
+          "yearly_per_month_cents": 11120,
+          "yearly_total_cents": 133440,
+          "yearly_savings_cents": 33360
+        },
+        {
+          "agents": 12,
+          "extra_agents": 7,
+          "monthly_cents": 14900,
+          "yearly_per_month_cents": 11920,
+          "yearly_total_cents": 143040,
+          "yearly_savings_cents": 35760
+        },
+        {
+          "agents": 13,
+          "extra_agents": 8,
+          "monthly_cents": 15900,
+          "yearly_per_month_cents": 12720,
+          "yearly_total_cents": 152640,
+          "yearly_savings_cents": 38160
+        },
+        {
+          "agents": 14,
+          "extra_agents": 9,
+          "monthly_cents": 16900,
+          "yearly_per_month_cents": 13520,
+          "yearly_total_cents": 162240,
+          "yearly_savings_cents": 40560
+        },
+        {
+          "agents": 15,
+          "extra_agents": 10,
+          "monthly_cents": 17900,
+          "yearly_per_month_cents": 14320,
+          "yearly_total_cents": 171840,
+          "yearly_savings_cents": 42960
+        },
+        {
+          "agents": 16,
+          "extra_agents": 11,
+          "monthly_cents": 18900,
+          "yearly_per_month_cents": 15120,
+          "yearly_total_cents": 181440,
+          "yearly_savings_cents": 45360
+        },
+        {
+          "agents": 17,
+          "extra_agents": 12,
+          "monthly_cents": 19900,
+          "yearly_per_month_cents": 15920,
+          "yearly_total_cents": 191040,
+          "yearly_savings_cents": 47760
+        },
+        {
+          "agents": 18,
+          "extra_agents": 13,
+          "monthly_cents": 20900,
+          "yearly_per_month_cents": 16720,
+          "yearly_total_cents": 200640,
+          "yearly_savings_cents": 50160
+        },
+        {
+          "agents": 19,
+          "extra_agents": 14,
+          "monthly_cents": 21900,
+          "yearly_per_month_cents": 17520,
+          "yearly_total_cents": 210240,
+          "yearly_savings_cents": 52560
+        },
+        {
+          "agents": 20,
+          "extra_agents": 15,
+          "monthly_cents": 22900,
+          "yearly_per_month_cents": 18320,
+          "yearly_total_cents": 219840,
+          "yearly_savings_cents": 54960
+        },
+        {
+          "agents": 21,
+          "extra_agents": 16,
+          "monthly_cents": 23900,
+          "yearly_per_month_cents": 19120,
+          "yearly_total_cents": 229440,
+          "yearly_savings_cents": 57360
+        },
+        {
+          "agents": 22,
+          "extra_agents": 17,
+          "monthly_cents": 24900,
+          "yearly_per_month_cents": 19920,
+          "yearly_total_cents": 239040,
+          "yearly_savings_cents": 59760
+        },
+        {
+          "agents": 23,
+          "extra_agents": 18,
+          "monthly_cents": 25900,
+          "yearly_per_month_cents": 20720,
+          "yearly_total_cents": 248640,
+          "yearly_savings_cents": 62160
+        },
+        {
+          "agents": 24,
+          "extra_agents": 19,
+          "monthly_cents": 26900,
+          "yearly_per_month_cents": 21520,
+          "yearly_total_cents": 258240,
+          "yearly_savings_cents": 64560
+        },
+        {
+          "agents": 25,
+          "extra_agents": 20,
+          "monthly_cents": 27900,
+          "yearly_per_month_cents": 22320,
+          "yearly_total_cents": 267840,
+          "yearly_savings_cents": 66960
+        }
+      ]
+    },
+    {
+      "id": "business",
+      "featured": false,
+      "support": "priority",
+      "cta": "get_started",
+      "pricing": {
+        "monthly_base_cents": 14900,
+        "included_agents": 10,
+        "extra_agent_monthly_cents": 800,
+        "max_agents": 50
+      },
+      "limits": {
+        "agentSeats": 10,
+        "campaignMessagesPerMonth": 15000,
+        "aiRunsPerMonth": 5000,
+        "aiAssistPerMonth": 3000,
+        "automationRunsPerMonth": 25000,
+        "chatbotSessionsPerMonth": 10000
+      },
+      "quotes": [
+        {
+          "agents": 1,
+          "extra_agents": 0,
+          "monthly_cents": 14900,
+          "yearly_per_month_cents": 11920,
+          "yearly_total_cents": 143040,
+          "yearly_savings_cents": 35760
+        },
+        {
+          "agents": 2,
+          "extra_agents": 0,
+          "monthly_cents": 14900,
+          "yearly_per_month_cents": 11920,
+          "yearly_total_cents": 143040,
+          "yearly_savings_cents": 35760
+        },
+        {
+          "agents": 3,
+          "extra_agents": 0,
+          "monthly_cents": 14900,
+          "yearly_per_month_cents": 11920,
+          "yearly_total_cents": 143040,
+          "yearly_savings_cents": 35760
+        },
+        {
+          "agents": 4,
+          "extra_agents": 0,
+          "monthly_cents": 14900,
+          "yearly_per_month_cents": 11920,
+          "yearly_total_cents": 143040,
+          "yearly_savings_cents": 35760
+        },
+        {
+          "agents": 5,
+          "extra_agents": 0,
+          "monthly_cents": 14900,
+          "yearly_per_month_cents": 11920,
+          "yearly_total_cents": 143040,
+          "yearly_savings_cents": 35760
+        },
+        {
+          "agents": 6,
+          "extra_agents": 0,
+          "monthly_cents": 14900,
+          "yearly_per_month_cents": 11920,
+          "yearly_total_cents": 143040,
+          "yearly_savings_cents": 35760
+        },
+        {
+          "agents": 7,
+          "extra_agents": 0,
+          "monthly_cents": 14900,
+          "yearly_per_month_cents": 11920,
+          "yearly_total_cents": 143040,
+          "yearly_savings_cents": 35760
+        },
+        {
+          "agents": 8,
+          "extra_agents": 0,
+          "monthly_cents": 14900,
+          "yearly_per_month_cents": 11920,
+          "yearly_total_cents": 143040,
+          "yearly_savings_cents": 35760
+        },
+        {
+          "agents": 9,
+          "extra_agents": 0,
+          "monthly_cents": 14900,
+          "yearly_per_month_cents": 11920,
+          "yearly_total_cents": 143040,
+          "yearly_savings_cents": 35760
+        },
+        {
+          "agents": 10,
+          "extra_agents": 0,
+          "monthly_cents": 14900,
+          "yearly_per_month_cents": 11920,
+          "yearly_total_cents": 143040,
+          "yearly_savings_cents": 35760
+        },
+        {
+          "agents": 11,
+          "extra_agents": 1,
+          "monthly_cents": 15700,
+          "yearly_per_month_cents": 12560,
+          "yearly_total_cents": 150720,
+          "yearly_savings_cents": 37680
+        },
+        {
+          "agents": 12,
+          "extra_agents": 2,
+          "monthly_cents": 16500,
+          "yearly_per_month_cents": 13200,
+          "yearly_total_cents": 158400,
+          "yearly_savings_cents": 39600
+        },
+        {
+          "agents": 13,
+          "extra_agents": 3,
+          "monthly_cents": 17300,
+          "yearly_per_month_cents": 13840,
+          "yearly_total_cents": 166080,
+          "yearly_savings_cents": 41520
+        },
+        {
+          "agents": 14,
+          "extra_agents": 4,
+          "monthly_cents": 18100,
+          "yearly_per_month_cents": 14480,
+          "yearly_total_cents": 173760,
+          "yearly_savings_cents": 43440
+        },
+        {
+          "agents": 15,
+          "extra_agents": 5,
+          "monthly_cents": 18900,
+          "yearly_per_month_cents": 15120,
+          "yearly_total_cents": 181440,
+          "yearly_savings_cents": 45360
+        },
+        {
+          "agents": 16,
+          "extra_agents": 6,
+          "monthly_cents": 19700,
+          "yearly_per_month_cents": 15760,
+          "yearly_total_cents": 189120,
+          "yearly_savings_cents": 47280
+        },
+        {
+          "agents": 17,
+          "extra_agents": 7,
+          "monthly_cents": 20500,
+          "yearly_per_month_cents": 16400,
+          "yearly_total_cents": 196800,
+          "yearly_savings_cents": 49200
+        },
+        {
+          "agents": 18,
+          "extra_agents": 8,
+          "monthly_cents": 21300,
+          "yearly_per_month_cents": 17040,
+          "yearly_total_cents": 204480,
+          "yearly_savings_cents": 51120
+        },
+        {
+          "agents": 19,
+          "extra_agents": 9,
+          "monthly_cents": 22100,
+          "yearly_per_month_cents": 17680,
+          "yearly_total_cents": 212160,
+          "yearly_savings_cents": 53040
+        },
+        {
+          "agents": 20,
+          "extra_agents": 10,
+          "monthly_cents": 22900,
+          "yearly_per_month_cents": 18320,
+          "yearly_total_cents": 219840,
+          "yearly_savings_cents": 54960
+        },
+        {
+          "agents": 21,
+          "extra_agents": 11,
+          "monthly_cents": 23700,
+          "yearly_per_month_cents": 18960,
+          "yearly_total_cents": 227520,
+          "yearly_savings_cents": 56880
+        },
+        {
+          "agents": 22,
+          "extra_agents": 12,
+          "monthly_cents": 24500,
+          "yearly_per_month_cents": 19600,
+          "yearly_total_cents": 235200,
+          "yearly_savings_cents": 58800
+        },
+        {
+          "agents": 23,
+          "extra_agents": 13,
+          "monthly_cents": 25300,
+          "yearly_per_month_cents": 20240,
+          "yearly_total_cents": 242880,
+          "yearly_savings_cents": 60720
+        },
+        {
+          "agents": 24,
+          "extra_agents": 14,
+          "monthly_cents": 26100,
+          "yearly_per_month_cents": 20880,
+          "yearly_total_cents": 250560,
+          "yearly_savings_cents": 62640
+        },
+        {
+          "agents": 25,
+          "extra_agents": 15,
+          "monthly_cents": 26900,
+          "yearly_per_month_cents": 21520,
+          "yearly_total_cents": 258240,
+          "yearly_savings_cents": 64560
+        },
+        {
+          "agents": 26,
+          "extra_agents": 16,
+          "monthly_cents": 27700,
+          "yearly_per_month_cents": 22160,
+          "yearly_total_cents": 265920,
+          "yearly_savings_cents": 66480
+        },
+        {
+          "agents": 27,
+          "extra_agents": 17,
+          "monthly_cents": 28500,
+          "yearly_per_month_cents": 22800,
+          "yearly_total_cents": 273600,
+          "yearly_savings_cents": 68400
+        },
+        {
+          "agents": 28,
+          "extra_agents": 18,
+          "monthly_cents": 29300,
+          "yearly_per_month_cents": 23440,
+          "yearly_total_cents": 281280,
+          "yearly_savings_cents": 70320
+        },
+        {
+          "agents": 29,
+          "extra_agents": 19,
+          "monthly_cents": 30100,
+          "yearly_per_month_cents": 24080,
+          "yearly_total_cents": 288960,
+          "yearly_savings_cents": 72240
+        },
+        {
+          "agents": 30,
+          "extra_agents": 20,
+          "monthly_cents": 30900,
+          "yearly_per_month_cents": 24720,
+          "yearly_total_cents": 296640,
+          "yearly_savings_cents": 74160
+        },
+        {
+          "agents": 31,
+          "extra_agents": 21,
+          "monthly_cents": 31700,
+          "yearly_per_month_cents": 25360,
+          "yearly_total_cents": 304320,
+          "yearly_savings_cents": 76080
+        },
+        {
+          "agents": 32,
+          "extra_agents": 22,
+          "monthly_cents": 32500,
+          "yearly_per_month_cents": 26000,
+          "yearly_total_cents": 312000,
+          "yearly_savings_cents": 78000
+        },
+        {
+          "agents": 33,
+          "extra_agents": 23,
+          "monthly_cents": 33300,
+          "yearly_per_month_cents": 26640,
+          "yearly_total_cents": 319680,
+          "yearly_savings_cents": 79920
+        },
+        {
+          "agents": 34,
+          "extra_agents": 24,
+          "monthly_cents": 34100,
+          "yearly_per_month_cents": 27280,
+          "yearly_total_cents": 327360,
+          "yearly_savings_cents": 81840
+        },
+        {
+          "agents": 35,
+          "extra_agents": 25,
+          "monthly_cents": 34900,
+          "yearly_per_month_cents": 27920,
+          "yearly_total_cents": 335040,
+          "yearly_savings_cents": 83760
+        },
+        {
+          "agents": 36,
+          "extra_agents": 26,
+          "monthly_cents": 35700,
+          "yearly_per_month_cents": 28560,
+          "yearly_total_cents": 342720,
+          "yearly_savings_cents": 85680
+        },
+        {
+          "agents": 37,
+          "extra_agents": 27,
+          "monthly_cents": 36500,
+          "yearly_per_month_cents": 29200,
+          "yearly_total_cents": 350400,
+          "yearly_savings_cents": 87600
+        },
+        {
+          "agents": 38,
+          "extra_agents": 28,
+          "monthly_cents": 37300,
+          "yearly_per_month_cents": 29840,
+          "yearly_total_cents": 358080,
+          "yearly_savings_cents": 89520
+        },
+        {
+          "agents": 39,
+          "extra_agents": 29,
+          "monthly_cents": 38100,
+          "yearly_per_month_cents": 30480,
+          "yearly_total_cents": 365760,
+          "yearly_savings_cents": 91440
+        },
+        {
+          "agents": 40,
+          "extra_agents": 30,
+          "monthly_cents": 38900,
+          "yearly_per_month_cents": 31120,
+          "yearly_total_cents": 373440,
+          "yearly_savings_cents": 93360
+        },
+        {
+          "agents": 41,
+          "extra_agents": 31,
+          "monthly_cents": 39700,
+          "yearly_per_month_cents": 31760,
+          "yearly_total_cents": 381120,
+          "yearly_savings_cents": 95280
+        },
+        {
+          "agents": 42,
+          "extra_agents": 32,
+          "monthly_cents": 40500,
+          "yearly_per_month_cents": 32400,
+          "yearly_total_cents": 388800,
+          "yearly_savings_cents": 97200
+        },
+        {
+          "agents": 43,
+          "extra_agents": 33,
+          "monthly_cents": 41300,
+          "yearly_per_month_cents": 33040,
+          "yearly_total_cents": 396480,
+          "yearly_savings_cents": 99120
+        },
+        {
+          "agents": 44,
+          "extra_agents": 34,
+          "monthly_cents": 42100,
+          "yearly_per_month_cents": 33680,
+          "yearly_total_cents": 404160,
+          "yearly_savings_cents": 101040
+        },
+        {
+          "agents": 45,
+          "extra_agents": 35,
+          "monthly_cents": 42900,
+          "yearly_per_month_cents": 34320,
+          "yearly_total_cents": 411840,
+          "yearly_savings_cents": 102960
+        },
+        {
+          "agents": 46,
+          "extra_agents": 36,
+          "monthly_cents": 43700,
+          "yearly_per_month_cents": 34960,
+          "yearly_total_cents": 419520,
+          "yearly_savings_cents": 104880
+        },
+        {
+          "agents": 47,
+          "extra_agents": 37,
+          "monthly_cents": 44500,
+          "yearly_per_month_cents": 35600,
+          "yearly_total_cents": 427200,
+          "yearly_savings_cents": 106800
+        },
+        {
+          "agents": 48,
+          "extra_agents": 38,
+          "monthly_cents": 45300,
+          "yearly_per_month_cents": 36240,
+          "yearly_total_cents": 434880,
+          "yearly_savings_cents": 108720
+        },
+        {
+          "agents": 49,
+          "extra_agents": 39,
+          "monthly_cents": 46100,
+          "yearly_per_month_cents": 36880,
+          "yearly_total_cents": 442560,
+          "yearly_savings_cents": 110640
+        },
+        {
+          "agents": 50,
+          "extra_agents": 40,
+          "monthly_cents": 46900,
+          "yearly_per_month_cents": 37520,
+          "yearly_total_cents": 450240,
+          "yearly_savings_cents": 112560
+        }
+      ]
+    },
+    {
+      "id": "enterprise",
+      "featured": false,
+      "support": "dedicated",
+      "cta": "contact_sales",
+      "pricing": null,
+      "limits": {
+        "agentSeats": null,
+        "campaignMessagesPerMonth": null,
+        "aiRunsPerMonth": null,
+        "aiAssistPerMonth": null,
+        "automationRunsPerMonth": null,
+        "chatbotSessionsPerMonth": null
+      },
+      "quotes": []
+    }
+  ],
+  "add_ons": [
+    {
+      "id": "agent",
+      "limit": "agentSeats",
+      "unit_cents": 1000,
+      "unit_size": 1,
+      "recurring": "monthly"
+    },
+    {
+      "id": "ai_replies",
+      "limit": "aiRunsPerMonth",
+      "unit_cents": 1500,
+      "unit_size": 1000,
+      "recurring": "monthly"
+    },
+    {
+      "id": "campaign_messages",
+      "limit": "campaignMessagesPerMonth",
+      "unit_cents": 1000,
+      "unit_size": 1000,
+      "recurring": "monthly"
+    },
+    {
+      "id": "automation_runs",
+      "limit": "automationRunsPerMonth",
+      "unit_cents": 500,
+      "unit_size": 1000,
+      "recurring": "monthly"
+    }
+  ],
+  "feature_groups": {
+    "communication": [
+      "shared_inbox",
+      "whatsapp_api",
+      "embedded_signup",
+      "coexistence",
+      "realtime",
+      "media_messages",
+      "voice_notes",
+      "assignment",
+      "internal_notes"
+    ],
+    "ai": [
+      "ai_agent",
+      "ai_writing_assistant",
+      "knowledge_search",
+      "image_analysis",
+      "translation"
+    ],
+    "crm": [
+      "customers",
+      "labels",
+      "custom_fields",
+      "conversation_history",
+      "import_export"
+    ],
+    "campaigns": [
+      "templates",
+      "template_submission",
+      "campaigns"
+    ],
+    "automation": [
+      "chatbot",
+      "automations",
+      "quick_replies",
+      "scheduled_messages"
+    ],
+    "team": [
+      "roles",
+      "invitations",
+      "teams",
+      "activity_log",
+      "analytics"
+    ],
+    "security": [
+      "two_step_sign_in",
+      "secure_data_management",
+      "data_deletion"
+    ]
+  }
+}
