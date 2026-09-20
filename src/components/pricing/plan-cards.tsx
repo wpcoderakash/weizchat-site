@@ -100,7 +100,7 @@ export function PlanCards({
   return (
     <div>
       {/* ── controls ─────────────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-6 rounded-card border border-border bg-surface p-5 md:flex-row md:items-end md:justify-between">
+      <div className="flex flex-col gap-6 rounded-card border border-border bg-surface p-5 md:flex-row md:items-start md:justify-between">
         <fieldset>
           <legend className="text-sm font-medium text-muted">{t('billing.label')}</legend>
           <div className="mt-2 inline-flex rounded-full border border-border-strong p-1">
@@ -191,6 +191,12 @@ export function PlanCards({
         </div>
       </div>
 
+      {/* Sighted users see every card change; a screen-reader user hears one
+          sentence saying what the prices now on the page are for. */}
+      <p className="sr-only" role="status" aria-live="polite">
+        {t('agents.status', { count: nf.format(agents), period: t(`billing.${period}`) })}
+      </p>
+
       {/* ── cards ────────────────────────────────────────────────────────── */}
       <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
         {plans.map((plan) => {
@@ -246,7 +252,10 @@ export function PlanCards({
                     </p>
                     {period === 'yearly' ? (
                       <p className="text-sm font-medium text-ok">
-                        {t('card.saves', { amount: money(quote.yearly_savings_cents) })}
+                        {t('card.saves', {
+                          percent: annualDiscountPercent,
+                          amount: money(quote.yearly_savings_cents),
+                        })}
                       </p>
                     ) : null}
                     {cheapest === plan.id && quote.extra_agents > 0 ? (
@@ -273,44 +282,50 @@ export function PlanCards({
               </div>
 
               {/* what the price covers */}
-              <dl className="mt-5 flex-1 space-y-3 border-t border-border pt-5 text-sm">
-                <div>
-                  <dt className="text-muted">{t('card.agentsRow')}</dt>
-                  <dd className="font-semibold">
-                    {plan.pricing === null ? (
-                      t('card.unlimited')
-                    ) : (
-                      <>
-                        {t('card.includes', { count: nf.format(plan.pricing.included_agents) })}
-                        <span className="block font-normal text-muted">
-                          {quote && quote.extra_agents > 0
-                            ? t('card.breakdown', {
-                                included: nf.format(plan.pricing.included_agents),
-                                extra: nf.format(quote.extra_agents),
-                              })
-                            : t('card.extra', {
-                                price: money(plan.pricing.extra_agent_monthly_cents),
-                              })}
-                        </span>
-                      </>
-                    )}
-                  </dd>
-                </div>
-                {METERED_LIMITS.map((key) => (
-                  <div key={key}>
-                    <dt className="text-muted">{t(`limits.${key}`)}</dt>
-                    <dd className="font-semibold tabular-nums">
-                      {plan.limits[key] === null
-                        ? t('card.unlimited')
-                        : nf.format(plan.limits[key] as number)}
-                    </dd>
+              <div className="mt-5 flex-1 border-t border-border pt-5 text-sm">
+                <p className="font-semibold">
+                  {plan.pricing === null
+                    ? t('card.unlimitedAgents')
+                    : t('card.includes', { count: nf.format(plan.pricing.included_agents) })}
+                </p>
+                {plan.pricing !== null ? (
+                  <p className="mt-0.5 text-muted">
+                    {/* The additional-agent price is ALWAYS shown; with extra
+                        agents selected the line also says how many. Both numbers
+                        are published — nothing is multiplied here. */}
+                    {quote && quote.extra_agents > 0
+                      ? t('card.breakdown', {
+                          included: nf.format(plan.pricing.included_agents),
+                          extra: nf.format(quote.extra_agents),
+                          price: money(plan.pricing.extra_agent_monthly_cents),
+                        })
+                      : t('card.extra', { price: money(plan.pricing.extra_agent_monthly_cents) })}
+                  </p>
+                ) : null}
+
+                {/* One line per allowance: the label and its number side by side.
+                    Stacked, five allowances made every card twice as tall and
+                    the page four screens long on a phone. */}
+                <p className="mt-5 text-xs font-semibold uppercase tracking-wide text-muted">
+                  {t('card.includedUsage')}
+                </p>
+                <dl className="mt-2 space-y-1.5">
+                  {METERED_LIMITS.map((key) => (
+                    <div key={key} className="flex items-baseline justify-between gap-3">
+                      <dt className="text-muted">{t(`limitsShort.${key}`)}</dt>
+                      <dd className="shrink-0 font-semibold tabular-nums">
+                        {plan.limits[key] === null
+                          ? t('card.unlimited')
+                          : nf.format(plan.limits[key] as number)}
+                      </dd>
+                    </div>
+                  ))}
+                  <div className="flex items-baseline justify-between gap-3 border-t border-border pt-2">
+                    <dt className="text-muted">{t('card.supportRow')}</dt>
+                    <dd className="shrink-0 text-end font-semibold">{t(`card.support.${plan.support}`)}</dd>
                   </div>
-                ))}
-                <div>
-                  <dt className="text-muted">{t('card.supportRow')}</dt>
-                  <dd className="font-semibold">{t(`card.support.${plan.support}`)}</dd>
-                </div>
-              </dl>
+                </dl>
+              </div>
 
               <CardLink
                 href={plan.cta === 'contact_sales' ? contactHref : getStartedHref}

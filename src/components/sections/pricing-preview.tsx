@@ -61,7 +61,7 @@ export function PricingPreview({ data, mostPopular }: { data: Pricing; mostPopul
               <p className="mt-3 text-sm text-muted">
                 {plan.pricing
                   ? t('card.includes', { count: nf.format(plan.pricing.included_agents) })
-                  : `${t('card.unlimited')} · ${t('card.agentsRow')}`}
+                  : t('card.unlimitedAgents')}
               </p>
               <p className="mt-1 text-sm text-muted">
                 {plan.limits.campaignMessagesPerMonth === null

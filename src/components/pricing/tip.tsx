@@ -23,7 +23,12 @@ export function Tip({ label, text }: { label: string; text: string }) {
 
   return (
     <span
-      className="group relative inline-flex align-middle"
+      // Below `md` the wrapper is NOT the anchor: the comparison table pins its
+      // row headers there (position: sticky, which is a positioned box), so the
+      // bubble anchors to the pinned cell and is inset to fit INSIDE it. Anchored
+      // to the button, a 16rem bubble ran past the pinned column and was cut off
+      // by the table's scroll container.
+      className="group relative inline-flex align-middle max-md:static"
       onMouseLeave={() => setDismissed(false)}
       onBlur={() => setDismissed(false)}
     >
@@ -44,7 +49,7 @@ export function Tip({ label, text }: { label: string; text: string }) {
         // `hidden`, not `invisible`: an invisible absolutely-positioned bubble
         // still adds to a scroll container's overflow, and the comparison table
         // scrolls sideways on a phone. `aria-describedby` reads hidden content.
-        className={`absolute start-0 top-full z-20 mt-2 w-64 max-w-[70vw] rounded-card border border-border bg-surface p-3 text-start text-sm font-normal leading-snug text-fg shadow-lg ${
+        className={`absolute start-0 top-full z-20 mt-2 w-64 max-w-[70vw] max-md:start-2 max-md:end-2 max-md:mt-0 max-md:w-auto max-md:max-w-none rounded-card border border-border bg-surface p-3 text-start text-sm font-normal leading-snug text-fg shadow-lg ${
           dismissed ? 'hidden' : 'hidden group-focus-within:block group-hover:block'
         }`}
       >

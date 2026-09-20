@@ -5,7 +5,7 @@ import { CmsCta } from './cms-link';
 type Hero = Extract<CmsSection, { id: 'hero' }>;
 
 /**
- * Hero (§5.2): outcome promise, plain-words subhead, trial + demo CTAs.
+ * Hero (§5.2): outcome promise, plain-words subhead, register + demo CTAs.
  * The visual is a REAL screenshot of the running product (fixture data,
  * phone numbers masked) — the brief bans fake dashboards. Markup is
  * unchanged from the hand-written version; only the source of the words

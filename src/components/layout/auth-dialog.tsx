@@ -10,7 +10,7 @@ export type AuthMode = "login" | "register";
 
 /**
  * The two doors into the app, entirely inside a dialog over the landing page
- * (ADR-0044 in the app repo): sign in, and start a trial. Nobody sees
+ * (ADR-0044 in the app repo): sign in, and register. Nobody sees
  * app.weiz.chat until they are signed in on it.
  *
  * ## How a session can start here at all

@@ -7,7 +7,7 @@
     "tools": "Tools",
     "pricing": "Pricing",
     "login": "Log in",
-    "startTrial": "Start free trial",
+    "startTrial": "Get started",
     "comingSoon": "Coming soon",
     "solution": {
       "sharedInbox": "Shared team inbox",
@@ -56,7 +56,7 @@
         "forgotPassword": "Forgot password?",
         "resetSent": "If that address has an account, a reset link is on its way.",
         "noAccount": "New to WeizChat?",
-        "startTrial": "Start your free trial"
+        "startTrial": "Create your account"
       },
       "register": {
         "kicker": "Start building.",
@@ -136,7 +136,7 @@
   },
   "solutions": {
     "common": {
-      "ctaTrial": "Start free trial",
+      "ctaTrial": "Get started",
       "ctaDemo": "Book a demo",
       "comingSoon": "Coming soon",
       "closerTitle": "See it on your own number.",
@@ -399,19 +399,20 @@
       "save": "Save {percent}%"
     },
     "agents": {
-      "label": "Agents on your team",
-      "hint": "Everyone who signs in to answer customers. Change it to see each plan's price.",
+      "label": "Number of agents",
+      "hint": "Changes every plan's price, and which plans can seat your team.",
       "decrease": "One agent fewer",
-      "increase": "One agent more"
+      "increase": "One agent more",
+      "status": "Showing prices for {count} agents, billed {period}."
     },
     "card": {
       "perMonth": "/ month",
       "billedMonthly": "Billed monthly",
-      "billedYearly": "Billed yearly — {total} a year",
-      "saves": "You save {amount} a year",
+      "billedYearly": "Billed {total} yearly",
+      "saves": "Save {percent}% — {amount} a year",
       "includes": "{count} agents included",
-      "extra": "then {price} per extra agent / month",
-      "breakdown": "{included} included + {extra} extra",
+      "extra": "Additional agent: {price}/month",
+      "breakdown": "{included} included + {extra} additional × {price}",
       "upTo": "Sold for teams of up to {max} agents",
       "chooseLarger": "For {count} agents, look at {plan}.",
       "cheapest": "Lowest price for {count} agents",
@@ -426,7 +427,9 @@
         "email": "Email support",
         "priority": "Priority support",
         "dedicated": "Dedicated contact"
-      }
+      },
+      "includedUsage": "Included every month",
+      "unlimitedAgents": "Unlimited agents"
     },
     "limits": {
       "campaignMessagesPerMonth": "Campaign messages / month",
@@ -443,7 +446,7 @@
       "chatbotSessionsPerMonth": "Each new conversation the menu chatbot starts. A customer already talking to it always finishes."
     },
     "addOns": {
-      "title": "Need more of one thing?",
+      "title": "Need more than your plan includes?",
       "body": "Add to a single allowance without changing plan. Add-ons are monthly, and our team switches them on for your workspace.",
       "per": "{price} / month",
       "item": {
@@ -466,7 +469,6 @@
       "body": "Every plan includes every feature. What changes between plans is how much you can do each month, and the support you get.",
       "feature": "Feature",
       "limitsGroup": "Monthly allowances and team size",
-      "included": "Included",
       "about": "About {feature}",
       "groups": {
         "communication": "Inbox and WhatsApp",
@@ -614,12 +616,21 @@
           "name": "Delete a customer's data",
           "tip": "Erase one person's data on request, or ask for the whole workspace to be closed."
         }
-      }
+      },
+      "includedAll": "Included in every plan",
+      "swipe": "Swipe sideways to see every plan."
+    },
+    "limitsShort": {
+      "campaignMessagesPerMonth": "Campaign messages",
+      "aiRunsPerMonth": "AI replies",
+      "aiAssistPerMonth": "AI assistant uses",
+      "automationRunsPerMonth": "Automation runs",
+      "chatbotSessionsPerMonth": "Chatbot conversations"
     }
   },
   "contact": {
     "metaTitle": "Contact",
-    "metaDescription": "Talk to the WeizChat team about a demo, a trial or a question. Company details, phone and support email.",
+    "metaDescription": "Talk to the WeizChat team about a demo, pricing or a question. Company details, phone and support email.",
     "title": "Talk to us.",
     "sub": "A demo, a question about connecting your number, or help choosing a plan — a person answers.",
     "formTitle": "Send us a message",
@@ -656,7 +667,7 @@
       "privacy": "This tool runs entirely in your browser. Nothing you type is sent to us or stored anywhere — this site has no form backend at all.",
       "closerTitle": "Want the number answered as fast as it is scanned?",
       "closerSub": "WeizChat gives your team one shared inbox and an AI agent on the same number.",
-      "ctaTrial": "Start free trial",
+      "ctaTrial": "Get started",
       "ctaDemo": "Book a demo",
       "phoneError": {
         "empty": "Enter a phone number.",
@@ -854,7 +865,7 @@
       "emptyTitle": "Nothing published here yet.",
       "emptyBody": "We would rather show you an empty page than filler. Articles appear here as we write them.",
       "ctaTitle": "See it working on your own number.",
-      "ctaTrial": "Start free trial",
+      "ctaTrial": "Get started",
       "ctaDemo": "Book a demo"
     },
     "blog": {

@@ -115,11 +115,38 @@ async function setAgents(page, n) {
     hrefs.slice(0, 3).every((h) => /\/register$/.test(h)) && hrefs[3] === '/contact', JSON.stringify(hrefs));
   check('no button promises a trial', !/trial/i.test(await page.locator('main').innerText()));
 
+  // Every card states its included agents and its additional-agent price — the
+  // two numbers a visitor needs to understand why the price moved.
+  await setPeriod(page, 'monthly');
+  await setAgents(page, 3);
+  for (const plan of priced) {
+    const text = await page.locator(`[data-plan="${plan.id}"]`).innerText();
+    check(`${plan.id}: card states ${plan.pricing.included_agents} included and ${money(plan.pricing.extra_agent_monthly_cents)} per additional agent`,
+      text.includes(String(plan.pricing.included_agents)) && text.includes(money(plan.pricing.extra_agent_monthly_cents)));
+    for (const [key, value] of Object.entries(plan.limits)) {
+      if (key === 'agentSeats') continue;
+      if (!text.includes(new Intl.NumberFormat('en-US').format(value))) {
+        check(`${plan.id}: card shows the published ${key}`, false, String(value));
+      }
+    }
+  }
+  check('the agent selector is labelled “Number of agents”', (await page.locator('label[for="pricing-agents"]').innerText()).trim() === messages.en.agents.label);
+
+  // Add-ons: the published price and unit, and never one the app does not publish.
+  const addOnText = await page.locator('main').innerText();
+  for (const addOn of doc.add_ons.filter((a) => a.id !== 'agent')) {
+    const name = messages.en.addOns.item[addOn.id].name;
+    check(`add-on “${name}” shows ${money(addOn.unit_cents)} per ${addOn.unit_size.toLocaleString('en-US')}`,
+      addOnText.includes(name) && addOnText.includes(money(addOn.unit_cents)) && addOnText.includes(addOn.unit_size.toLocaleString('en-US')));
+  }
+  check('nothing the product does not have is advertised', !/\bAPI (requests|limits?|add-on)|public API|encrypted backup|custom integration|advanced workspace|product overview/i.test(addOnText));
+
   // The comparison table: open every group, then every feature must have words.
   await page.locator('[data-compare] details > summary').evaluateAll((els) => els.forEach((e) => e.click()));
   const table = await page.locator('[data-compare]').innerText();
   const missing = Object.values(doc.feature_groups).flat().filter((id) => !table.includes(messages.en.compare.features[id]?.name ?? '\u0000'));
   check('every published feature is named in the table', missing.length === 0, missing.join(', '));
+  check('shared features say so once, not as a wall of ticks', table.includes(messages.en.compare.includedAll));
   check('no translation key leaks onto the page', !/pricing\.[a-zA-Z_.]+/.test(await page.locator('body').innerText()));
 
   // A tooltip: reachable by keyboard, dismissible with Escape (WCAG 1.4.13).

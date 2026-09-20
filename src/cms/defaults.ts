@@ -41,7 +41,14 @@ function t(locale: string, dotPath: string): string {
   return node;
 }
 
-/** Where a "Start free trial" button goes: the funnel the words describe. */
+/**
+ * Where a "Get started" button goes: registration, which creates a workspace
+ * that is not yet subscribed (app ADR-0060). There is NO free trial and no
+ * checkout, so no button may say there is. The schema keys are still called
+ * `startTrial` / `ctaTrial` — renaming them would orphan every stored document —
+ * but the WORDS must never promise a trial; `scripts/check-no-trial.mjs` fails
+ * the build of any page that does.
+ */
 const APP_REGISTER = 'https://app.weiz.chat/register';
 
 // ── Solutions ───────────────────────────────────────────────────────────────

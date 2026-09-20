@@ -6,7 +6,8 @@ import { Tip } from './tip';
  * The comparison table.
  *
  * Every feature is in every plan, so a grid of identical ticks would compare
- * nothing. What differs — team size, the monthly allowances, support — comes
+ * nothing — a shared feature says "Included in every plan" ONCE, in a single
+ * cell spanning the plan columns. What differs — team size, the monthly allowances, support — comes
  * FIRST and open; the feature groups follow, collapsed, as the honest answer
  * to "is X included?" (yes, on every plan).
  *
@@ -17,14 +18,11 @@ import { Tip } from './tip';
  * from `md` up the table fits and overflow stays visible, so a tooltip in the
  * last row is never clipped.
  */
-function Check({ label }: { label: string }) {
+function Check() {
   return (
-    <>
-      <svg viewBox="0 0 20 20" width={18} height={18} aria-hidden="true" className="mx-auto text-ok">
-        <path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-      </svg>
-      <span className="sr-only">{label}</span>
-    </>
+    <svg viewBox="0 0 20 20" width={16} height={16} aria-hidden="true" className="shrink-0 text-ok">
+      <path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+    </svg>
   );
 }
 
@@ -34,7 +32,7 @@ export async function CompareTable({ locale }: { locale: string }) {
 
   const cols = (
     <colgroup>
-      <col className="w-[36%]" />
+      <col className="w-[40%] md:w-[36%]" />
       {plans.map((p) => (
         <col key={p.id} className="w-[16%]" />
       ))}
@@ -43,7 +41,13 @@ export async function CompareTable({ locale }: { locale: string }) {
   const head = (hidden: boolean) => (
     <thead className={hidden ? 'sr-only' : undefined}>
       <tr>
-        <th scope="col" className="px-4 py-3 text-start text-sm font-medium text-muted">
+        {/* Pinned on a phone like the row headers under it — otherwise the plan
+            names slide over the pinned labels and stop lining up with their
+            columns. */}
+        <th
+          scope="col"
+          className="px-4 py-3 text-start text-sm font-medium text-muted max-md:sticky max-md:start-0 max-md:z-10 max-md:bg-bg"
+        >
           {t('compare.feature')}
         </th>
         {plans.map((p) => (
@@ -54,8 +58,16 @@ export async function CompareTable({ locale }: { locale: string }) {
       </tr>
     </thead>
   );
-  const rowHead = 'px-4 py-3 text-start text-sm font-medium';
+  // On a phone the plans scroll sideways, so the feature name is pinned to the
+  // inline-start edge — otherwise you scroll to Business and no longer know
+  // which row you are reading. It needs a background (rows slide under it) and
+  // it rises above its neighbours while a tooltip inside it is open, because a
+  // later pinned cell would otherwise paint over the bubble.
+  const rowHead =
+    'px-4 py-3 text-start text-sm font-medium max-md:sticky max-md:start-0 max-md:z-10 max-md:bg-bg max-md:hover:z-30 max-md:focus-within:z-30';
   const cell = 'px-2 py-3 text-center text-sm tabular-nums';
+  // The rows that differ between plans are the point of the table.
+  const differs = `${cell} font-semibold text-fg`;
 
   return (
     <div
@@ -65,7 +77,7 @@ export async function CompareTable({ locale }: { locale: string }) {
       tabIndex={0}
       className="rounded-card border border-border max-md:overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
-      <div className="min-w-[44rem]">
+      <div className="min-w-[40rem]">
         {/* What actually differs — always open. */}
         <table className="w-full table-fixed border-collapse">
           <caption className="bg-surface px-4 py-3 text-start text-base font-semibold">
@@ -79,10 +91,16 @@ export async function CompareTable({ locale }: { locale: string }) {
                 {t('card.agentsRow')}
               </th>
               {plans.map((p) => (
-                <td key={p.id} className={cell}>
+                <td key={p.id} className={differs}>
                   {p.pricing === null
                     ? t('card.unlimited')
-                    : `${nf.format(p.pricing.included_agents)}–${nf.format(p.pricing.max_agents)}`}
+                    : (
+                      // A numeric range reads left to right in Hebrew too;
+                      // without this the bidi algorithm renders "3–10" as "10–3".
+                      <span dir="ltr">
+                        {nf.format(p.pricing.included_agents)}–{nf.format(p.pricing.max_agents)}
+                      </span>
+                    )}
                 </td>
               ))}
             </tr>
@@ -96,7 +114,7 @@ export async function CompareTable({ locale }: { locale: string }) {
                   />
                 </th>
                 {plans.map((p) => (
-                  <td key={p.id} className={cell}>
+                  <td key={p.id} className={differs}>
                     {p.limits[key] === null ? t('card.unlimited') : nf.format(p.limits[key] as number)}
                   </td>
                 ))}
@@ -146,11 +164,15 @@ export async function CompareTable({ locale }: { locale: string }) {
                         text={t(`compare.features.${id}.tip`)}
                       />
                     </th>
-                    {plans.map((p) => (
-                      <td key={p.id} className={cell}>
-                        <Check label={t('compare.included')} />
-                      </td>
-                    ))}
+                    {/* ONE cell across every plan. Four identical ticks per row,
+                        thirty-four rows deep, compares nothing and hides the
+                        rows that do differ. */}
+                    <td colSpan={plans.length} className={`${cell} text-muted`}>
+                      <span className="inline-flex items-center gap-2">
+                        <Check />
+                        {t('compare.includedAll')}
+                      </span>
+                    </td>
                   </tr>
                 ))}
               </tbody>

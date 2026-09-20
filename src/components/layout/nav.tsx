@@ -16,7 +16,7 @@ import { ThemeSwitcher } from "./theme-switcher";
 
 /**
  * Top navigation (brief §5.1): logo · Solutions ▾ · Tools ▾ · Resources ·
- * Pricing · language switcher · Login (ghost) · Start free trial (primary).
+ * Pricing · language switcher · Login (ghost) · Get started (primary).
  * Dropdowns are real disclosure buttons — keyboard first, Escape closes,
  * outside click closes; position uses logical properties so RTL mirrors.
  */
@@ -49,7 +49,7 @@ export function Nav({ g }: { g: GlobalDoc }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const rootRef = useRef<HTMLElement>(null);
 
-  // The two doors into the app — sign in and start a trial — open as a dialog
+  // The two doors into the app — sign in and register — open as a dialog
   // over this page rather than as a page load. `?login` / `?register` open one
   // on arrival so each door is linkable, and opening pushes a history entry so
   // the phone's Back gesture closes the dialog instead of leaving the site.

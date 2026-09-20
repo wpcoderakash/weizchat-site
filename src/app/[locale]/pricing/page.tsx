@@ -75,10 +75,10 @@ export default async function PricingPage({
 
         {/* Rule 0.1-adjacent honesty: Meta's fees are not ours. */}
         <div className="mt-8 grid gap-4 md:grid-cols-2">
-          <p className="rounded-card border border-border bg-accent-soft/40 p-5 font-medium">
+          <p className="rounded-card border border-border bg-accent-soft/40 p-5 text-sm">
             {doc.metaNote}
           </p>
-          <p className="rounded-card border border-border bg-surface p-5 text-muted">
+          <p className="rounded-card border border-border bg-surface p-5 text-sm text-muted">
             {doc.paymentsNote}
           </p>
         </div>
@@ -109,6 +109,8 @@ export default async function PricingPage({
         <div className="mx-auto max-w-6xl px-6 py-14">
           <h2 className="text-2xl sm:text-3xl">{t('compare.title')}</h2>
           <p className="mt-3 max-w-2xl text-muted">{t('compare.body')}</p>
+          {/* Only where the table actually scrolls. */}
+          <p className="mt-3 text-sm text-muted md:hidden">{t('compare.swipe')}</p>
           <div className="mt-8">
             <CompareTable locale={locale} />
           </div>

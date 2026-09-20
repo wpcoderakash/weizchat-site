@@ -134,7 +134,7 @@ const pricingGroups: FieldGroup[] = [
   {
     title: 'Closing buttons',
     fields: [
-      { kind: 'link', path: 'ctaTrial', label: 'Trial button' },
+      { kind: 'link', path: 'ctaTrial', label: '"Get started" button' },
       { kind: 'link', path: 'ctaContact', label: 'Contact button' },
     ],
   },
@@ -211,7 +211,7 @@ export const globalGroups: FieldGroup[] = [
       { kind: 'text', path: 'nav.tools', label: 'Tools menu' },
       { kind: 'text', path: 'nav.pricing', label: 'Pricing link' },
       { kind: 'text', path: 'nav.login', label: 'Login button' },
-      { kind: 'text', path: 'nav.startTrial', label: 'Trial button' },
+      { kind: 'text', path: 'nav.startTrial', label: '"Get started" button' },
       { kind: 'text', path: 'nav.comingSoon', label: '"Coming soon" badge' },
     ],
   },
@@ -310,7 +310,7 @@ export const globalGroups: FieldGroup[] = [
   {
     title: 'Shared buttons and blurbs',
     fields: [
-      { kind: 'text', path: 'shared.ctaTrial', label: 'Trial button' },
+      { kind: 'text', path: 'shared.ctaTrial', label: '"Get started" button' },
       { kind: 'text', path: 'shared.ctaDemo', label: 'Demo button' },
       { kind: 'text', path: 'shared.comingSoon', label: '"Coming soon" badge' },
       { kind: 'text', path: 'shared.solutionsCloser', label: 'Solution pages closing line' },
