@@ -12,6 +12,7 @@ import {
   resolveIdentifier,
   type PhoneTables,
 } from "@/lib/phone-identifier";
+import { generatePassword } from "@/lib/generate-password";
 
 export type AuthMode = "login" | "register";
 
@@ -153,6 +154,9 @@ export function AuthDialog({
   /** "Forgot password?" for a number: the code leads to the app's reset screen, not a session. */
   const [resetByCode, setResetByCode] = useState(false);
   const [password, setPassword] = useState("");
+  /** The password this form suggested, while the field still holds it. */
+  const [suggested, setSuggested] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const [confirm, setConfirm] = useState("");
   const [code, setCode] = useState("");
   const [fullName, setFullName] = useState("");
@@ -172,6 +176,8 @@ export function AuthDialog({
     setConfirm("");
     setCode("");
     setResetByCode(false);
+    setSuggested(null);
+    setCopied(false);
   }
 
   const open = mode !== null;
@@ -490,6 +496,30 @@ export function AuthDialog({
     t("strength.strong"),
   ][strength];
 
+  // A suggested password is made here, in the browser, and goes nowhere until
+  // the person submits the form like any other (see lib/generate-password.ts).
+  function suggestPassword(): void {
+    let next: string;
+    try {
+      next = generatePassword();
+    } catch {
+      return; // no cryptographic random source: the person types their own
+    }
+    setPassword(next);
+    setConfirm(next);
+    setSuggested(next);
+    setCopied(false);
+    setReveal(true); // nobody has seen it yet
+  }
+  async function copySuggested(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(password);
+      setCopied(true);
+    } catch {
+      // Clipboard refused: the password is visible in the field and in the note.
+    }
+  }
+
   const passwordInput = (
     id: string,
     value: string,
@@ -502,13 +532,18 @@ export function AuthDialog({
         id={id}
         type={reveal ? "text" : "password"}
         autoComplete={autoComplete}
-        dir="ltr"
         required
         minLength={id.endsWith("confirm") ? undefined : 8}
         value={value}
         disabled={busy}
         onChange={(event) => set(event.target.value)}
-        className={`${field} pe-14`}
+        // No `dir`: a forced left-to-right field put its padding on the right
+        // while the Show button sits on the left of a Hebrew dialog — over the
+        // start of the text. `plaintext` lets the TEXT decide the order it is
+        // drawn in (so `abc!` is never drawn `!abc`), and the PAGE decides the
+        // side: right in Hebrew, left in English. The two physical values are
+        // deliberate — under `plaintext`, start/end follow the text, not the page.
+        className={`${field} pe-14 [unicode-bidi:plaintext] ltr:text-left rtl:text-right`}
         aria-label={ariaLabel}
       />
       <button
@@ -785,9 +820,19 @@ export function AuthDialog({
               onChange={(event) => setBusiness(event.target.value)}
               className={field}
             />
-            <label htmlFor="auth-dialog-new-password" className={label}>
-              {t("register.passwordLabel")}
-            </label>
+            <div className="flex items-baseline justify-between gap-2">
+              <label htmlFor="auth-dialog-new-password" className={label}>
+                {t("register.passwordLabel")}
+              </label>
+              <button
+                type="button"
+                className={`${link} text-xs`}
+                disabled={busy}
+                onClick={suggestPassword}
+              >
+                {t("register.suggestPassword")}
+              </button>
+            </div>
             {passwordInput(
               "auth-dialog-new-password",
               password,
@@ -826,7 +871,27 @@ export function AuthDialog({
                 </p>
               </div>
             ) : null}
-            <p className="text-xs text-muted">{t("register.passwordHint")}</p>
+            {/* Only while the field still holds what was suggested; in full,
+                because this is the one moment it has to be readable. It takes
+                the hint's place, so the dialog does not grow. */}
+            {suggested !== null && suggested === password ? (
+              <p className="text-xs text-muted" role="status">
+                {t("register.suggestedPasswordNote")}{" "}
+                <code dir="ltr" className="select-all whitespace-nowrap font-mono text-fg">
+                  {password}
+                </code>{" "}
+                <button
+                  type="button"
+                  className={link}
+                  disabled={busy}
+                  onClick={() => void copySuggested()}
+                >
+                  {copied ? t("register.passwordCopied") : t("register.copyPassword")}
+                </button>
+              </p>
+            ) : (
+              <p className="text-xs text-muted">{t("register.passwordHint")}</p>
+            )}
             <label htmlFor="auth-dialog-confirm" className={label}>
               {t("register.confirmLabel")}
             </label>
