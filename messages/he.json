@@ -74,6 +74,7 @@
         "businessLabel": "שם העסק",
         "passwordLabel": "סיסמה",
         "passwordHint": "לפחות 8 תווים. מעכשיו תתחברו איתה.",
+        "personalNumberHint": "השתמשו במספר הוואטסאפ האישי שלכם — לא במספר העסקי שתחברו ל-WeizChat.",
         "suggestPassword": "הצעת סיסמה",
         "suggestedPasswordNote": "שמרו את הסיסמה במקום בטוח — תצטרכו אותה כדי להתחבר:",
         "copyPassword": "העתקת הסיסמה",

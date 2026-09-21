@@ -74,6 +74,7 @@
         "businessLabel": "Business name",
         "passwordLabel": "Password",
         "passwordHint": "At least 8 characters. You will sign in with this from now on.",
+        "personalNumberHint": "Use your own WhatsApp number — not the business number you plan to connect to WeizChat.",
         "suggestPassword": "Suggest a password",
         "suggestedPasswordNote": "Save this password somewhere safe — you will need it to sign in:",
         "copyPassword": "Copy password",
