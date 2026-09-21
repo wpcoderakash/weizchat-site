@@ -1,10 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, MouseEvent, ReactNode } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { WeizLogo } from "../weiz-logo";
 import { TurnstileWidget } from "./turnstile-widget";
+import {
+  guessCountry,
+  identifierShape,
+  readPhoneTables,
+  resolveIdentifier,
+  type PhoneTables,
+} from "@/lib/phone-identifier";
 
 export type AuthMode = "login" | "register";
 
@@ -51,6 +58,7 @@ type ErrorKey =
   | "invalidCredentials"
   | "noWhatsapp"
   | "phoneUnavailable"
+  | "numberIncomplete"
   | "rateLimited"
   | "passwordTooWeak"
   | "passwordMismatch"
@@ -137,6 +145,11 @@ export function AuthDialog({
    * no code can be sent to. The app decides; this form only reflects it.
    */
   const [whatsappCodes, setWhatsappCodes] = useState(false);
+  // A number written the local way (0544747742) names no country: a picker
+  // appears exactly then, and what is SENT is always the full number. The
+  // tables come from the app with the same answer as `whatsappCodes`.
+  const [phoneTables, setPhoneTables] = useState<PhoneTables | null>(null);
+  const [country, setCountry] = useState<string | null>(null);
   /** "Forgot password?" for a number: the code leads to the app's reset screen, not a session. */
   const [resetByCode, setResetByCode] = useState(false);
   const [password, setPassword] = useState("");
@@ -162,15 +175,31 @@ export function AuthDialog({
   }
 
   const open = mode !== null;
+  const locale = useLocale();
+  const shape = identifierShape(email);
+  const chosenCountry = country ?? guessCountry(phoneTables);
+  /** What is sent: the email as typed, or the number in full. Null = not dialable yet. */
+  const wire = resolveIdentifier(email, chosenCountry, phoneTables);
+  const countries = useMemo(() => {
+    if (!phoneTables) return [];
+    const names = new Intl.DisplayNames([locale], { type: "region" });
+    return Object.entries(phoneTables.dial_codes)
+      .map(([iso, dial]) => ({ iso, dial, name: names.of(iso) ?? iso }))
+      .sort((a, b) => a.name.localeCompare(b.name, locale));
+  }, [phoneTables, locale]);
   // Ask the app, each time the dialog opens, whether a code can go by WhatsApp.
   // Any failure — offline, an older app, a refused request — leaves it false.
   useEffect(() => {
     if (!open) return;
     let cancelled = false;
     fetch(new URL("/api/v1/auth/methods", appUrl).toString(), { credentials: "omit" })
-      .then((res) => (res.ok ? (res.json() as Promise<{ whatsapp_code?: unknown }>) : null))
+      .then((res) =>
+        res.ok ? (res.json() as Promise<{ whatsapp_code?: unknown; phone?: unknown }>) : null,
+      )
       .then((body) => {
-        if (!cancelled) setWhatsappCodes(body?.whatsapp_code === true);
+        if (cancelled) return;
+        setWhatsappCodes(body?.whatsapp_code === true);
+        setPhoneTables(readPhoneTables(body?.phone));
       })
       .catch(() => {
         if (!cancelled) setWhatsappCodes(false);
@@ -241,7 +270,7 @@ export function AuthDialog({
 
   async function requestCode(): Promise<void> {
     const res = await call("POST", "/api/v1/auth/otp/request", {
-      identifier: email,
+      identifier: wire,
       ...(turnstileToken ? { turnstile_token: turnstileToken } : {}),
     });
     spendTurnstile();
@@ -268,7 +297,7 @@ export function AuthDialog({
       // app — where it revokes every session. The token travels in the URL
       // FRAGMENT, which browsers never send to a server.
       const reset = await call("POST", "/api/v1/auth/password/reset-code", {
-        identifier: email,
+        identifier: wire,
         code,
       });
       const resetToken = reset.json["reset_token"];
@@ -284,7 +313,7 @@ export function AuthDialog({
       return;
     }
     const res = await call("POST", "/api/v1/auth/otp/verify", {
-      identifier: email,
+      identifier: wire,
       code,
     });
     if (res.ok && res.json["mfa_required"] === true) {
@@ -321,7 +350,7 @@ export function AuthDialog({
   async function signInWithPassword(): Promise<void> {
     const res = await call("POST", "/api/v1/auth/password/login", {
       // An email or a WhatsApp number; the app tells them apart.
-      identifier: email,
+      identifier: wire,
       password,
     });
     if (res.ok && res.json["mfa_required"] === true) {
@@ -365,7 +394,7 @@ export function AuthDialog({
   async function forgotPassword(): Promise<void> {
     // A number has no inbox to send a link to: the way back is a code on
     // WhatsApp, requested through the ordinary bot-checked step.
-    if (!email.includes("@")) {
+    if (shape !== "email") {
       setResetByCode(true);
       setErrorKey(null);
       setStage("email");
@@ -418,6 +447,11 @@ export function AuthDialog({
   function submit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
     if (busy) return;
+    // A number that is not dialable yet is said here, not sent to fail there.
+    if (wire === null && (stage === "email" || stage === "password")) {
+      setErrorKey("numberIncomplete");
+      return;
+    }
     if (stage === "email") {
       // Signing in goes to the password next — unless this is the way back
       // from a forgotten one, where the next thing is the code itself.
@@ -534,7 +568,34 @@ export function AuthDialog({
               onChange={(event) => setEmail(event.target.value)}
               className={field}
             />
-            {whatsappCodes ? (
+            {whatsappCodes && shape === "national" && countries.length > 0 ? (
+              <>
+                <label htmlFor="auth-dialog-country" className={label}>
+                  {t("countryLabel")}
+                </label>
+                <select
+                  id="auth-dialog-country"
+                  value={chosenCountry}
+                  disabled={busy}
+                  onChange={(event) => setCountry(event.target.value)}
+                  className={field}
+                >
+                  {countries.map((c) => (
+                    <option key={c.iso} value={c.iso}>
+                      {c.name} (+{c.dial})
+                    </option>
+                  ))}
+                </select>
+                {wire !== null ? (
+                  <p className="text-xs text-muted">
+                    {t("fullNumber")}{" "}
+                    <strong dir="ltr" className="text-fg">
+                      {wire}
+                    </strong>
+                  </p>
+                ) : null}
+              </>
+            ) : whatsappCodes ? (
               <p className="text-xs text-muted">
                 {resetByCode ? t("resetByWhatsapp") : t("identifierHint")}
               </p>
@@ -572,7 +633,7 @@ export function AuthDialog({
         {stage === "password" ? (
           <>
             <p className="text-sm text-muted">
-              <span dir="ltr">{email}</span>{" "}
+              <span dir="ltr">{wire ?? email}</span>{" "}
               <button
                 type="button"
                 className={link}
@@ -648,7 +709,7 @@ export function AuthDialog({
             <p className="text-sm text-muted">
               {t("codeSentTo")}{" "}
               <strong dir="ltr" className="text-fg">
-                {email}
+                {wire ?? email}
               </strong>
             </p>
             <label htmlFor="auth-dialog-code" className={label}>
