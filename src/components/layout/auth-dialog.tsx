@@ -602,7 +602,7 @@ export function AuthDialog({
                 disabled={busy}
                 onClick={() => void run(requestCode)}
               >
-                {t("login.useCodeInstead")}
+                {whatsappCodes ? t("login.sendCodeInstead") : t("login.useCodeInstead")}
               </button>
               {" · "}
               <button

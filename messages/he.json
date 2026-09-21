@@ -57,6 +57,7 @@
         "passwordLabel": "סיסמה",
         "signIn": "כניסה",
         "useCodeInstead": "שלחו לי קוד באימייל במקום",
+        "sendCodeInstead": "שלחו לי קוד במקום",
         "forgotPassword": "שכחתם סיסמה?",
         "resetSent": "אם לכתובת הזו יש חשבון, קישור לאיפוס בדרך אליכם.",
         "noAccount": "חדשים ב-WeizChat?",
