@@ -49,6 +49,8 @@ type Stage =
 type ErrorKey =
   | "invalidCode"
   | "invalidCredentials"
+  | "noWhatsapp"
+  | "phoneUnavailable"
   | "rateLimited"
   | "passwordTooWeak"
   | "passwordMismatch"
@@ -128,6 +130,15 @@ export function AuthDialog({
     setTurnstileKey((k) => k + 1);
   };
   const [email, setEmail] = useState("");
+  /**
+   * Can the app send a code by WhatsApp right now? Asked of the app each time
+   * the dialog opens (`GET /api/v1/auth/methods`). False until it says yes —
+   * and false if it cannot be asked — so this form never accepts a number that
+   * no code can be sent to. The app decides; this form only reflects it.
+   */
+  const [whatsappCodes, setWhatsappCodes] = useState(false);
+  /** "Forgot password?" for a number: the code leads to the app's reset screen, not a session. */
+  const [resetByCode, setResetByCode] = useState(false);
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [code, setCode] = useState("");
@@ -147,9 +158,27 @@ export function AuthDialog({
     setPassword("");
     setConfirm("");
     setCode("");
+    setResetByCode(false);
   }
 
   const open = mode !== null;
+  // Ask the app, each time the dialog opens, whether a code can go by WhatsApp.
+  // Any failure — offline, an older app, a refused request — leaves it false.
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    fetch(new URL("/api/v1/auth/methods", appUrl).toString(), { credentials: "omit" })
+      .then((res) => (res.ok ? (res.json() as Promise<{ whatsapp_code?: unknown }>) : null))
+      .then((body) => {
+        if (!cancelled) setWhatsappCodes(body?.whatsapp_code === true);
+      })
+      .catch(() => {
+        if (!cancelled) setWhatsappCodes(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [open, appUrl]);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -217,6 +246,14 @@ export function AuthDialog({
     });
     spendTurnstile();
     if (!res.ok) {
+      // The two answers a person can act on: the number has no WhatsApp, or
+      // codes by WhatsApp are not available. The app says which; this shows it.
+      const details = (res.json["error"] as { details?: { identifier?: string } } | undefined)
+        ?.details;
+      if (res.status === 422 && details?.identifier) {
+        setErrorKey(details.identifier === "no_whatsapp" ? "noWhatsapp" : "phoneUnavailable");
+        return;
+      }
       fail(res.status, "other");
       return;
     }
@@ -225,6 +262,27 @@ export function AuthDialog({
   }
 
   async function verifyCode(): Promise<void> {
+    if (resetByCode) {
+      // Proving the code does not sign anyone in. It yields the same single-use
+      // reset token an emailed link carries, and the reset itself happens on the
+      // app — where it revokes every session. The token travels in the URL
+      // FRAGMENT, which browsers never send to a server.
+      const reset = await call("POST", "/api/v1/auth/password/reset-code", {
+        identifier: email,
+        code,
+      });
+      const resetToken = reset.json["reset_token"];
+      if (!reset.ok || typeof resetToken !== "string") {
+        fail(reset.status, "code");
+        return;
+      }
+      setStage("handing-off");
+      // The APP's reset screen — another origin, so this is a real navigation.
+      const resetUrl = new URL("/reset-password", appUrl);
+      resetUrl.hash = `token=${encodeURIComponent(resetToken)}`;
+      window.location.assign(resetUrl.toString());
+      return;
+    }
     const res = await call("POST", "/api/v1/auth/otp/verify", {
       identifier: email,
       code,
@@ -262,7 +320,8 @@ export function AuthDialog({
 
   async function signInWithPassword(): Promise<void> {
     const res = await call("POST", "/api/v1/auth/password/login", {
-      email,
+      // An email or a WhatsApp number; the app tells them apart.
+      identifier: email,
       password,
     });
     if (res.ok && res.json["mfa_required"] === true) {
@@ -304,6 +363,14 @@ export function AuthDialog({
   }
 
   async function forgotPassword(): Promise<void> {
+    // A number has no inbox to send a link to: the way back is a code on
+    // WhatsApp, requested through the ordinary bot-checked step.
+    if (!email.includes("@")) {
+      setResetByCode(true);
+      setErrorKey(null);
+      setStage("email");
+      return;
+    }
     const res = await call("POST", "/api/v1/auth/password/forgot", { email });
     if (!res.ok) {
       fail(res.status, "other");
@@ -352,7 +419,9 @@ export function AuthDialog({
     event.preventDefault();
     if (busy) return;
     if (stage === "email") {
-      if (shown === "login") {
+      // Signing in goes to the password next — unless this is the way back
+      // from a forgotten one, where the next thing is the code itself.
+      if (shown === "login" && !resetByCode) {
         setErrorKey(null);
         setStage("password");
       } else void run(requestCode);
@@ -448,22 +517,28 @@ export function AuthDialog({
         {stage === "email" ? (
           <>
             <label htmlFor="auth-dialog-email" className={label}>
-              {t("emailLabel")}
+              {whatsappCodes ? t("identifierLabel") : t("emailLabel")}
             </label>
             <input
               id="auth-dialog-email"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
+              // A number is accepted only while the app can send a code to one.
+              type={whatsappCodes ? "text" : "email"}
+              inputMode={whatsappCodes ? "text" : "email"}
+              autoComplete={whatsappCodes ? "username" : "email"}
               dir="ltr"
               required
               autoFocus
-              placeholder={t("emailPlaceholder")}
+              placeholder={whatsappCodes ? t("identifierPlaceholder") : t("emailPlaceholder")}
               value={email}
               disabled={busy}
               onChange={(event) => setEmail(event.target.value)}
               className={field}
             />
+            {whatsappCodes ? (
+              <p className="text-xs text-muted">
+                {resetByCode ? t("resetByWhatsapp") : t("identifierHint")}
+              </p>
+            ) : null}
             <TurnstileWidget
               key={`email-${turnstileKey}`}
               action="otp_request"
@@ -472,6 +547,20 @@ export function AuthDialog({
             <button type="submit" disabled={busy} className={primary}>
               {busy ? t("loading") : t("continue")}
             </button>
+            {resetByCode ? (
+              <button
+                type="button"
+                className={`${link} mt-1 self-center text-sm`}
+                disabled={busy}
+                onClick={() => {
+                  setResetByCode(false);
+                  setErrorKey(null);
+                  setStage("password");
+                }}
+              >
+                {t("back")}
+              </button>
+            ) : null}
             {door === "register" ? (
               <p className="mt-1 text-center text-xs text-muted">
                 {t("register.reassurance")}

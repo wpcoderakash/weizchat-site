@@ -38,6 +38,10 @@
       "handingOff": "Signing you in…",
       "emailLabel": "Email",
       "emailPlaceholder": "you@company.com",
+      "identifierLabel": "WhatsApp number or email",
+      "identifierPlaceholder": "+972 50 123 4567 or you@company.com",
+      "identifierHint": "A number with its country code gets the code on WhatsApp. An email gets it by email.",
+      "resetByWhatsapp": "We will send a code to your WhatsApp. Enter it, and you can choose a new password.",
       "codeSentTo": "We sent a 6-digit code to",
       "codeLabel": "Verification code",
       "codeHint": "Enter the six digits from the email.",
@@ -87,7 +91,9 @@
         "rateLimited": "Too many attempts. Wait a few minutes and try again.",
         "passwordTooWeak": "That password is too short or too common. Try a longer, less predictable one.",
         "passwordMismatch": "Those two passwords do not match.",
-        "error": "Something went wrong. Please try again."
+        "error": "Something went wrong. Please try again.",
+        "noWhatsapp": "That number cannot receive WhatsApp messages. Check it, or use your email instead.",
+        "phoneUnavailable": "Codes by WhatsApp are not available right now. Use your email instead."
       },
       "mfaHint": "This account uses two-step sign-in. Enter the code from your authenticator app.",
       "mfaCodeLabel": "Six-digit code",
