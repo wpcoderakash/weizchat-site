@@ -57,6 +57,7 @@
         "passwordLabel": "Password",
         "signIn": "Sign in",
         "useCodeInstead": "Email me a code instead",
+        "sendCodeInstead": "Send me a code instead",
         "forgotPassword": "Forgot password?",
         "resetSent": "If that address has an account, a reset link is on its way.",
         "noAccount": "New to WeizChat?",
