@@ -635,6 +635,13 @@ export function AuthDialog({
                 {resetByCode ? t("resetByWhatsapp") : t("identifierHint")}
               </p>
             ) : null}
+            {/* A business number moved to the Cloud API has no WhatsApp app left
+                to read a code on: someone who signs up with it could never reset
+                a forgotten password. Said once, where the number is typed — and
+                not to someone typing an email. */}
+            {door === "register" && whatsappCodes && shape !== "email" ? (
+              <p className="text-xs text-muted">{t("register.personalNumberHint")}</p>
+            ) : null}
             <TurnstileWidget
               key={`email-${turnstileKey}`}
               action="otp_request"
