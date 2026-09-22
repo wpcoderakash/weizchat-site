@@ -128,7 +128,10 @@ export function Nav({ g }: { g: GlobalDoc }) {
       if (
         !(anchor instanceof HTMLAnchorElement) ||
         anchor.target === "_blank" ||
-        anchor.hasAttribute("download")
+        anchor.hasAttribute("download") ||
+        // A link that MEANS to leave for the app, and must not be turned back
+        // into the dialog it sits in — the passkey hand-over (app ADR-0076).
+        anchor.dataset.authDialog === "skip"
       )
         return;
       let url: URL;
