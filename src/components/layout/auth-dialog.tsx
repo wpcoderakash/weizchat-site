@@ -62,6 +62,7 @@ type ErrorKey =
   | "numberIncomplete"
   | "rateLimited"
   | "passwordTooWeak"
+  | "passwordExists"
   | "passwordMismatch"
   | "error";
 
@@ -443,7 +444,12 @@ export function AuthDialog({
     }
     const set = await call("POST", "/api/v1/auth/password/set", { password });
     if (!set.ok) {
-      fail(set.status, "password");
+      // An account that already has a password cannot have it replaced from a
+      // code alone (the app's ADR-0077): say so, not "too weak".
+      const details = (set.json["error"] as { details?: Record<string, unknown> } | undefined)
+        ?.details;
+      if (details && "current_password" in details) setErrorKey("passwordExists");
+      else fail(set.status, "password");
       return;
     }
     // Creating the workspace rotates the session; the new token is the one

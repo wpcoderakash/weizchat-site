@@ -99,6 +99,7 @@
         "invalidCredentials": "Email or password is incorrect.",
         "rateLimited": "Too many attempts. Wait a few minutes and try again.",
         "passwordTooWeak": "That password is too short or too common. Try a longer, less predictable one.",
+        "passwordExists": "This account already has a password. Log in with it, or use \u201cForgot password?\u201d to choose a new one.",
         "passwordMismatch": "Those two passwords do not match.",
         "error": "Something went wrong. Please try again.",
         "noWhatsapp": "That number cannot receive WhatsApp messages. Check it, or use your email instead.",
