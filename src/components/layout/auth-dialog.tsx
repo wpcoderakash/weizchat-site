@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { FormEvent, MouseEvent, ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { WeizLogo } from "../weiz-logo";
@@ -108,6 +108,9 @@ function passwordScore(password: string): number {
   return score;
 }
 
+/** Browser support for passkeys does not change while the page is open. */
+const noSubscription = (): (() => void) => () => {};
+
 export function AuthDialog({
   appUrl,
   mode,
@@ -146,6 +149,15 @@ export function AuthDialog({
    * no code can be sent to. The app decides; this form only reflects it.
    */
   const [whatsappCodes, setWhatsappCodes] = useState(false);
+  // The server has no `window` and answers false; the browser answers for
+  // itself — without a hydration mismatch, and without setting state inside an
+  // effect. Offering a passkey to a browser that cannot make one is a dead end
+  // (app ADR-0076).
+  const passkeysSupported = useSyncExternalStore(
+    noSubscription,
+    () => typeof window.PublicKeyCredential === "function",
+    () => false,
+  );
   // A number written the local way (0544747742) names no country: a picker
   // appears exactly then, and what is SENT is always the full number. The
   // tables come from the app with the same answer as `whatsappCodes`.
@@ -667,6 +679,21 @@ export function AuthDialog({
             {door === "register" ? (
               <p className="mt-1 text-center text-xs text-muted">
                 {t("register.reassurance")}
+              </p>
+            ) : null}
+            {/* A passkey belongs to app.weiz.chat and cannot be used on this
+                origin (app ADR-0076 §5), so this is a LINK across, not a
+                button that would fail here. `data-auth-dialog="skip"` tells
+                nav.tsx not to turn it back into this very dialog. */}
+            {door === "login" && passkeysSupported && !resetByCode ? (
+              <p className="mt-1 text-center text-sm">
+                <a
+                  href={`${new URL("/login", appUrl).toString()}?passkey=1`}
+                  data-auth-dialog="skip"
+                  className={link}
+                >
+                  {t("login.passkey")}
+                </a>
               </p>
             ) : null}
           </>
