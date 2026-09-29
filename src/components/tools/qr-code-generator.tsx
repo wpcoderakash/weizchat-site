@@ -43,7 +43,7 @@ export function QrCodeGenerator() {
 
   return (
     <div className="grid gap-8 lg:grid-cols-2">
-      <div className="rounded-card border border-border bg-surface p-6">
+      <div className="card p-6 sm:p-7">
         <div className="grid gap-4">
           <Field id="qr-phone" label={t('phoneLabel')} hint={t('phoneHint')}>
             <input
@@ -74,7 +74,7 @@ export function QrCodeGenerator() {
         </div>
       </div>
 
-      <div className="rounded-card border border-border bg-surface p-6">
+      <div className="card p-6 sm:p-7">
         <h2 className="font-semibold">{t('resultTitle')}</h2>
         <div className={link ? 'mt-4' : 'hidden'}>
           <canvas
@@ -91,14 +91,14 @@ export function QrCodeGenerator() {
               <a
                 href={dataUrl}
                 download="weizchat-whatsapp-qr.png"
-                className="rounded-full bg-accent px-5 py-2.5 font-semibold text-accent-fg hover:bg-accent-hover"
+                className="btn btn-primary"
               >
                 {t('download')}
               </a>
             ) : null}
             <CopyButton
               value={link}
-              className="rounded-full border border-border-strong px-5 py-2.5 font-semibold hover:border-accent hover:text-accent"
+              className="btn btn-secondary"
             />
           </div>
         </div>

@@ -9,7 +9,16 @@ import { Link } from '../../i18n/navigation';
  * through a plain anchor with the right rel; a relative one stays inside
  * the locale-aware router.
  */
-export function CmsCta({ link, className }: { link: CmsLink; className: string }) {
+export function CmsCta({
+  link,
+  className,
+  children,
+}: {
+  link: CmsLink;
+  className: string;
+  /** Decoration after the label (the design system's arrow). */
+  children?: React.ReactNode;
+}) {
   if (!link.enabled) return null;
 
   const external = /^https?:\/\//i.test(link.href);
@@ -21,12 +30,14 @@ export function CmsCta({ link, className }: { link: CmsLink; className: string }
         {...(link.newTab ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
       >
         {link.label}
+        {children}
       </a>
     );
   }
   return (
     <Link href={link.href} className={className}>
       {link.label}
+      {children}
     </Link>
   );
 }

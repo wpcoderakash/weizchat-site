@@ -47,7 +47,18 @@ export function Nav({ g }: { g: GlobalDoc }) {
   const pathname = usePathname();
   const [openMenu, setOpenMenu] = useState<MenuId>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  // Transparent over the top of the page; a frosted bar once the page moves.
+  const [scrolled, setScrolled] = useState(false);
   const rootRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 8);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // The two doors into the app — sign in and register — open as a dialog
   // over this page rather than as a page load. `?login` / `?register` open one
@@ -210,14 +221,14 @@ export function Nav({ g }: { g: GlobalDoc }) {
       {openMenu === id ? (
         <div
           role="menu"
-          className="absolute start-0 top-full z-40 mt-2 w-64 rounded-card border border-border bg-surface p-2 shadow-lg"
+          className="absolute start-0 top-full z-40 mt-3 w-72 rounded-2xl border border-border bg-surface p-2 shadow-[var(--shadow-lg)] motion-safe:animate-[rise_0.25s_var(--ease-out)_both]"
         >
           {items.map((item) => (
             <Link
               key={item.href}
               role="menuitem"
               href={item.href}
-              className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-fg hover:bg-accent-soft/60"
+              className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm text-fg hover:bg-accent-soft/70"
             >
               {labelOf(item.key)}
               {"comingSoon" in item && item.comingSoon ? (
@@ -235,9 +246,13 @@ export function Nav({ g }: { g: GlobalDoc }) {
   return (
     <header
       ref={rootRef}
-      className="sticky top-0 z-50 border-b border-border bg-surface/90 backdrop-blur"
+      className={`sticky top-0 z-50 border-b transition-[background-color,border-color,box-shadow] duration-300 ${
+        scrolled || mobileOpen
+          ? "border-border bg-surface/80 shadow-[var(--shadow-sm)] backdrop-blur-xl"
+          : "border-transparent bg-transparent"
+      }`}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-2 px-6">
+      <div className={`wrap flex items-center gap-2 transition-[height] duration-300 ${scrolled ? "h-16" : "h-[4.5rem]"}`}>
         {/* The lockup carries the name; the word beside it said it twice —
             on screen and to a screen reader. */}
         <Link href="/" className="flex items-center" aria-label="WeizChat">
@@ -278,13 +293,13 @@ export function Nav({ g }: { g: GlobalDoc }) {
           <LocaleSwitcher />
           <a
             href={`${g.site.appUrl}/login`}
-            className="whitespace-nowrap rounded-full border border-border-strong px-4 py-1.5 text-sm font-semibold text-fg hover:border-accent hover:text-accent"
+            className="btn btn-secondary btn-sm"
           >
             {g.nav.login}
           </a>
           <a
             href={`${g.site.appUrl}/register`}
-            className="whitespace-nowrap rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-accent-fg hover:bg-accent-hover"
+            className="btn btn-primary btn-sm"
           >
             {g.nav.startTrial}
           </a>
@@ -324,7 +339,7 @@ export function Nav({ g }: { g: GlobalDoc }) {
       {mobileOpen ? (
         <nav
           aria-label={t("primary")}
-          className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-border bg-surface px-6 py-4 pb-28 lg:hidden"
+          className="h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-border bg-surface px-6 py-6 pb-28 motion-safe:animate-[rise_0.3s_var(--ease-out)_both] lg:hidden [&>*]:motion-safe:animate-[rise_0.45s_var(--ease-out)_both] [&>*:nth-child(2)]:[animation-delay:40ms] [&>*:nth-child(3)]:[animation-delay:80ms] [&>*:nth-child(4)]:[animation-delay:120ms] [&>*:nth-child(5)]:[animation-delay:160ms]"
         >
           <p className="pb-1 text-xs font-semibold uppercase tracking-wide text-muted">
             {g.nav.solutions}
@@ -333,7 +348,7 @@ export function Nav({ g }: { g: GlobalDoc }) {
             <Link
               key={r.href}
               href={r.href}
-              className="flex items-center gap-2 py-1.5 text-fg"
+              className="flex items-center gap-2 py-2.5 text-lg text-fg"
             >
               {solutionLabel(r.key)}
               {"comingSoon" in r && r.comingSoon ? (
@@ -347,7 +362,7 @@ export function Nav({ g }: { g: GlobalDoc }) {
             {g.nav.tools}
           </p>
           {toolRoutes.map((r) => (
-            <Link key={r.href} href={r.href} className="block py-1.5 text-fg">
+            <Link key={r.href} href={r.href} className="block py-2.5 text-lg text-fg">
               {toolLabel(r.key)}
             </Link>
           ))}

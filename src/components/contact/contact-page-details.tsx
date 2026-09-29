@@ -45,7 +45,7 @@ export function ContactDetailsRows({
   ];
 
   return (
-    <dl className="mt-6 divide-y divide-border rounded-card border border-border bg-surface">
+    <dl className="card mt-6 divide-y divide-border">
       {rows.map(([label, value], i) => (
         <div key={i} className="flex flex-wrap items-baseline gap-x-4 gap-y-1 px-5 py-4">
           <dt className="w-40 shrink-0 text-sm text-muted">{label}</dt>
@@ -60,7 +60,7 @@ export function ContactDetailsRows({
 export function OfficeCard({ contact }: { contact: ContactBlock }) {
   if (contact.offices.length === 0) return null;
   return (
-    <div className="mt-6 rounded-card border border-border bg-surface p-5">
+    <div className="card mt-6 p-6">
       <h3 className="font-semibold">{contact.officesTitle}</h3>
       <ul className="mt-4 flex flex-col gap-4">
         {contact.offices.map((office) => (

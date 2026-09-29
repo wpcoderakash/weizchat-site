@@ -11,17 +11,29 @@ export function Testimonials({ data }: { data: Testimonials }) {
   if (data.items.length === 0) return null;
 
   return (
-    <section className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
-      <h2 className="text-3xl sm:text-4xl">{data.title}</h2>
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
-        {data.items.map((entry) => (
-          <figure key={entry.id} className="rounded-card border border-border bg-surface p-6">
-            <blockquote className="text-lg">{entry.quote}</blockquote>
-            <figcaption className="mt-4 text-sm text-muted">
-              {entry.author} · {entry.company}
-            </figcaption>
-          </figure>
-        ))}
+    <section className="section">
+      <div className="wrap">
+        <h2 data-reveal className="display-2">
+          {data.title}
+        </h2>
+        <div className="mt-12 grid gap-5 md:grid-cols-3">
+          {data.items.map((entry, index) => (
+            <figure
+              key={entry.id}
+              data-reveal
+              style={{ '--i': index + 1 } as React.CSSProperties}
+              className="card card-hover flex flex-col p-7"
+            >
+              <svg viewBox="0 0 24 24" width={28} height={28} aria-hidden="true" className="text-accent rtl:-scale-x-100">
+                <path d="M9.5 6C6.5 7.2 5 9.6 5 13v5h5v-5H7.5c0-2 .9-3.4 2.8-4.3L9.5 6zm9 0c-3 1.2-4.5 3.6-4.5 7v5h5v-5h-2.5c0-2 .9-3.4 2.8-4.3L18.5 6z" fill="currentColor" />
+              </svg>
+              <blockquote className="mt-5 flex-1 text-lg">{entry.quote}</blockquote>
+              <figcaption className="mt-6 border-t border-border pt-4 text-sm text-muted">
+                <span className="font-semibold text-fg">{entry.author}</span> · {entry.company}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
       </div>
     </section>
   );

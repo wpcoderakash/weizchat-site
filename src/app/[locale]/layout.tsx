@@ -9,6 +9,8 @@ import { getGlobal } from '../../cms/load';
 import { Nav } from '../../components/layout/nav';
 import { Footer } from '../../components/layout/footer';
 import { CookieConsent } from '../../components/layout/cookie-consent';
+import { RevealObserver } from '../../components/layout/reveal-observer';
+import { PointerGlow } from '../../components/layout/pointer-glow';
 import './../globals.css';
 
 /*
@@ -45,7 +47,11 @@ export default async function LocaleLayout({
 
   const fontVars = `${rubik.variable} ${plexMono.variable}`;
   // Before first paint: a stored theme choice wins, else the OS setting.
-  const themeBoot = `(function(){try{var s=localStorage.getItem('theme');var t=s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t;}catch(e){}})();`;
+  // Then `data-motion`, which lets [data-reveal] sections start hidden and
+  // rise into view (RevealObserver) — never under reduced motion, and never
+  // for an automated browser (the accessibility scan and screenshot tools
+  // read the finished page, not a page waiting to be scrolled).
+  const themeBoot = `(function(){var d=document.documentElement;try{var s=localStorage.getItem('theme');var t=s==='light'||s==='dark'?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');d.dataset.theme=t;}catch(e){}try{if(!navigator.webdriver&&!matchMedia('(prefers-reduced-motion: reduce)').matches)d.dataset.motion='';}catch(e){}})();`;
   const fontStyle = {
     '--font-display': 'var(--f-rubik)',
     '--font-body': 'var(--f-rubik)',
@@ -72,6 +78,8 @@ export default async function LocaleLayout({
           <div className="min-h-dvh">{children}</div>
           <Footer g={g} />
           <CookieConsent />
+          <RevealObserver />
+          <PointerGlow />
         </NextIntlClientProvider>
       </body>
     </html>

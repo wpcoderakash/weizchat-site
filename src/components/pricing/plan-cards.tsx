@@ -100,15 +100,15 @@ export function PlanCards({
   return (
     <div>
       {/* ── controls ─────────────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-6 rounded-card border border-border bg-surface p-5 md:flex-row md:items-start md:justify-between">
+      <div data-reveal className="card flex flex-col gap-6 p-6 shadow-[var(--shadow-md)] md:flex-row md:items-start md:justify-between">
         <fieldset>
           <legend className="text-sm font-medium text-muted">{t('billing.label')}</legend>
-          <div className="mt-2 inline-flex rounded-full border border-border-strong p-1">
+          <div className="mt-2 inline-flex rounded-full border border-border bg-bg p-1">
             {(['monthly', 'yearly'] as const).map((p) => (
               <label
                 key={p}
                 className={`cursor-pointer rounded-full px-4 py-2 text-sm font-semibold has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent ${
-                  period === p ? 'bg-accent text-accent-fg' : 'text-fg hover:text-accent'
+                  period === p ? 'bg-accent text-accent-fg shadow-[0_6px_16px_-8px_var(--accent)]' : 'text-fg hover:text-accent'
                 }`}
               >
                 <input
@@ -173,7 +173,7 @@ export function PlanCards({
                 const n = Number(typed);
                 commit(typed.trim() === '' || !Number.isFinite(n) ? agents : n);
               }}
-              className="h-10 w-20 rounded-card border border-border-strong bg-bg text-center text-lg font-semibold tabular-nums"
+              className="h-10 w-20 rounded-full border border-border-strong bg-bg text-center text-lg font-semibold tabular-nums"
             />
             <button
               type="button"
@@ -202,7 +202,7 @@ export function PlanCards({
           1280px, and two rows of two hid the comparison the page exists for.
           Between lg and xl the cards are narrow, so spacing and the price step
           down one size there and return to full size at xl. */}
-      <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-4 xl:gap-6">
+      <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4 lg:gap-4 xl:gap-5">
         {plans.map((plan) => {
           const quote = quoteFor(plan, agents);
           const tooBig = plan.pricing !== null && quote === null;
@@ -214,12 +214,14 @@ export function PlanCards({
               key={plan.id}
               aria-labelledby={`plan-${plan.id}`}
               data-plan={plan.id}
-              className={`relative flex flex-col rounded-card border bg-surface p-6 lg:p-4 xl:p-6 ${
-                plan.featured ? 'border-accent shadow-lg ring-1 ring-accent/25' : 'border-border'
+              className={`card card-hover flex flex-col p-6 lg:p-5 xl:p-7 ${
+                plan.featured
+                  ? 'border-accent shadow-[var(--shadow-lg),0_30px_80px_-30px_var(--glow)] ring-1 ring-accent/30'
+                  : ''
               }`}
             >
               {plan.featured ? (
-                <span className="absolute -top-3 start-6 rounded-full bg-accent px-3 py-0.5 text-xs font-semibold text-accent-fg">
+                <span className="absolute -top-3 start-6 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-fg shadow-[0_6px_16px_-8px_var(--accent)]">
                   {mostPopular}
                 </span>
               ) : null}
@@ -234,7 +236,7 @@ export function PlanCards({
                   <>
                     {/* One size down from a price: "Custom" is a phrase, and in
                         Hebrew it is two words that must not wrap. */}
-                    <p className="text-3xl font-bold leading-10 tracking-tight">{t('card.custom')}</p>
+                    <p className="text-3xl font-semibold leading-10 tracking-tight">{t('card.custom')}</p>
                     <p className="mt-2 text-sm text-muted">{t('card.customSub')}</p>
                   </>
                 ) : quote ? (
@@ -243,7 +245,7 @@ export function PlanCards({
                       <span
                         dir="ltr"
                         data-price
-                        className="text-4xl font-bold tracking-tight tabular-nums lg:text-3xl xl:text-4xl"
+                        className="text-4xl font-semibold tracking-tight tabular-nums lg:text-3xl xl:text-4xl"
                       >
                         {money(perMonthCents(quote, period))}
                       </span>
@@ -333,11 +335,7 @@ export function PlanCards({
 
               <CardLink
                 href={plan.cta === 'contact_sales' ? contactHref : getStartedHref}
-                className={`mt-6 rounded-full px-5 py-2.5 text-center font-semibold ${
-                  plan.featured
-                    ? 'bg-accent text-accent-fg hover:bg-accent-hover'
-                    : 'border border-border-strong text-fg hover:border-accent hover:text-accent'
-                }`}
+                className={`btn mt-7 w-full ${plan.featured ? 'btn-primary' : 'btn-secondary'}`}
               >
                 {plan.cta === 'contact_sales' ? t('card.contactSales') : t('card.getStarted')}
                 <span className="sr-only"> — {name}</span>

@@ -97,12 +97,13 @@ export function makeLegalPage(slug: LegalSlug, _titleKey: string) {
     const t = await getTranslations({ locale, namespace: 'legal' });
 
     return (
-      <main className="mx-auto max-w-3xl px-6 py-14">
+      <main className="glow-bg">
+        <div className="mx-auto max-w-3xl px-6 pb-20 pt-14 sm:pt-20">
         {/* Brief §9.5: visible until a lawyer approves THIS document. */}
         {REVIEWED.has(slug) ? null : (
           <div
             role="note"
-            className="mb-8 rounded-card border border-warn/40 bg-warn/10 p-4 text-sm font-medium text-warn"
+            className="mb-10 rounded-2xl border border-warn/40 bg-warn/10 p-5 text-sm font-medium text-warn"
           >
             {t('lawyerNotice')}
           </div>
@@ -118,6 +119,7 @@ export function makeLegalPage(slug: LegalSlug, _titleKey: string) {
         <p className="mt-10 border-t border-border pt-4 text-sm text-muted">
           {t('updated')}: {lastUpdated(slug, locale)}
         </p>
+        </div>
       </main>
     );
   }
