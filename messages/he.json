@@ -452,6 +452,7 @@
       "campaignMessagesPerMonth": "הודעות קמפיין / חודש",
       "aiRunsPerMonth": "תשובות AI / חודש",
       "aiAssistPerMonth": "שימושים בעוזר הכתיבה / חודש",
+      "aiTokensPerMonth": "טוקני AI / חודש",
       "automationRunsPerMonth": "הרצות אוטומציה / חודש",
       "chatbotSessionsPerMonth": "שיחות צ׳אטבוט / חודש"
     },
@@ -459,6 +460,7 @@
       "campaignMessagesPerMonth": "הודעות תבנית שנשלחות דרך קמפיין. תשובות שהצוות שולח בצ׳אט אינן נספרות לעולם.",
       "aiRunsPerMonth": "כל פעם ש-Weizic, סוכן ה-AI, עונה ללקוח. בהגעה למכסה ה-AI זז הצידה והצוות ממשיך לענות.",
       "aiAssistPerMonth": "כל פעם שנציג משתמש בעוזר הכתיבה בתיבת ההודעה — ליטוש, תרגום, קיצור, סיכום.",
+      "aiTokensPerMonth": "כל מה שה-AI קורא וכותב, עבור הסוכן, עוזר הכתיבה ו-Weizic, נספר במכסה חודשית אחת. כשהמכסה נגמרת, ה-AI מפסיק לענות ושיחות חדשות עוברות לצוות שלכם עד ה-1 בחודש.",
       "automationRunsPerMonth": "כל פעם שכלל אוטומציה פועל על שיחה.",
       "chatbotSessionsPerMonth": "כל שיחה חדשה שהצ׳אטבוט פותח. לקוח שכבר משוחח איתו תמיד מסיים."
     },
@@ -641,6 +643,7 @@
       "campaignMessagesPerMonth": "הודעות קמפיין",
       "aiRunsPerMonth": "תשובות AI",
       "aiAssistPerMonth": "שימושים בעוזר הכתיבה",
+      "aiTokensPerMonth": "טוקני AI",
       "automationRunsPerMonth": "הרצות אוטומציה",
       "chatbotSessionsPerMonth": "שיחות צ׳אטבוט"
     }

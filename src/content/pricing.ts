@@ -26,6 +26,7 @@ export type LimitKey =
   | 'campaignMessagesPerMonth'
   | 'aiRunsPerMonth'
   | 'aiAssistPerMonth'
+  | 'aiTokensPerMonth'
   | 'automationRunsPerMonth'
   | 'chatbotSessionsPerMonth';
 
@@ -103,6 +104,8 @@ export const METERED_LIMITS: readonly Exclude<LimitKey, 'agentSeats'>[] = [
   'campaignMessagesPerMonth',
   'aiRunsPerMonth',
   'aiAssistPerMonth',
+  // One monthly bill across the agent, the writing assistant and Weizic (app ADR-0093).
+  'aiTokensPerMonth',
   'automationRunsPerMonth',
   'chatbotSessionsPerMonth',
 ];

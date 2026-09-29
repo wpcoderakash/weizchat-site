@@ -452,6 +452,7 @@
       "campaignMessagesPerMonth": "Campaign messages / month",
       "aiRunsPerMonth": "AI replies / month",
       "aiAssistPerMonth": "AI writing assistant uses / month",
+      "aiTokensPerMonth": "AI tokens / month",
       "automationRunsPerMonth": "Automation runs / month",
       "chatbotSessionsPerMonth": "Chatbot conversations / month"
     },
@@ -459,6 +460,7 @@
       "campaignMessagesPerMonth": "Template messages sent through a campaign. Replies your team sends in a chat are never counted.",
       "aiRunsPerMonth": "Each time Weizic, the AI agent, answers a customer. At the cap the AI steps aside and your team keeps replying.",
       "aiAssistPerMonth": "Each time an agent uses the writing assistant in the composer — polish, translate, shorten, summarise.",
+      "aiTokensPerMonth": "Everything the AI reads and writes, for the agent, the writing assistant and Weizic, counts toward one monthly allowance. When it runs out, the AI stops answering and new conversations go to your team until the 1st.",
       "automationRunsPerMonth": "Each time an automation rule fires on a conversation.",
       "chatbotSessionsPerMonth": "Each new conversation the menu chatbot starts. A customer already talking to it always finishes."
     },
@@ -641,6 +643,7 @@
       "campaignMessagesPerMonth": "Campaign messages",
       "aiRunsPerMonth": "AI replies",
       "aiAssistPerMonth": "AI assistant uses",
+      "aiTokensPerMonth": "AI tokens",
       "automationRunsPerMonth": "Automation runs",
       "chatbotSessionsPerMonth": "Chatbot conversations"
     }
