@@ -7,6 +7,7 @@
     "campaignMessagesPerMonth",
     "aiRunsPerMonth",
     "aiAssistPerMonth",
+    "aiTokensPerMonth",
     "automationRunsPerMonth",
     "chatbotSessionsPerMonth"
   ],
@@ -27,6 +28,7 @@
         "campaignMessagesPerMonth": 1000,
         "aiRunsPerMonth": 500,
         "aiAssistPerMonth": 300,
+        "aiTokensPerMonth": 2000000,
         "automationRunsPerMonth": 500,
         "chatbotSessionsPerMonth": 500
       },
@@ -129,6 +131,7 @@
         "campaignMessagesPerMonth": 5000,
         "aiRunsPerMonth": 2000,
         "aiAssistPerMonth": 1500,
+        "aiTokensPerMonth": 8000000,
         "automationRunsPerMonth": 5000,
         "chatbotSessionsPerMonth": 2500
       },
@@ -351,6 +354,7 @@
         "campaignMessagesPerMonth": 15000,
         "aiRunsPerMonth": 5000,
         "aiAssistPerMonth": 3000,
+        "aiTokensPerMonth": 20000000,
         "automationRunsPerMonth": 25000,
         "chatbotSessionsPerMonth": 10000
       },
@@ -768,6 +772,7 @@
         "campaignMessagesPerMonth": null,
         "aiRunsPerMonth": null,
         "aiAssistPerMonth": null,
+        "aiTokensPerMonth": null,
         "automationRunsPerMonth": null,
         "chatbotSessionsPerMonth": null
       },
