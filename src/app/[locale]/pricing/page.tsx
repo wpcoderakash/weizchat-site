@@ -6,6 +6,7 @@ import { CompareTable } from '../../../components/pricing/compare-table';
 import { getPageDoc } from '../../../cms/load';
 import type { PricingDoc } from '../../../cms/site-schema';
 import { CmsCta } from '../../../components/sections/cms-link';
+import { Arrow } from '../../../components/ui/arrow';
 import { metaFromSeo } from '../../../lib/seo';
 
 /**
@@ -58,14 +59,15 @@ export default async function PricingPage({
 
   return (
     <main>
-      <section className="border-b border-border bg-surface">
-        <div className="mx-auto max-w-6xl px-6 py-14 lg:py-20">
-          <h1 className="max-w-2xl text-4xl sm:text-5xl">{doc.title}</h1>
-          <p className="mt-5 max-w-2xl text-lg text-muted">{doc.sub}</p>
+      <section className="glow-bg overflow-hidden">
+        <div aria-hidden="true" className="grid-bg" />
+        <div className="wrap pb-12 pt-16 text-center sm:pt-24">
+          <h1 className="display-1 mx-auto max-w-3xl">{doc.title}</h1>
+          <p className="lede mx-auto mt-6 max-w-2xl">{doc.sub}</p>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-14">
+      <section className="wrap pb-20">
         <PlanCards
           mostPopular={doc.mostPopular}
           getStartedHref={doc.ctaTrial.href}
@@ -75,28 +77,35 @@ export default async function PricingPage({
 
         {/* Rule 0.1-adjacent honesty: Meta's fees are not ours. */}
         <div className="mt-8 grid gap-4 md:grid-cols-2">
-          <p className="rounded-card border border-border bg-accent-soft/40 p-5 text-sm">
-            {doc.metaNote}
+          <p data-reveal className="flex gap-3 rounded-[var(--radius-lg)] border border-accent/20 bg-accent-soft/60 p-6 text-sm">
+            <Info />
+            <span>{doc.metaNote}</span>
           </p>
-          <p className="rounded-card border border-border bg-surface p-5 text-sm text-muted">
-            {doc.paymentsNote}
+          <p data-reveal className="card flex gap-3 p-6 text-sm text-muted">
+            <Info />
+            <span>{doc.paymentsNote}</span>
           </p>
         </div>
       </section>
 
-      <section className="border-t border-border">
-        <div className="mx-auto max-w-6xl px-6 py-14">
-          <h2 className="text-2xl sm:text-3xl">{t('addOns.title')}</h2>
-          <p className="mt-3 max-w-2xl text-muted">{t('addOns.body')}</p>
-          <ul className="mt-8 grid gap-4 sm:grid-cols-3">
-            {shownAddOns.map((addOn) => (
-              <li key={addOn.id} className="rounded-card border border-border bg-surface p-5">
+      <section className="section border-t border-border bg-surface">
+        <div className="wrap">
+          <h2 data-reveal className="display-2">{t('addOns.title')}</h2>
+          <p data-reveal className="lede mt-4 max-w-2xl">{t('addOns.body')}</p>
+          <ul className="mt-10 grid gap-5 sm:grid-cols-3">
+            {shownAddOns.map((addOn, index) => (
+              <li
+                key={addOn.id}
+                data-reveal
+                style={{ '--i': index + 1 } as React.CSSProperties}
+                className="card card-hover bg-bg p-7"
+              >
                 <p className="font-semibold">{t(`addOns.item.${addOn.id}.name`)}</p>
-                <p className="mt-2 text-2xl font-bold tabular-nums">
+                <p className="mt-4 text-3xl font-semibold tracking-tight tabular-nums">
                   <span dir="ltr">{money.format(addOn.unit_cents / 100)}</span>{' '}
                   <span className="text-sm font-normal text-muted">{t('card.perMonth')}</span>
                 </p>
-                <p className="mt-1 text-sm text-muted">
+                <p className="mt-2 text-sm text-muted">
                   {t(`addOns.item.${addOn.id}.unit`, { size: nf.format(addOn.unit_size) })}
                 </p>
               </li>
@@ -105,28 +114,35 @@ export default async function PricingPage({
         </div>
       </section>
 
-      <section className="border-t border-border">
-        <div className="mx-auto max-w-6xl px-6 py-14">
-          <h2 className="text-2xl sm:text-3xl">{t('compare.title')}</h2>
-          <p className="mt-3 max-w-2xl text-muted">{t('compare.body')}</p>
+      <section className="section border-t border-border">
+        <div className="wrap">
+          <h2 data-reveal className="display-2">{t('compare.title')}</h2>
+          <p data-reveal className="lede mt-4 max-w-2xl">{t('compare.body')}</p>
           {/* Only where the table actually scrolls. */}
           <p className="mt-3 text-sm text-muted md:hidden">{t('compare.swipe')}</p>
-          <div className="mt-8">
+          <div data-reveal className="mt-10">
             <CompareTable locale={locale} />
           </div>
         </div>
       </section>
 
-      <section className="border-y border-border bg-surface">
-        <div className="mx-auto max-w-6xl px-6 py-14">
-          <h2 className="text-2xl sm:text-3xl">{doc.includedTitle}</h2>
-          <p className="mt-3 max-w-2xl text-muted">{doc.includedBody}</p>
-          <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {doc.included.map((item) => (
-              <li key={item.id} className="flex items-center gap-3 rounded-card border border-border bg-bg px-4 py-3">
-                <svg viewBox="0 0 20 20" width={16} height={16} aria-hidden="true" className="shrink-0 text-ok">
-                  <path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                </svg>
+      <section className="section border-y border-border bg-surface">
+        <div className="wrap">
+          <h2 data-reveal className="display-2">{doc.includedTitle}</h2>
+          <p data-reveal className="lede mt-4 max-w-2xl">{doc.includedBody}</p>
+          <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {doc.included.map((item, index) => (
+              <li
+                key={item.id}
+                data-reveal
+                style={{ '--i': (index % 4) + 1 } as React.CSSProperties}
+                className="flex items-center gap-3 rounded-2xl border border-border bg-bg px-4 py-3.5"
+              >
+                <span aria-hidden="true" className="grid size-7 shrink-0 place-items-center rounded-full bg-accent-soft text-accent">
+                  <svg viewBox="0 0 20 20" width={14} height={14}>
+                    <path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
                 <span className="text-sm font-medium">{item.text}</span>
               </li>
             ))}
@@ -134,27 +150,36 @@ export default async function PricingPage({
         </div>
       </section>
 
-      <section className="mx-auto max-w-3xl px-6 py-14">
-        <h2 className="text-2xl sm:text-3xl">{doc.faqTitle}</h2>
-        <dl className="mt-8 divide-y divide-border">
-          {doc.faq.map((item) => (
-            <div key={item.id} className="py-5">
-              <dt className="font-semibold">{item.q}</dt>
-              <dd className="mt-2 text-muted">{item.a}</dd>
+      <section className="section">
+        <div className="wrap grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <h2 data-reveal className="display-2">{doc.faqTitle}</h2>
+            <div data-reveal className="mt-8 flex flex-wrap gap-3">
+              <CmsCta link={doc.ctaTrial} className="btn btn-primary">
+                <Arrow />
+              </CmsCta>
+              <CmsCta link={doc.ctaContact} className="btn btn-secondary" />
             </div>
-          ))}
-        </dl>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <CmsCta
-            link={doc.ctaTrial}
-            className="rounded-full bg-accent px-6 py-3 font-semibold text-accent-fg hover:bg-accent-hover"
-          />
-          <CmsCta
-            link={doc.ctaContact}
-            className="rounded-full border border-border-strong px-6 py-3 font-semibold text-fg hover:border-accent hover:text-accent"
-          />
+          </div>
+          <dl data-reveal className="border-t border-border">
+            {doc.faq.map((item) => (
+              <div key={item.id} className="border-b border-border py-6">
+                <dt className="text-lg font-medium">{item.q}</dt>
+                <dd className="mt-2 max-w-2xl text-muted">{item.a}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
     </main>
+  );
+}
+
+function Info() {
+  return (
+    <svg viewBox="0 0 20 20" width={18} height={18} aria-hidden="true" className="mt-0.5 shrink-0 text-accent">
+      <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M10 9v5M10 6.2v.1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
   );
 }

@@ -50,7 +50,7 @@ export function ChatWidgetGenerator() {
 
   return (
     <div className="grid gap-8 lg:grid-cols-2">
-      <div className="rounded-card border border-border bg-surface p-6">
+      <div className="card p-6 sm:p-7">
         <div className="grid gap-4">
           <Field id="cw-phone" label={t('phoneLabel')} hint={t('phoneHint')}>
             <input
@@ -112,7 +112,7 @@ export function ChatWidgetGenerator() {
         </div>
       </div>
 
-      <div className="rounded-card border border-border bg-surface p-6">
+      <div className="card p-6 sm:p-7">
         <h2 className="font-semibold">{t('resultTitle')}</h2>
         {code ? (
           <>

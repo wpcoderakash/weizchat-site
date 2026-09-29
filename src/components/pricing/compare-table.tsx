@@ -75,7 +75,7 @@ export async function CompareTable({ locale }: { locale: string }) {
       data-compare
       aria-label={t('compare.title')}
       tabIndex={0}
-      className="rounded-card border border-border max-md:overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      className="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface shadow-[var(--shadow-sm)] max-md:overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
       <div className="min-w-[40rem]">
         {/* What actually differs — always open. */}

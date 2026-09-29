@@ -21,33 +21,26 @@ export function Faq({ data }: { data: Faq }) {
   };
 
   return (
-    <section className="border-y border-border bg-surface">
-      <div className="mx-auto max-w-3xl px-6 py-16 lg:py-20">
-        <h2 className="text-3xl sm:text-4xl">{data.title}</h2>
-        <div className="mt-10 space-y-3">
+    <section className="section border-y border-border bg-surface">
+      <div className="wrap grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+        <h2 data-reveal className="display-2 lg:sticky lg:top-28 lg:self-start">
+          {data.title}
+        </h2>
+        <div data-reveal className="border-t border-border">
           {data.items.map((item) => (
-            <details
-              key={item.id}
-              className="group rounded-card border border-border bg-bg transition-colors open:border-accent/40"
-            >
-              <summary className="flex cursor-pointer list-none items-center gap-4 px-5 py-4 text-lg font-semibold [&::-webkit-details-marker]:hidden">
+            <details key={item.id} className="faq-item group border-b border-border">
+              <summary className="flex cursor-pointer list-none items-center gap-6 py-6 text-lg font-medium transition-colors hover:text-accent [&::-webkit-details-marker]:hidden">
                 <span className="flex-1">{item.q}</span>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  aria-hidden
-                  className="shrink-0 text-accent transition-transform duration-200 group-open:rotate-180"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                <span
+                  aria-hidden="true"
+                  className="grid size-9 shrink-0 place-items-center rounded-full border border-border-strong text-accent transition-[transform,background-color,border-color] duration-300 group-open:rotate-45 group-open:border-accent group-open:bg-accent-soft"
                 >
-                  <path d="m6 9 6 6 6-6" />
-                </svg>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                    <path d="M7 1.5v11M1.5 7h11" />
+                  </svg>
+                </span>
               </summary>
-              <p className="px-5 pb-5 text-muted">{item.a}</p>
+              <p className="max-w-2xl pb-7 pe-14 text-muted">{item.a}</p>
             </details>
           ))}
         </div>

@@ -66,16 +66,16 @@ export function WaitlistCta({
   }
 
   return (
-    <div className="rounded-card border border-border bg-surface p-6">
-      <h2 className="text-xl font-semibold">{s.title}</h2>
-      <p className="mt-2 text-muted">{s.body}</p>
+    <div data-reveal className="card mx-auto max-w-3xl p-8 text-center shadow-[var(--shadow-md)] sm:p-12">
+      <h2 className="display-2">{s.title}</h2>
+      <p className="lede mx-auto mt-4 max-w-xl">{s.body}</p>
       {state === 'sent' ? (
         <p role="status" className="mt-4 font-semibold">
           {s.success}
         </p>
       ) : (
         <>
-          <form className="mt-4 flex flex-wrap items-center gap-3" onSubmit={submit}>
+          <form className="mt-8 flex flex-wrap items-center justify-center gap-3" onSubmit={submit}>
             <label className="sr-only" htmlFor="waitlist-email">
               {s.emailLabel}
             </label>
@@ -86,7 +86,7 @@ export function WaitlistCta({
               value={value}
               onChange={(event) => setValue(event.target.value)}
               placeholder={s.emailLabel}
-              className="w-full max-w-xs rounded-full border border-border-strong bg-bg px-4 py-2.5 focus:border-accent"
+              className="min-h-[2.875rem] w-full max-w-xs rounded-full border border-border-strong bg-bg px-5 py-2.5 focus:border-accent"
             />
             {/* The honeypot: humans never see it, bots fill it, the API drops it. */}
             <div className="hidden" aria-hidden>
@@ -102,7 +102,7 @@ export function WaitlistCta({
             <button
               type="submit"
               disabled={state === 'busy' || (Boolean(TURNSTILE_SITE_KEY) && !token)}
-              className="rounded-full bg-accent px-5 py-2.5 font-semibold text-accent-fg hover:bg-accent-hover disabled:opacity-60"
+              className="btn btn-primary disabled:opacity-60"
             >
               {s.cta}
             </button>

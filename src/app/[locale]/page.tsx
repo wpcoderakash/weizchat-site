@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { getPageDoc } from '../../cms/load';
-import type { PricingDoc } from '../../cms/site-schema';
+import type { PricingDoc, SolutionDoc } from '../../cms/site-schema';
+import { pageBySlug } from '../../cms/registry';
 import type { CmsSection, LandingPage } from '../../cms/schema';
 import { Hero } from '../../components/sections/hero';
 import { TrustStrip } from '../../components/sections/trust-strip';
@@ -41,6 +42,7 @@ function renderSection(
   section: CmsSection,
   extras: {
     mostPopular: string;
+    previews: Previews;
   },
 ) {
   if (!section.visible) return null;
@@ -52,7 +54,7 @@ function renderSection(
     case 'problem':
       return <Problem key={section.id} data={section} />;
     case 'pillars':
-      return <Pillars key={section.id} data={section} />;
+      return <Pillars key={section.id} data={section} previews={extras.previews} />;
     case 'ai':
       return <AiDeepDive key={section.id} data={section} />;
     case 'platform':
@@ -60,11 +62,11 @@ function renderSection(
     case 'useCases':
       return <UseCases key={section.id} data={section} />;
     case 'crm':
-      return <SimpleCrm key={section.id} data={section} />;
+      return <SimpleCrm key={section.id} data={section} preview={extras.previews[section.link.href] ?? null} />;
     case 'testimonials':
       return <Testimonials key={section.id} data={section} />;
     case 'pricing':
-      return <PricingPreview key={section.id} data={section} {...extras} />;
+      return <PricingPreview key={section.id} data={section} mostPopular={extras.mostPopular} />;
     case 'faq':
       return <Faq key={section.id} data={section} />;
     case 'finalCta':
@@ -74,11 +76,38 @@ function renderSection(
   }
 }
 
+/** href → the real product screenshot on that solution page. */
+type Previews = Record<string, { src: string; alt: string }>;
+
+/**
+ * The product previews on the home page are the SOLUTION PAGES' own
+ * screenshots, looked up by the link a section already carries. Nothing is
+ * drawn for the home page: a pillar whose page has no screenshot (or is
+ * coming soon) simply shows none. An unknown slug is skipped, not thrown.
+ */
+async function loadPreviews(page: LandingPage, locale: string): Promise<Previews> {
+  const hrefs = new Set<string>();
+  for (const section of page.sections) {
+    if (section.id === 'pillars') for (const item of section.items) hrefs.add(item.href);
+    if (section.id === 'crm') hrefs.add(section.link.href);
+  }
+  const previews: Previews = {};
+  await Promise.all(
+    [...hrefs].map(async (href) => {
+      const slug = href.replace(/^\//, '');
+      if (!/^[a-z-]+$/.test(slug) || !pageBySlug(slug)) return;
+      const doc = await getPageDoc<SolutionDoc>(slug, locale).catch(() => null);
+      if (doc?.image && !doc.comingSoon) previews[href] = doc.image;
+    }),
+  );
+  return previews;
+}
+
 export async function LandingSections({ page, locale }: { page: LandingPage; locale: string }) {
   // The badge is wrapper copy from the pricing DOCUMENT; plans, prices and
   // limits come from the published catalogue inside the preview itself.
   const pricingDoc = await getPageDoc<PricingDoc>('pricing', locale);
-  const extras = { mostPopular: pricingDoc.mostPopular };
+  const extras = { mostPopular: pricingDoc.mostPopular, previews: await loadPreviews(page, locale) };
   return <>{page.sections.map((section) => renderSection(section, extras))}</>;
 }
 

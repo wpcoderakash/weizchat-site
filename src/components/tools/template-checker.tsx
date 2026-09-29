@@ -21,7 +21,7 @@ export function TemplateChecker() {
 
   return (
     <div className="grid gap-8 lg:grid-cols-2">
-      <div className="rounded-card border border-border bg-surface p-6">
+      <div className="card p-6 sm:p-7">
         <div className="grid gap-4">
           <Field id="tc-name" label={t('nameLabel')} hint={t('nameHint')}>
             <input
@@ -47,7 +47,7 @@ export function TemplateChecker() {
       </div>
 
       <div className="grid gap-6">
-        <div className="rounded-card border border-border bg-surface p-6">
+        <div className="card p-6 sm:p-7">
           <h2 className="font-semibold">{t('resultTitle')}</h2>
           {!touched ? (
             <p className="mt-3 text-muted">{t('empty')}</p>
@@ -85,7 +85,7 @@ export function TemplateChecker() {
         </div>
 
         {/* The honest half: everything this tool does not verify. */}
-        <div className="rounded-card border border-border bg-surface-2 p-6">
+        <div className="rounded-[var(--radius-lg)] border border-border bg-surface-2 p-6 sm:p-7">
           <h2 className="font-semibold">{t('notCheckedTitle')}</h2>
           <p className="mt-2 text-sm text-muted">{t('notCheckedIntro')}</p>
           <ul className="mt-3 list-disc space-y-1 ps-5 text-sm text-muted">

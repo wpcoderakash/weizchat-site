@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 
 /** Shared field styling so the five tools look like one family. */
 export const fieldClass =
-  'mt-1 w-full rounded-xl border border-border-strong bg-bg px-4 py-2.5 focus:border-accent';
+  'mt-1.5 w-full rounded-xl border border-border-strong bg-bg px-4 py-3 transition-shadow focus:border-accent focus:shadow-[0_0_0_4px_var(--accent-soft)]';
 
 export function Field({
   id,
@@ -54,7 +54,7 @@ export function CopyButton({ value, className }: { value: string; className?: st
       onClick={copy}
       className={
         className ??
-        'rounded-full bg-accent px-5 py-2.5 font-semibold text-accent-fg hover:bg-accent-hover'
+        'btn btn-primary'
       }
     >
       {state === 'copied' ? t('copied') : state === 'failed' ? t('copyFailed') : t('copy')}

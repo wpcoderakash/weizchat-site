@@ -34,6 +34,21 @@
   --radius-sm: 8px;
   --shadow-sm: 0 1px 2px rgb(15 23 42 / 6%);
 
+  /* ── Redesign 2026-09 — the design system (see "Design system" below).
+     No new brand colours: the stage is the palette's own dark ground, and
+     every glow is mixed from --accent. */
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --shadow-md: 0 1px 2px rgb(15 23 42 / 5%), 0 12px 32px -16px rgb(15 23 42 / 22%);
+  --shadow-lg: 0 2px 4px rgb(15 23 42 / 4%), 0 32px 64px -28px rgb(15 23 42 / 34%);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --stage: #0b1120;
+  --stage-2: #111827;
+  --stage-fg: #f1f5f9;
+  --stage-muted: #a5b0c2;
+  --stage-border: rgb(255 255 255 / 10%);
+  --glow: color-mix(in srgb, var(--accent) 28%, transparent);
+
   color-scheme: light dark;
 }
 
@@ -59,6 +74,11 @@
     --warn: #fcd34d;
 
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+    --shadow-md: 0 1px 2px rgb(0 0 0 / 40%), 0 12px 32px -16px rgb(0 0 0 / 60%);
+    --shadow-lg: 0 2px 4px rgb(0 0 0 / 30%), 0 32px 64px -28px rgb(0 0 0 / 70%);
+    --stage: #111827;
+    --stage-2: #172033;
+    --glow: color-mix(in srgb, var(--accent) 22%, transparent);
   }
 }
 
@@ -81,6 +101,11 @@
   --warn: #fcd34d;
 
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-md: 0 1px 2px rgb(0 0 0 / 40%), 0 12px 32px -16px rgb(0 0 0 / 60%);
+  --shadow-lg: 0 2px 4px rgb(0 0 0 / 30%), 0 32px 64px -28px rgb(0 0 0 / 70%);
+  --stage: #111827;
+  --stage-2: #172033;
+  --glow: color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
 :root[data-theme='light'] {
@@ -111,6 +136,10 @@
   --font-body: var(--font-body);
   --font-mono: var(--font-mono);
   --radius-card: var(--radius);
+  --color-stage: var(--stage);
+  --color-stage-2: var(--stage-2);
+  --color-stage-fg: var(--stage-fg);
+  --color-stage-muted: var(--stage-muted);
 }
 
 body {
@@ -122,14 +151,29 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1,
-h2,
-h3 {
-  font-family: var(--font-display), var(--font-body), ui-sans-serif, sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 1.12;
-  text-wrap: balance;
+/* Base typography sits in the `base` layer so the design system's classes
+   (.display-1, .display-2 — `components` layer) can refine it. Unlayered, an
+   element selector here would beat every class there. */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display), var(--font-body), ui-sans-serif, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  h3 {
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+  }
+}
+
+/* Hebrew has no case and tighter counters: negative tracking crowds it. */
+:root[dir='rtl'] :is(h1, h2, h3, .display-1, .display-2) {
+  letter-spacing: 0;
 }
 
 :focus-visible {
@@ -143,15 +187,17 @@ h3 {
  * switcher) compress a touch while pressed, so the click is felt the moment
  * it happens. The reduced-motion block below turns all of this off.
  */
-a,
-button,
-[role='button'] {
-  transition:
-    color 0.15s ease,
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.12s ease;
+@layer base {
+  a,
+  button,
+  [role='button'] {
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      box-shadow 0.15s ease,
+      transform 0.12s ease;
+  }
 }
 
 a.rounded-full:active,
@@ -171,25 +217,35 @@ button.rounded-lg:active {
   }
 }
 
-/* Legal prose — MDX articles under /privacy-policy, /terms, etc. */
+/* Legal prose — MDX articles under /privacy-policy, /terms, etc., and the
+   blog / information-center articles. A reading measure, a calm rhythm, and
+   headings on the design system's scale. */
+.legal-prose {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
 .legal-prose h1 {
-  font-size: 2.25rem;
+  font-size: clamp(2.25rem, 4.5vw, 3.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
 }
 
 .legal-prose h2 {
-  margin-block-start: 2.2rem;
-  font-size: 1.35rem;
+  margin-block-start: 3rem;
+  font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+  letter-spacing: -0.02em;
 }
 
 .legal-prose h3 {
-  margin-block-start: 1.6rem;
-  font-size: 1.1rem;
+  margin-block-start: 2rem;
+  font-size: 1.2rem;
 }
 
 .legal-prose p,
 .legal-prose ul,
 .legal-prose ol {
-  margin-block-start: 0.85rem;
+  margin-block-start: 1rem;
   color: var(--fg);
 }
 
@@ -204,12 +260,18 @@ button.rounded-lg:active {
 }
 
 .legal-prose li {
-  margin-block-start: 0.35rem;
+  margin-block-start: 0.4rem;
+}
+
+.legal-prose li::marker {
+  color: var(--accent);
 }
 
 .legal-prose a {
   color: var(--accent);
   text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
 
 .legal-prose a:hover {
@@ -217,12 +279,19 @@ button.rounded-lg:active {
 }
 
 .legal-prose strong {
-  font-weight: 650;
+  font-weight: 600;
+}
+
+.legal-prose blockquote {
+  margin-block-start: 1.25rem;
+  border-inline-start: 3px solid var(--accent);
+  padding-inline-start: 1rem;
+  color: var(--muted);
 }
 
 .legal-prose table {
   display: block;
-  margin-block-start: 1rem;
+  margin-block-start: 1.25rem;
   overflow-x: auto;
   border-collapse: collapse;
 }
@@ -230,13 +299,13 @@ button.rounded-lg:active {
 .legal-prose th,
 .legal-prose td {
   border: 1px solid var(--border);
-  padding: 0.5rem 0.75rem;
+  padding: 0.6rem 0.85rem;
   text-align: start;
 }
 
 .legal-prose th {
   background: var(--surface-2);
-  font-weight: 650;
+  font-weight: 600;
 }
 
 .legal-prose code {
@@ -397,4 +466,505 @@ button.theme-toggle:hover:not(:disabled) {
   display: block;
   block-size: auto;
   max-inline-size: 100%;
+}
+
+
+/* ════════════════════════════════════════════════════════════════════════
+ * Design system — redesign 2026-09
+ *
+ * One vocabulary for every marketing page, so a section written tomorrow
+ * looks like the ones written today:
+ *
+ *   Layout      .wrap (1200px, 24px gutter) · .section (fluid block rhythm)
+ *   Type        .display-1 (hero) · .display-2 (section) · .lede (intro)
+ *               · .eyebrow (only where the CMS supplies a kicker)
+ *   Actions     .btn + .btn-primary | .btn-secondary | .btn-light | .btn-outline-light
+ *               · .link-arrow (text link whose arrow moves on hover)
+ *   Surfaces    .card (+ .card-hover) · .stage (the dark panel) · .glow-bg
+ *   Motion      [data-reveal] (+ --i for stagger), scroll-linked hero settle
+ *
+ * Every rule uses logical properties, so Hebrew mirrors by direction. All
+ * motion is transform/opacity only (compositor-friendly) and switches off
+ * under prefers-reduced-motion.
+ * ════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  .wrap {
+    margin-inline: auto;
+    inline-size: 100%;
+    max-inline-size: 1200px;
+    padding-inline: 1.5rem;
+  }
+
+  .section {
+    padding-block: clamp(4.5rem, 9vw, 7.5rem);
+  }
+
+  .section-tight {
+    padding-block: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .display-1 {
+    font-size: clamp(2.6rem, 6.2vw, 4.75rem);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+
+  .display-2 {
+    font-size: clamp(2rem, 4.2vw, 3.25rem);
+    font-weight: 600;
+    line-height: 1.06;
+    letter-spacing: -0.03em;
+  }
+
+  .lede {
+    font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .eyebrow::before {
+    content: '';
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
+  /* ── Buttons ─────────────────────────────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-block-size: 2.875rem;
+    padding: 0.7rem 1.4rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.975rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      box-shadow 0.25s var(--ease-out),
+      transform 0.25s var(--ease-out);
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--accent-fg);
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 18%) inset,
+      0 8px 20px -8px color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 18%) inset,
+      0 14px 28px -10px color-mix(in srgb, var(--accent) 75%, transparent);
+  }
+
+  .btn-secondary {
+    background: var(--surface);
+    border-color: var(--border-strong);
+    color: var(--fg);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  /* On the accent panel and the dark stage. Fixed colours on purpose: the
+     ground under them does not change with the theme. */
+  .btn-light {
+    background: #fff;
+    color: #3b1fb8;
+  }
+
+  .btn-light:hover {
+    background: #f3f0ff;
+    transform: translateY(-1px);
+  }
+
+  .btn-outline-light {
+    border-color: rgb(255 255 255 / 45%);
+    color: #fff;
+  }
+
+  .btn-outline-light:hover {
+    border-color: #fff;
+    background: rgb(255 255 255 / 10%);
+  }
+
+  .link-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .link-arrow:hover {
+    color: var(--accent-hover);
+  }
+
+  .link-arrow .arrow {
+    transition: transform 0.25s var(--ease-out);
+  }
+
+  .link-arrow:hover .arrow,
+  .btn:hover .arrow,
+  .card-hover:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  :root[dir='rtl'] .link-arrow:hover .arrow,
+  :root[dir='rtl'] .btn:hover .arrow,
+  :root[dir='rtl'] .card-hover:hover .arrow {
+    transform: translateX(-3px);
+  }
+
+  /* ── Surfaces ────────────────────────────────────────────────────────── */
+  .card {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card-hover {
+    transition:
+      transform 0.35s var(--ease-out),
+      box-shadow 0.35s var(--ease-out),
+      border-color 0.25s ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+    box-shadow: var(--shadow-lg);
+  }
+
+  .icon-tile {
+    display: grid;
+    place-items: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    border-radius: 14px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent);
+  }
+
+  /* The dark panel: the same ground in both themes (in dark mode it lifts one
+     step above the page so it still reads as a panel). */
+  .stage {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    background: var(--stage);
+    color: var(--stage-fg);
+  }
+
+  :root[data-theme='dark'] .stage {
+    box-shadow: inset 0 0 0 1px var(--stage-border);
+  }
+
+  .stage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(60% 80% at 85% 0%, color-mix(in srgb, var(--accent) 38%, transparent), transparent 70%),
+      radial-gradient(50% 70% at 0% 100%, color-mix(in srgb, #a78bfa 22%, transparent), transparent 70%);
+  }
+
+  .stage .muted {
+    color: var(--stage-muted);
+  }
+
+  /* Soft brand light behind a hero or a section head. Decorative only. */
+  .glow-bg {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .glow-bg::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0;
+    block-size: min(820px, 100%);
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(55% 55% at 50% 0%, var(--glow), transparent 70%),
+      radial-gradient(30% 35% at 85% 20%, color-mix(in srgb, #a78bfa 16%, transparent), transparent 70%);
+  }
+
+  /* A faint grid under the hero — texture, not content. */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--fg) 6%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--fg) 6%, transparent) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(70% 60% at 50% 20%, #000 20%, transparent 75%);
+  }
+
+  /* The accent closing panel: brand gradient with two slow-drifting lights. */
+  .cta-panel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, #5936e4 0%, #6d4aff 45%, #4a2bc9 100%);
+    color: #fff;
+  }
+
+  .cta-panel::before,
+  .cta-panel::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inline-size: 60%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  .cta-panel::before {
+    inset-block-start: -35%;
+    inset-inline-start: -10%;
+    background: #a78bfa;
+    animation: drift 14s ease-in-out infinite alternate;
+  }
+
+  .cta-panel::after {
+    inset-block-end: -45%;
+    inset-inline-end: -15%;
+    background: #0b1120;
+    opacity: 0.45;
+    animation: drift 18s ease-in-out infinite alternate-reverse;
+  }
+
+  /* ── Browser frame for real product screenshots ──────────────────────── */
+  .shot-frame {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-lg), 0 40px 120px -40px var(--glow);
+    overflow: hidden;
+  }
+
+  .shot-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.7rem 0.9rem;
+    border-block-end: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+
+  .shot-bar span {
+    inline-size: 0.6rem;
+    block-size: 0.6rem;
+    border-radius: 50%;
+    background: var(--border-strong);
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(12%, 8%, 0) scale(1.15);
+  }
+}
+
+/* ── Reveal on scroll ─────────────────────────────────────────────────────
+ * Server markup is fully visible. Only once the boot script has marked the
+ * document (`data-motion`) do below-the-fold [data-reveal] elements start
+ * hidden, and RevealObserver sets `data-in` as they enter. No script, no
+ * hiding — content never depends on JavaScript to be seen. */
+[data-reveal] {
+  transition:
+    opacity 0.8s var(--ease-out),
+    transform 0.8s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+
+:root[data-motion] [data-reveal]:not([data-in]) {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+/* The hero's product shot settles from a slight tilt as the page scrolls —
+   scroll-driven, so it costs no JavaScript and no main-thread work. */
+@supports (animation-timeline: scroll()) {
+  .hero-settle {
+    transform-origin: 50% 0;
+    animation: hero-settle linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 60vh;
+  }
+}
+
+@keyframes hero-settle {
+  from {
+    transform: perspective(1800px) rotateX(9deg) scale(0.965);
+  }
+  to {
+    transform: perspective(1800px) rotateX(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-motion] [data-reveal]:not([data-in]) {
+    opacity: 1;
+    transform: none;
+  }
+
+  .hero-settle,
+  .cta-panel::before,
+  .cta-panel::after {
+    animation: none;
+  }
+
+  .card-hover:hover,
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    transform: none;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The FAQ answer opens with a short rise rather than a jump. */
+.faq-item[open] > p {
+  animation: rise 0.45s var(--ease-out) both;
+}
+
+.btn-sm {
+  min-block-size: 2.375rem;
+  padding: 0.5rem 1.05rem;
+  font-size: 0.875rem;
+}
+
+/* ── Scroll-story for the AI steps (redesign pass 2) ──────────────────────
+ * Gated on data-motion like the reveals, so reduced motion, no script, and
+ * automated scans all get the finished state: a full track, every step lit. */
+@supports (animation-timeline: view()) {
+  :root[data-motion] .ai-track-fill {
+    transform-origin: 0 50%;
+    animation: ai-fill linear both;
+    animation-timeline: view();
+    animation-range: entry 60% cover 70%;
+  }
+
+  :root[data-motion][dir='rtl'] .ai-track-fill {
+    transform-origin: 100% 50%;
+  }
+
+  :root[data-motion] .ai-step {
+    animation: ai-lit linear both;
+    animation-timeline: view();
+    /* Side by side the four share one position, so each takes a later slice
+       of the scroll: they light in reading order. */
+    animation-range: entry calc(15% + var(--i, 0) * 10%) cover calc(30% + var(--i, 0) * 8%);
+  }
+}
+
+@keyframes ai-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes ai-lit {
+  from {
+    opacity: 0.35;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Cursor spotlight (redesign pass 2) ──────────────────────────────────
+ * PointerGlow sets --mx / --my on the card under a mouse. Without them (a
+ * touch screen, reduced motion, no script) the light never appears. */
+.card-hover {
+  position: relative;
+}
+
+.card-hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    380px circle at var(--mx, -999px) var(--my, -999px),
+    color-mix(in srgb, var(--accent) 11%, transparent),
+    transparent 65%
+  );
+  transition: opacity 0.35s ease;
+}
+
+.card-hover:hover::after {
+  opacity: 1;
+}
+
+.stage.card-hover::after {
+  background: radial-gradient(
+    380px circle at var(--mx, -999px) var(--my, -999px),
+    rgb(167 139 250 / 18%),
+    transparent 65%
+  );
 }

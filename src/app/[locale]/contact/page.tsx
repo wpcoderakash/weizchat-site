@@ -51,31 +51,32 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
   return (
     <main>
-      <section className="border-b border-border bg-surface">
-        <div className="mx-auto max-w-6xl px-6 py-14 lg:py-16">
-          <h1 className="text-4xl sm:text-5xl">{doc.title}</h1>
-          <p className="mt-5 max-w-2xl text-lg text-muted">{doc.sub}</p>
+      <section className="glow-bg overflow-hidden">
+        <div aria-hidden="true" className="grid-bg" />
+        <div className="wrap pb-12 pt-16 text-center sm:pt-24">
+          <h1 className="display-1 mx-auto max-w-3xl">{doc.title}</h1>
+          <p className="lede mx-auto mt-6 max-w-2xl">{doc.sub}</p>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl gap-10 px-6 py-14 lg:grid-cols-[1.15fr_1fr]">
-        <div>
-          <h2 className="text-2xl">{doc.formTitle}</h2>
+      <section className="wrap grid gap-10 pb-24 lg:grid-cols-[1.15fr_1fr] lg:gap-14">
+        <div data-reveal>
+          <h2 className="text-2xl sm:text-3xl">{doc.formTitle}</h2>
           <p className="mt-2 text-muted">{doc.formSub}</p>
           <div className="mt-6">
             <ContactForm email={g.site.supportEmail} locale={locale} strings={doc.form} />
           </div>
         </div>
 
-        <div>
-          <h2 className="text-2xl">{doc.detailsTitle}</h2>
+        <div data-reveal style={{ '--i': 1 } as React.CSSProperties}>
+          <h2 className="text-2xl sm:text-3xl">{doc.detailsTitle}</h2>
           <ContactDetailsRows labels={doc.details} g={g} />
           <OfficeCard contact={g.contact} />
-          <div className="mt-6 rounded-card border border-border bg-surface p-5">
+          <div className="card mt-6 p-6">
             <h3 className="font-semibold">{doc.supportTitle}</h3>
             <p className="mt-2 text-sm text-muted">{doc.supportBody}</p>
           </div>
-          <div className="mt-4 rounded-card border border-border bg-surface p-5">
+          <div className="card mt-4 p-6">
             <h3 className="font-semibold">{doc.privacyTitle}</h3>
             <p className="mt-2 text-sm text-muted">{doc.privacyBody}</p>
           </div>

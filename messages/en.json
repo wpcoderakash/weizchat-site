@@ -765,8 +765,8 @@
       "nameLabel": "Template name",
       "nameHint": "Meta documents: lowercase letters, numbers and underscores, up to 512 characters.",
       "bodyLabel": "Body text",
-      "bodyHint": "Paste the body including its variables, for example {{1}} or {{first_name}}.",
-      "bodyPlaceholder": "Hi {{1}}, your order {{2}} is on its way.",
+      "bodyHint": "Paste the body including its variables, for example '{{1}}' or '{{first_name}}'.",
+      "bodyPlaceholder": "Hi '{{1}}', your order '{{2}}' is on its way.",
       "resultTitle": "What we checked",
       "allPass": "No problems found in the rules this tool checks.",
       "someFail": "{count} problem(s) found.",
@@ -790,7 +790,7 @@
         "mixedFormats": {
           "label": "One variable format",
           "ok": "The body uses a single placeholder format.",
-          "fail": "The body mixes numbered {{1}} and named {{example}} placeholders. Meta expects one format."
+          "fail": "The body mixes numbered '{{1}}' and named '{{example}}' placeholders. Meta expects one format."
         },
         "sequential": {
           "label": "Numbered variables run 1, 2, 3…",

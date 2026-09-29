@@ -80,18 +80,18 @@ export function ContactForm({
   const mailto = `mailto:${email}?subject=${encodeURIComponent(t.emailSubject)}&body=${encodeURIComponent(mailtoBody)}`;
 
   const field =
-    'mt-1 w-full rounded-xl border border-border-strong bg-bg px-4 py-2.5 focus:border-accent';
+    'mt-1.5 w-full rounded-xl border border-border-strong bg-bg px-4 py-3 transition-shadow focus:border-accent focus:shadow-[0_0_0_4px_var(--accent-soft)]';
 
   if (state === 'sent') {
     return (
-      <div role="status" className="rounded-card border border-border bg-surface p-6">
+      <div role="status" className="card p-8 shadow-[var(--shadow-md)]">
         <p className="font-semibold">{t.success}</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={submit} className="rounded-card border border-border bg-surface p-6">
+    <form onSubmit={submit} className="card p-6 shadow-[var(--shadow-md)] sm:p-8">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="c-name" className="text-sm font-medium">
@@ -159,7 +159,7 @@ export function ContactForm({
       <button
         type="submit"
         disabled={state === 'busy' || (needsToken && !token)}
-        className="mt-5 rounded-full bg-accent px-6 py-2.5 font-semibold text-accent-fg hover:bg-accent-hover disabled:opacity-60"
+        className="btn btn-primary mt-6 disabled:opacity-60"
       >
         {t.submit}
       </button>

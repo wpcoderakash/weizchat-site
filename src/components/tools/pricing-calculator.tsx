@@ -73,7 +73,7 @@ export function PricingCalculator() {
 
   return (
     <div className="grid gap-8 lg:grid-cols-2">
-      <div className="rounded-card border border-border bg-surface p-6">
+      <div className="card p-6 sm:p-7">
         {haveTable ? (
           <Field id="pc-country" label={t('countryLabel')}>
             <select
@@ -144,7 +144,7 @@ export function PricingCalculator() {
       </div>
 
       <div className="grid gap-6">
-        <div className="rounded-card border border-border bg-surface p-6">
+        <div className="card p-6 sm:p-7">
           <h2 className="font-semibold">{t('resultTitle')}</h2>
           {!anyVolume ? (
             <p className="mt-3 text-muted">{t('empty')}</p>
@@ -185,7 +185,7 @@ export function PricingCalculator() {
         </div>
 
         {/* Mandatory disclaimer + dated rates line (brief §4). */}
-        <div className="rounded-card border border-border bg-surface-2 p-6 text-sm">
+        <div className="rounded-[var(--radius-lg)] border border-border bg-surface-2 p-6 text-sm sm:p-7">
           <p className="font-medium">{t('disclaimerTitle')}</p>
           <p className="mt-2 text-muted">{t('disclaimer')}</p>
           <p className="mt-3 text-muted">

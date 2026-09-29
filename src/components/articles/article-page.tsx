@@ -4,6 +4,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "../../i18n/navigation";
+import { Arrow } from "../ui/arrow";
 import { site } from "../../config/site";
 import { articleParams, getArticle, type Collection } from "../../lib/articles";
 import { alternatesFor, openGraphLocale } from "../../lib/seo";
@@ -77,44 +78,45 @@ export function makeArticlePage(collection: Collection, nsKey: string) {
     };
 
     return (
-      <main className="mx-auto max-w-3xl px-6 py-12">
-        <p className="font-mono text-xs uppercase tracking-wide text-muted">
-          <Link href={base} className="text-accent hover:text-accent-hover">
-            {tIndex("title")}
-          </Link>
-        </p>
-        <h1 className="mt-4 text-4xl">{article.title}</h1>
-        <p className="mt-3 text-lg text-muted">{article.description}</p>
-        <p className="mt-4 font-mono text-xs uppercase tracking-wide text-muted">
-          <time dateTime={article.date}>
-            {df.format(new Date(article.date))}
-          </time>
-          {" · "}
-          {t("readingTime", { minutes: article.readingMinutes })}
-        </p>
-
-        <article className="legal-prose mt-10">
-          <MDXRemote
-            source={article.body}
-            options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
-          />
-        </article>
-
-        <div className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-card bg-accent px-6 py-6 text-accent-fg">
-          <p className="font-semibold">{t("ctaTitle")}</p>
-          <div className="flex flex-wrap gap-3">
-            <a
-              href={`${site.appUrl}/register`}
-              className="rounded-full bg-surface px-5 py-2.5 font-semibold text-accent hover:opacity-90"
-            >
-              {t("ctaTrial")}
-            </a>
-            <Link
-              href="/contact"
-              className="rounded-full border border-current px-5 py-2.5 font-semibold hover:opacity-80"
-            >
-              {t("ctaDemo")}
+      <main>
+        <header className="glow-bg overflow-hidden">
+          <div className="mx-auto max-w-3xl px-6 pb-4 pt-14 sm:pt-20">
+            <Link href={base} className="eyebrow hover:text-accent">
+              {tIndex("title")}
             </Link>
+            <h1 className="display-2 mt-5">{article.title}</h1>
+            <p className="lede mt-5">{article.description}</p>
+            <p className="mt-6 border-b border-border pb-8 font-mono text-xs uppercase tracking-wide text-muted">
+              <time dateTime={article.date}>
+                {df.format(new Date(article.date))}
+              </time>
+              {" · "}
+              {t("readingTime", { minutes: article.readingMinutes })}
+            </p>
+          </div>
+        </header>
+
+        <div className="mx-auto max-w-3xl px-6">
+          <article className="legal-prose mt-8">
+            <MDXRemote
+              source={article.body}
+              options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+            />
+          </article>
+        </div>
+
+        <div className="wrap section-tight">
+          <div data-reveal className="cta-panel px-6 py-12 text-center sm:px-12">
+            <p className="display-2 mx-auto max-w-2xl">{t("ctaTitle")}</p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <a href={`${site.appUrl}/register`} className="btn btn-light">
+                {t("ctaTrial")}
+                <Arrow />
+              </a>
+              <Link href="/contact" className="btn btn-outline-light">
+                {t("ctaDemo")}
+              </Link>
+            </div>
           </div>
         </div>
 

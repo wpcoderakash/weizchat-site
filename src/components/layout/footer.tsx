@@ -36,7 +36,7 @@ export function Footer({ g }: { g: GlobalDoc }) {
       <ul className="flex flex-col gap-2 text-sm">
         {items.map((item) => (
           <li key={item.href}>
-            <Link href={item.href} className="text-muted hover:text-fg">
+            <Link href={item.href} className="text-muted underline-offset-4 hover:text-fg hover:underline">
               {labelSets[ns]![item.key]!}
             </Link>
           </li>
@@ -46,8 +46,8 @@ export function Footer({ g }: { g: GlobalDoc }) {
   );
 
   return (
-    <footer className="border-t border-border bg-surface-2">
-      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-2 lg:grid-cols-5">
+    <footer className="border-t border-border bg-surface">
+      <div className="wrap grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-5 lg:py-20">
         <div className="lg:col-span-2">
           <p className="flex items-center">
             <WeizLogo width={112} />
@@ -69,7 +69,7 @@ export function Footer({ g }: { g: GlobalDoc }) {
       </div>
 
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-6 text-xs text-muted">
+        <div className="wrap flex flex-col gap-2 py-7 text-xs text-muted">
           {/* Rule 0.1 — trademark attribution, do not reword casually. */}
           <p>{t('metaAttribution')}</p>
           <p>
