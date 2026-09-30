@@ -38,8 +38,8 @@ export type LegalSlug =
  * document and moving one means editing its line here.
  */
 const BUILT_IN_UPDATED: Readonly<Record<string, string>> = {
-  'privacy-policy': '2026-09-15',
-  dpa: '2026-09-15',
+  'privacy-policy': '2026-09-30',
+  dpa: '2026-09-30',
 };
 const BUILT_IN_UPDATED_DEFAULT = '2026-08-20';
 
