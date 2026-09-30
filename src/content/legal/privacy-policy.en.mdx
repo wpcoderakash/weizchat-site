@@ -57,6 +57,10 @@ Within WeizChat, conversation content is stored for the business that owns the c
 
 Where a business enables the AI assistant, chatbot or related features, conversation content and the business's configured catalog and rules are processed to generate replies and summaries. For this purpose we use carefully selected third-party AI model providers (such as Anthropic) as sub-processors, bound by confidentiality and data-protection obligations; we do not use our customers' content to train models of our own.
 
+**Learning from past conversations.** A business may also allow our AI setup assistant (Weizic) to read its past WhatsApp conversations, so that it can propose how the business writes, questions its customers often ask, example replies, rules and products. This is off until an administrator of the business turns it on, and it can be turned off at any time. Only conversations in which a member of the business's staff replied are read, within a period the business chooses (up to 12 months). Phone numbers, email addresses and links are removed before any text is sent to our AI model provider, and messages written by the AI, the chatbot or a campaign are not included. The results are proposals only: nothing is used until the business approves it, and a price seen in a past conversation is never used unless the business confirms it. When a person's information is erased, anything proposed from their conversations is deleted with it.
+
+**A business's own AI account.** A business may instead connect its own account with a supported AI provider (currently Anthropic, OpenAI or Google) by entering its own key. The business can then choose to use that account for drafting replies and, where the provider supports it, for answering its customers. In that case the text needed for those features — including customers' messages — is sent to the provider the business chose, under the business's own agreement with that provider, and that provider acts on the business's behalf rather than as our sub-processor. If the business's own account cannot be reached, we do not send the text to our provider instead; the conversation is passed to a person on the business's team. The key is stored encrypted and is never shown again, not even to us. Our AI setup assistant, including learning from past conversations, always uses our own provider.
+
 Each business controls these features: it can choose a draft-only mode in which a human approves every reply, pause the assistant, or take over any conversation with a human agent at any time.
 
 ## **Retention and Deletion**
@@ -84,13 +88,15 @@ We engage a small number of providers to operate the service. Each processes per
 | Sub-processor | Purpose |
 | --- | --- |
 | Meta Platforms, Inc. | WhatsApp Business Platform — sending and receiving messages |
-| Anthropic, PBC | AI replies, drafts and summaries, where a business enables the AI assistant |
+| Anthropic, PBC | AI replies, drafts and summaries, and proposals learned from past conversations, where a business enables these features |
 | Microsoft Corporation | Transactional email — sign-in codes, invitations and service notices |
 | Cloudflare, Inc. | Authoritative DNS, and the bot check on the sign-in and registration forms |
 | Contabo GmbH (Germany) | Cloud hosting of the application, the database and uploaded media |
 | Cloud storage provider (United States) | Nightly off-site backup copies of the database and uploaded media |
 
 The backup storage provider is identified by name to an account owner, or to a controller under our Data Processing Addendum, on request. We will announce any intended addition or replacement of a sub-processor in advance, and account owners may object on reasonable grounds.
+
+An AI provider that a business connects with its own key is not listed here: it is engaged by that business directly, under the business's own agreement.
 
 ## **International Transfers**
 
