@@ -113,12 +113,16 @@
         "noWhatsapp": "That number cannot receive WhatsApp messages. Check it, or use your email instead.",
         "numberIncomplete": "That number does not look complete. Check it, or choose another country.",
         "phoneUnavailable": "Codes by WhatsApp are not available right now. Use your email instead.",
-        "forgotInvalidEmail": "That does not look like an email address. Check it and try again."
+        "forgotInvalidEmail": "That does not look like an email address. Check it and try again.",
+        "usePassword": "This number uses WhatsApp as its second step, so it signs in with its password. Enter your password below.",
+        "sessionExpired": "That took a while, so we started over to keep your account safe. Enter your details again."
       },
       "mfaHint": "This account uses two-step sign-in. Enter the code from your authenticator app.",
       "mfaCodeLabel": "Six-digit code",
       "mfaRecoveryHint": "Lost your phone? Enter one of your recovery codes instead.",
-      "openingReset": "Opening the reset screen…"
+      "openingReset": "Opening the reset screen…",
+      "mfaHintWhatsapp": "We sent a six-digit code to your WhatsApp. Enter it here.",
+      "mfaWhatsappNotSent": "We could not send your WhatsApp code just now. Enter one of the recovery codes you saved instead, or try again in a few minutes."
     }
   },
   "footer": {

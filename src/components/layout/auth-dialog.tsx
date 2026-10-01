@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "reac
 import type { FormEvent, MouseEvent, ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { WeizLogo } from "../weiz-logo";
-import { TurnstileWidget } from "./turnstile-widget";
+import { TURNSTILE_SITE_KEY, TurnstileWidget } from "./turnstile-widget";
 import {
   guessCountry,
   identifierShape,
@@ -65,6 +65,8 @@ type ErrorKey =
   | "passwordExists"
   | "passwordMismatch"
   | "forgotInvalidEmail"
+  | "usePassword"
+  | "sessionExpired"
   | "error";
 
 /** Between two reset emails: every request kills the link the last one sent. */
@@ -185,6 +187,15 @@ export function AuthDialog({
   const [errorKey, setErrorKey] = useState<ErrorKey | null>(null);
   const [reveal, setReveal] = useState(false);
   /**
+   * The password this sign-up already saved. A failed workspace step used to
+   * send the retry through password/set again, which an account that HAS a
+   * password refuses without the current one — stuck at "already has a
+   * password" (app QA pass, 2026-09-30).
+   */
+  const [savedPassword, setSavedPassword] = useState<string | null>(null);
+  /** Which second step was asked for, and whether its WhatsApp code left. */
+  const [mfaVia, setMfaVia] = useState<"totp" | "whatsapp" | "whatsapp-unsent">("totp");
+  /**
    * "Forgot password?" used to swap the form for one small line. People did
    * not see it and pressed again — and each press kills the link the last one
    * sent. Now: the address, a countdown before sending again (QA pass,
@@ -262,6 +273,16 @@ export function AuthDialog({
     status: number,
     on: "code" | "login" | "password" | "other",
   ): void {
+    // The door's own session lives 15 minutes (ADR-0044). Holding one and being
+    // refused means it ran out while the dialog sat open: start over cleanly
+    // instead of failing the same way on every press.
+    if ((status === 401 || status === 403) && token && on !== "code" && on !== "login") {
+      setToken(null);
+      setStage("email");
+      setSavedPassword(null);
+      setErrorKey("sessionExpired");
+      return;
+    }
     if (status === 429) setErrorKey("rateLimited");
     else if (status === 401 && on === "code") setErrorKey("invalidCode");
     else if (status === 401 && on === "login")
@@ -362,13 +383,33 @@ export function AuthDialog({
       if (typeof challenge === "string") {
         setMfaChallenge(challenge);
         setMfaCode("");
+        // Said as the app says it: a WhatsApp second step is not an
+        // authenticator app, and a code that could not be sent is not "sent".
+        setMfaVia(
+          res.json["method"] === "whatsapp"
+            ? res.json["code_sent"] === false
+              ? "whatsapp-unsent"
+              : "whatsapp"
+            : "totp",
+        );
         setStage("mfa");
         return;
       }
     }
     const bearer = res.json["session_token"];
     if (!res.ok || typeof bearer !== "string") {
-      fail(res.status, "code");
+      // A number whose second step is WhatsApp signs in with its password:
+      // the code cannot be both steps (app ADR-0075). This was "Something
+      // went wrong", and every retry spent another paid code.
+      const details = (res.json["error"] as { details?: { identifier?: string } } | undefined)
+        ?.details;
+      if (res.status === 422 && details?.identifier === "use_password") {
+        setCode("");
+        setStage("password");
+        setErrorKey("usePassword");
+        return;
+      }
+      fail(res.status === 422 ? 401 : res.status, "code");
       return;
     }
     setToken(bearer);
@@ -399,6 +440,15 @@ export function AuthDialog({
       if (typeof challenge === "string") {
         setMfaChallenge(challenge);
         setMfaCode("");
+        // Said as the app says it: a WhatsApp second step is not an
+        // authenticator app, and a code that could not be sent is not "sent".
+        setMfaVia(
+          res.json["method"] === "whatsapp"
+            ? res.json["code_sent"] === false
+              ? "whatsapp-unsent"
+              : "whatsapp"
+            : "totp",
+        );
         setStage("mfa");
         return;
       }
@@ -480,8 +530,16 @@ export function AuthDialog({
       fail(named.status, "other");
       return;
     }
-    const set = await call("POST", "/api/v1/auth/password/set", { password });
-    if (!set.ok) {
+    const set =
+      savedPassword === password
+        ? null
+        : await call(
+            "POST",
+            "/api/v1/auth/password/set",
+            savedPassword === null ? { password } : { password, current_password: savedPassword },
+          );
+    if (set && set.ok) setSavedPassword(password);
+    if (set && !set.ok) {
       // An account that already has a password cannot have it replaced from a
       // code alone (the app's ADR-0077): say so, not "too weak".
       const details = (set.json["error"] as { details?: Record<string, unknown> } | undefined)
@@ -492,9 +550,21 @@ export function AuthDialog({
     }
     // Creating the workspace rotates the session; the new token is the one
     // that hands off.
+    // The visitor's own clock and language, applied as the workspace is born:
+    // a workspace starts on Asia/Jerusalem and English, and someone in Dhaka
+    // who skipped the profile stayed there. The onboarding route does not
+    // take this dialog's session, so the workspace route carries them.
+    let timezone: string | undefined;
+    try {
+      timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    } catch {
+      timezone = undefined;
+    }
     const org = await call("POST", "/api/v1/orgs", {
       name: business,
       ...(turnstileToken ? { turnstile_token: turnstileToken } : {}),
+      ...(timezone ? { timezone } : {}),
+      locale: locale === "he" ? "he" : "en",
     });
     spendTurnstile();
     const rotated = org.json["session_token"];
@@ -838,7 +908,13 @@ export function AuthDialog({
 
         {stage === "mfa" ? (
           <>
-            <p className="text-sm text-muted">{t("mfaHint")}</p>
+            <p className="text-sm text-muted">
+              {mfaVia === "whatsapp"
+                ? t("mfaHintWhatsapp")
+                : mfaVia === "whatsapp-unsent"
+                  ? t("mfaWhatsappNotSent")
+                  : t("mfaHint")}
+            </p>
             <label htmlFor="auth-dialog-mfa" className={label}>
               {t("mfaCodeLabel")}
             </label>
@@ -878,24 +954,33 @@ export function AuthDialog({
               inputMode="numeric"
               autoComplete="one-time-code"
               pattern="[0-9]*"
-              maxLength={6}
               dir="ltr"
               required
               autoFocus
               value={code}
               disabled={busy}
-              onChange={(event) => setCode(event.target.value)}
+              // Digits only, so a code pasted as "123 456" still works — and no
+              // maxLength: the browser would cut "123 456" to "123 45" first.
+              onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
               className={`${field} tracking-[0.3em]`}
             />
             <p className="text-xs text-muted">{t("codeHint")}</p>
             <button type="submit" disabled={busy} className={primary}>
               {busy ? t("loading") : t("verify")}
             </button>
+            {/* A new code is a new send: it passes the same bot check as the
+                first. The widget lived only on the first step, so every Resend
+                was refused with nothing on screen to answer. */}
+            <TurnstileWidget
+              key={`resend-${turnstileKey}`}
+              action="otp_request"
+              onToken={setTurnstileToken}
+            />
             <p className="mt-2 text-center text-sm text-muted">
               <button
                 type="button"
                 className={link}
-                disabled={busy}
+                disabled={busy || (TURNSTILE_SITE_KEY !== null && turnstileToken === null)}
                 onClick={() => void run(requestCode)}
               >
                 {t("resend")}
