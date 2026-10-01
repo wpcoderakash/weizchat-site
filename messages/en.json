@@ -64,7 +64,15 @@
         "passkey": "Sign in with a passkey",
         "resetSent": "If that address has an account, a reset link is on its way.",
         "noAccount": "New to WeizChat?",
-        "startTrial": "Create your account"
+        "startTrial": "Create your account",
+        "resetCheckTitle": "Check your email",
+        "resetCheckBody": "If an account uses <email>{address}</email>, we have sent it a link to choose a new password.",
+        "resetCheckExpiry": "The link works once and expires in 60 minutes. If you ask again, only the newest link works.",
+        "resetCheckSpam": "Nothing after a few minutes? Look in your spam or junk folder.",
+        "resetResend": "Send the link again",
+        "resetResendIn": "Send again in {seconds}s",
+        "resetDifferentAddress": "Use a different address",
+        "resetSending": "Sending…"
       },
       "register": {
         "kicker": "Start building.",
@@ -99,16 +107,18 @@
         "invalidCredentials": "Email or password is incorrect.",
         "rateLimited": "Too many attempts. Wait a few minutes and try again.",
         "passwordTooWeak": "That password is too short or too common. Try a longer, less predictable one.",
-        "passwordExists": "This account already has a password. Log in with it, or use \u201cForgot password?\u201d to choose a new one.",
+        "passwordExists": "This account already has a password. Log in with it, or use “Forgot password?” to choose a new one.",
         "passwordMismatch": "Those two passwords do not match.",
         "error": "Something went wrong. Please try again.",
         "noWhatsapp": "That number cannot receive WhatsApp messages. Check it, or use your email instead.",
         "numberIncomplete": "That number does not look complete. Check it, or choose another country.",
-        "phoneUnavailable": "Codes by WhatsApp are not available right now. Use your email instead."
+        "phoneUnavailable": "Codes by WhatsApp are not available right now. Use your email instead.",
+        "forgotInvalidEmail": "That does not look like an email address. Check it and try again."
       },
       "mfaHint": "This account uses two-step sign-in. Enter the code from your authenticator app.",
       "mfaCodeLabel": "Six-digit code",
-      "mfaRecoveryHint": "Lost your phone? Enter one of your recovery codes instead."
+      "mfaRecoveryHint": "Lost your phone? Enter one of your recovery codes instead.",
+      "openingReset": "Opening the reset screen…"
     }
   },
   "footer": {

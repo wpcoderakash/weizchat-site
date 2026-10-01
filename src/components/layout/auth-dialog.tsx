@@ -64,7 +64,13 @@ type ErrorKey =
   | "passwordTooWeak"
   | "passwordExists"
   | "passwordMismatch"
+  | "forgotInvalidEmail"
   | "error";
+
+/** Between two reset emails: every request kills the link the last one sent. */
+const RESEND_COOLDOWN_MS = 60_000;
+/** A mailbox-shaped string; the app decides the rest. Catches typos only. */
+const EMAIL_SHAPE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const BEARER_HEADER = { "x-session-transport": "bearer" } as const;
 
@@ -178,6 +184,22 @@ export function AuthDialog({
   const [busy, setBusy] = useState(false);
   const [errorKey, setErrorKey] = useState<ErrorKey | null>(null);
   const [reveal, setReveal] = useState(false);
+  /**
+   * "Forgot password?" used to swap the form for one small line. People did
+   * not see it and pressed again — and each press kills the link the last one
+   * sent. Now: the address, a countdown before sending again (QA pass,
+   * 2026-09-30).
+   */
+  const [resetSentTo, setResetSentTo] = useState<string | null>(null);
+  const [resendAt, setResendAt] = useState(0);
+  const [forgotBusy, setForgotBusy] = useState(false);
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (resendAt <= now) return;
+    const timer = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, [resendAt, now]);
+  const resendSeconds = Math.max(0, Math.ceil((resendAt - now) / 1000));
 
   // Switching doors resets the journey but keeps the typed address — the
   // one thing both doors ask for first.
@@ -419,12 +441,28 @@ export function AuthDialog({
       setStage("email");
       return;
     }
-    const res = await call("POST", "/api/v1/auth/password/forgot", { email });
-    if (!res.ok) {
-      fail(res.status, "other");
+    // The app answers 202 for anything (no account oracle), so a typo like
+    // "dev@weiz" was told a link was coming. Saying "not an address" here
+    // reveals nothing about any account.
+    const address = email.trim();
+    if (!EMAIL_SHAPE.test(address)) {
+      setErrorKey("forgotInvalidEmail");
       return;
     }
-    setStage("forgot-sent");
+    setForgotBusy(true);
+    try {
+      const res = await call("POST", "/api/v1/auth/password/forgot", { email: address });
+      if (!res.ok) {
+        fail(res.status, "other");
+        return;
+      }
+      setResetSentTo(address);
+      setResendAt(Date.now() + RESEND_COOLDOWN_MS);
+      setNow(Date.now());
+      setStage("forgot-sent");
+    } finally {
+      setForgotBusy(false);
+    }
   }
 
   /** Name, password and workspace — after this the account is real. */
@@ -580,23 +618,67 @@ export function AuthDialog({
   if (stage === "handing-off") {
     body = (
       <p className="mt-6 text-center text-sm text-muted" role="status">
-        {t("handingOff")}
+        {/* A reset code leads to the app's reset screen, not into an account. */}
+        {resetByCode ? t("openingReset") : t("handingOff")}
       </p>
     );
   } else if (stage === "forgot-sent") {
     body = (
-      <>
-        <p className="mt-6 text-sm text-fg" role="status">
-          {t("login.resetSent")}
+      // What to do next is the only thing in the dialog, and sending again is
+      // a visible, timed choice — each request kills the previous link.
+      <section className="mt-6 flex flex-col items-center gap-2 text-center" role="status" aria-live="polite">
+        <span className="grid size-12 place-items-center rounded-full bg-accent/12 text-accent" aria-hidden="true">
+          <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="5" width="18" height="14" rx="2.5" />
+            <path d="m4 7 8 6 8-6" />
+          </svg>
+        </span>
+        <h3 className="text-lg font-semibold text-fg">{t("login.resetCheckTitle")}</h3>
+        <p className="text-sm text-fg [overflow-wrap:anywhere]">
+          {t.rich("login.resetCheckBody", {
+            address: resetSentTo ?? email,
+            email: (chunks) => (
+              <strong>
+                <bdi>{chunks}</bdi>
+              </strong>
+            ),
+          })}
         </p>
+        <p className="text-sm text-muted">{t("login.resetCheckExpiry")}</p>
+        <p className="text-sm text-muted">{t("login.resetCheckSpam")}</p>
         <button
           type="button"
-          className={`${link} mt-4 text-sm`}
+          className={primary}
+          disabled={busy || resendSeconds > 0}
+          aria-busy={forgotBusy}
+          onClick={() => void run(forgotPassword)}
+        >
+          {forgotBusy
+            ? t("login.resetSending")
+            : resendSeconds > 0
+              ? t("login.resetResendIn", { seconds: resendSeconds })
+              : t("login.resetResend")}
+        </button>
+        <button
+          type="button"
+          className={`${link} text-sm`}
+          disabled={busy}
+          onClick={() => {
+            setErrorKey(null);
+            setStage("email");
+          }}
+        >
+          {t("login.resetDifferentAddress")}
+        </button>
+        <button
+          type="button"
+          className={`${link} text-sm`}
+          disabled={busy}
           onClick={() => setStage("password")}
         >
           {t("back")}
         </button>
-      </>
+      </section>
     );
   } else {
     body = (
@@ -745,9 +827,10 @@ export function AuthDialog({
                 type="button"
                 className={link}
                 disabled={busy}
+                aria-busy={forgotBusy}
                 onClick={() => void run(forgotPassword)}
               >
-                {t("login.forgotPassword")}
+                {forgotBusy ? t("login.resetSending") : t("login.forgotPassword")}
               </button>
             </p>
           </>
