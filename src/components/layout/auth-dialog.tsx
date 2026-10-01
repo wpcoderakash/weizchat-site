@@ -1136,7 +1136,19 @@ export function AuthDialog({
   return (
     <dialog
       ref={ref}
-      onClose={onClose}
+      onClose={() => {
+        // Closed after a code was proven but before the handoff: the short
+        // session it holds is ended on the server rather than left to run its
+        // fifteen minutes, and the dialog opens fresh next time.
+        if (token && stage !== "handing-off") {
+          void api(appUrl, token)("POST", "/api/v1/auth/logout").catch(() => undefined);
+          setToken(null);
+          setStage("email");
+          setSavedPassword(null);
+          setMfaChallenge(null);
+        }
+        onClose();
+      }}
       onClick={onBackdropClick}
       aria-labelledby="auth-dialog-title"
       className="m-auto w-[min(27rem,calc(100vw-2rem))] rounded-[22px] border-0 bg-surface p-0 text-fg shadow-[0_2px_6px_rgb(2_6_23/0.18),0_36px_80px_-24px_rgb(2_6_23/0.58)] backdrop:bg-[rgb(8_6_24/0.58)] backdrop:backdrop-blur-[4px]"
